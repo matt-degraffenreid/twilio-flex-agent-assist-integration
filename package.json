@@ -3,7 +3,7 @@
   "version": "1.1.1",
   "description": "This repository provides development teams with a starting point for flex projects or developing flex features.",
   "scripts": {
-    "postinstall": "node scripts/setup-environment.mjs",
+    "postinstall": "rm -rf ./serverless-functions/node_modules/ngrok && node scripts/setup-environment.mjs",
     "generate-env": "node scripts/setup-environment.mjs --skip-install",
     "deploy-addons": "node scripts/deploy-addons.mjs",
     "add-feature": "node scripts/add-feature.mjs",
