@@ -24,7 +24,18 @@
     },
     "features": {
       "agent_assist": {
-        "enabled": true
+        "enabled": true,
+        "custom_api_endpoint": "",
+        "conversation_profile": "",
+        "conversation_summary": true,
+        "agent_coaching": true,
+        "proactive_general_knowleadge_assist": true,
+        "smart_reply": true,
+        "enable_voice": false,
+        "notifier_server_endpoint": "",
+        "transcription": false,
+        "intermediate_transcription": false,
+        "debug": false
       },
       "activity_skill_filter": {
         "enabled": true,
