@@ -1,6 +1,6 @@
 {
   "custom_data": {
-    "serverless_functions_domain_agent_assist": "serverless-agent-assist-5011-dev.twil.io",
+    "serverless_functions_domain_agent_assist": "<YOUR_SERVERLESS_DOMAIN>",
     "common": {
       "log_level": "info",
       "audit_log_ttl": 1209600,
