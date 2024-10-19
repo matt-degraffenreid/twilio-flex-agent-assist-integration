@@ -23,6 +23,9 @@
       ]
     },
     "features": {
+      "agent_assist": {
+        "enabled": true
+      },
       "activity_skill_filter": {
         "enabled": true,
         "rules": {
@@ -240,10 +243,7 @@
         "per_queue": {
           "exampleQueueName": {
             "require_disposition": true,
-            "dispositions": [
-              "Promotional Sale",
-              "Renewal"
-            ],
+            "dispositions": ["Promotional Sale", "Renewal"],
             "text_attributes": [],
             "select_attributes": []
           }
