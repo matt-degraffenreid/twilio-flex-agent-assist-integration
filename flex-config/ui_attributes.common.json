@@ -1,6 +1,6 @@
 {
   "custom_data": {
-    "serverless_functions_domain_agent_assist": "<YOUR_SERVERLESS_DOMAIN>",
+    "serverless_functions_domain_agent_assist": "serverless-agent-assist-5011-dev.twil.io",
     "common": {
       "log_level": "info",
       "audit_log_ttl": 1209600,
@@ -422,7 +422,7 @@
       "conditional_recording": {
         "enabled": false,
         "exclude_attributes": [],
-        "exclude_queues": [],
+        "exclude_queues": []
       }
     }
   }
