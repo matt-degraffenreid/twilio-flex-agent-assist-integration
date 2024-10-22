@@ -1,5 +1,5 @@
 import * as Flex from '@twilio/flex-ui';
-import { FlexPlugin } from '@twilio/flex-plugin';
+import { FlexPlugin, loadJS } from '@twilio/flex-plugin';
 
 import { initFeatures } from './utils/feature-loader';
 
@@ -19,6 +19,8 @@ export default class AgentAssist extends FlexPlugin {
    * @param manager { Flex.Manager }
    */
   init(flex: typeof Flex, manager: Flex.Manager) {
+    loadJS('https://www.gstatic.com/agent-assist-ui-modules/common.js');
+    loadJS('https://www.gstatic.com/agent-assist-ui-modules/v1/summarization.js');
     initFeatures(flex, manager);
   }
 }

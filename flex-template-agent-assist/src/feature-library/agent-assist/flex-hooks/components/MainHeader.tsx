@@ -1,7 +1,8 @@
 import * as Flex from '@twilio/flex-ui';
-import { isAgentAssistEnabled } from 'feature-library/agent-assist/utils/helpers';
 
+import { isAgentAssistEnabled } from '../../utils/helpers';
 import { FlexComponent } from '../../../../types/feature-loader';
+import AgentAssistAlertButton from '../../custom-components/AgentAssistAlertButton';
 
 export const componentName = FlexComponent.MainHeader;
 export const componentHook = function addAgentAssistToMainHeader(flex: typeof Flex, manager: Flex.Manager) {
@@ -10,7 +11,7 @@ export const componentHook = function addAgentAssistToMainHeader(flex: typeof Fl
   }
 
   // Add alert button to the main header
-  flex.MainHeader.Content.add(<AdminSideLink viewName="template-admin" key="template-admin-side-nav" />, {
+  flex.MainHeader.Content.add(<AgentAssistAlertButton key="template-agent-assist-main-header" />, {
     sortOrder: -1,
     align: 'end',
   });
