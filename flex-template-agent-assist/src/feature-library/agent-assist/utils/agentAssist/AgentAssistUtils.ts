@@ -6,6 +6,7 @@ import { ConnectorConfig,
 } from '../types/AgentAssist';
 import { getCustomApiEndpoint, getConversationProfile } from '../../config';
 import Cookies from 'js-cookie';
+import logger from '../../../../utils/logger';
 
 class AgentAssistUtils {
     static #agentAssistUtils: AgentAssistUtils;
@@ -35,16 +36,19 @@ class AgentAssistUtils {
             window._uiModuleFlags = {debug: true};
         }
         else {
-            console.log("Connection already initialize");
+            logger.debug('[Agent-Assist] connector already instantiated')
         }
         AgentAssistUtils.#connector.init(config);
     }
 
     public async getAgentAssistAuthToken(token: string): string {
         const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
-        if(authToken)
+        if(authToken){
+            logger.debug('[Agent-Assist] AuthToken retrieved from cookies');
             return authToken;
+        }
 
+        logger.debug('[Agent-Assist] Making request for Agent Assist auth token');
         return fetch(`${getCustomApiEndpoint()}/register`, {
             method: 'POST',
             headers: [['Authorization', token]],
@@ -57,6 +61,7 @@ class AgentAssistUtils {
                 return response.json();
             })
             .then(data => {
+                logger.debug('[Agent-Assist] Saving auth token in cookie');
                 Cookies.set('CCAI_AGENT_ASSIST_AUTH_TOKEN', data.token, { expires: 7 })
                 return data.token;
             });
@@ -84,7 +89,8 @@ class AgentAssistUtils {
                 },
             },
         };
-        console.log(request)
+        logger.debug(`[Agent-Assist] Analyze content requested:`)
+        logger.debug(request)
         dispatchAgentAssistEvent('analyze-content-requested', {
             detail: request,
         });
@@ -92,9 +98,9 @@ class AgentAssistUtils {
 
     public addSmartReplyHook(hook: any): void {
         addAgentAssistEventListener('smart-reply-selected', function (event) {
-            console.log("trying to set input box");
-            console.log(event)
-            hook(event.detail.answer.reply);
+            const suggestion = event.detail.answer.reply
+            logger.debug(`[Agent-Assist][Smart-Reply] Smart replay suggestion selected: ${suggestion}`)
+            hook(suggestion);
         });
     }
 }

@@ -14,8 +14,6 @@ export const SmartReply = () => {
     useEffect(() => {
         if(taskSid){
             const agentAssistUtils = AgentAssistUtils.instance
-            console.log("Task SID:")
-            console.log(taskSid)
             const task = Flex.TaskHelper.getTaskByTaskSid(taskSid);
             const conversationSid = Flex.TaskHelper.getTaskConversationSid(task);
             const onClickInsert = (inputText: string) => {

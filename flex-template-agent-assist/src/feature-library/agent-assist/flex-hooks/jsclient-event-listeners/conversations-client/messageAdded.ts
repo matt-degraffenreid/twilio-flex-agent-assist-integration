@@ -21,6 +21,4 @@ export const jsClientHook = function analyzeContentRequest(
   const messageSendTime = `${message.dateCreated?.toString()}`;
 
   agentAssistUtils.analyzeContentRequest(participantRole, messageContent, messageSendTime, conversationId)
-  console.log("Message Added");
-  console.log(message);
 };

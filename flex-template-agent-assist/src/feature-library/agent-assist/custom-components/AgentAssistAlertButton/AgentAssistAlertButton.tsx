@@ -12,6 +12,7 @@ import { isVoiceEnabled, getConversationProfile, getCustomApiEndpoint, getNotifi
 import { updateAgentAssistState } from '../../flex-hooks/states/AgentAssist';
 import { Tooltip } from '@twilio-paste/core/tooltip';
 import { StringTemplates } from '../../flex-hooks/strings/AgentAssist';
+import logger from '../../../../utils/logger';
 
 export const AgentAssistAlertButton = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export const AgentAssistAlertButton = () => {
       return await agentAssistUtils.getAgentAssistAuthToken(agentToken);
     }
     if(isAvailable){
+      logger.debug('[Agent-Assist] Agent marked as available on page load. Setting up UI Modules')
       fetchAuthToken().then((authToken) => {
         const connectorConfig = {
           channel: isVoiceEnabled() ? 'voice' : 'chat',

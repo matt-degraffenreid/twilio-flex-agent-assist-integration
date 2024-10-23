@@ -10,6 +10,7 @@ import {
 } from '../../config';
 import { updateAgentAssistState } from '../states/AgentAssist';
 import Cookies from 'js-cookie';
+import logger from '../../../../utils/logger';
 
 export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.SetActivity;
@@ -35,6 +36,7 @@ export const actionHook = function afterSetActivity(flex: typeof Flex, _manager:
 };
 
 const loginFlow = async (agentAssistUtils: AgentAssistUtils, manager: Flex.Manager) => {
+  logger.debug('[Agent-Assist] Initialzing UI Modules')
   const agentToken = manager.store.getState().flex.session.ssoTokenPayload.token;
   const authToken = await agentAssistUtils.getAgentAssistAuthToken(agentToken);
   const connectorConfig = {
