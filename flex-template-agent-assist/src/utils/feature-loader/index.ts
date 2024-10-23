@@ -3,6 +3,7 @@ import * as Flex from '@twilio/flex-ui';
 import { FeatureDefinition } from '../../types/feature-loader';
 import { addLoadedFeature, setLoadedFeaturesPopulated } from '../configuration';
 import * as Actions from './actions';
+import * as AgentAssistEvents from './agent-assist-events';
 import * as Channels from './channels';
 import * as ChatOrchestrator from './chat-orchestrator';
 import * as Components from './components';
@@ -142,3 +143,38 @@ export const loadFeature = (flex: typeof Flex, manager: Flex.Manager, feature: F
     }
   }
 };
+
+export const initAgentAssistFeatures = (flex: typeof Flex, manager: Flex.Manager) => {
+  if (typeof features === 'undefined') {
+    // no features discovered; abort
+    return;
+  }
+
+  for (const file of features) {
+    // Each feature index file should export a `register` function for us to invoke
+    if (!file.register) {
+      console.error('Feature found, but its index file does not export a `register` function', file);
+      return;
+    }
+
+    try {
+      const feature = file.register() as FeatureDefinition;
+
+      if (feature && feature.name) {
+        loadAgentAssistEvents(flex, manager, feature)
+      }
+    } catch (error) {
+      console.error('Error loading feature:', error);
+    }
+  }
+};
+
+export const loadAgentAssistEvents = async (flex: typeof Flex, manager: Flex.Manager, feature: FeatureDefinition) => {
+  const name = feature.name ?? 'unknown';
+  const hooks = feature.hooks ?? [];
+  for (const hook of hooks) {
+    if(hook.agentAssistEventHook) {
+      AgentAssistEvents.addHook(flex, manager, name, hook)
+    }
+  }
+}

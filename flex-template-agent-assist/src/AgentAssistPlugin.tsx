@@ -1,7 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
-import { FlexPlugin, loadJS } from '@twilio/flex-plugin';
-
-import { initFeatures } from './utils/feature-loader';
+import { FlexPlugin } from '@twilio/flex-plugin';
+import loadjs from 'loadjs';
+import { initFeatures, initAgentAssistFeatures } from './utils/feature-loader';
 
 const PLUGIN_NAME = 'AgentAssist';
 
@@ -19,9 +19,14 @@ export default class AgentAssist extends FlexPlugin {
    * @param manager { Flex.Manager }
    */
   init(flex: typeof Flex, manager: Flex.Manager) {
-    loadJS('https://www.gstatic.com/agent-assist-ui-modules/common.js');
-    loadJS('https://www.gstatic.com/agent-assist-ui-modules/v1/summarization.js');
-    loadJS('https://www.gstatic.com/agent-assist-ui-modules/v1.2/smart_reply.js');
+    loadjs([
+      'https://www.gstatic.com/agent-assist-ui-modules/common.js', 
+      'https://www.gstatic.com/agent-assist-ui-modules/v1/summarization.js',
+      'https://www.gstatic.com/agent-assist-ui-modules/v1.2/smart_reply.js'
+    ], 'agent-assist');
+    loadjs.ready('agent-assist', function () {
+      initAgentAssistFeatures(flex, manager)
+    });
     initFeatures(flex, manager);
   }
 }

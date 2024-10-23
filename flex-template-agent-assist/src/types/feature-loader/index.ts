@@ -7,3 +7,4 @@ export { FlexOrchestrationEvent } from './FlexOrchestrationEvent';
 export { ConversationEvent } from './ConversationEvent';
 export { VoiceEvent } from './VoiceEvent';
 export { WorkerEvent } from './WorkerEvent';
+export { AgentAssistEvent }from './AgentAssistEvent';
