@@ -4,7 +4,7 @@ export default interface AgentAssistConfig {
   conversation_profile: string;
   conversation_summary: boolean;
   agent_coaching: boolean;
-  proactive_general_knowleadge_assist: boolean;
+  proactive_generative_knowleadge_assist: boolean;
   smart_reply: boolean;
   enable_voice: boolean;
   notifier_server_endpoint: string;

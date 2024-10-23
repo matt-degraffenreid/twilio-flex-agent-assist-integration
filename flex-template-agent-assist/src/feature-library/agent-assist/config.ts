@@ -7,7 +7,7 @@ const {
   conversation_profile = '',
   conversation_summary = true,
   agent_coaching = true,
-  proactive_general_knowleadge_assist = true,
+  proactive_generative_knowleadge_assist = true,
   smart_reply = true,
   enable_voice = false,
   notifier_server_endpoint = '',
@@ -37,7 +37,7 @@ export const isAgentCoachingEnabled = () => {
 };
 
 export const isPGKAEnabled = () => {
-  return proactive_general_knowleadge_assist;
+  return proactive_generative_knowleadge_assist;
 };
 
 export const isSmartReplyEnabled = () => {

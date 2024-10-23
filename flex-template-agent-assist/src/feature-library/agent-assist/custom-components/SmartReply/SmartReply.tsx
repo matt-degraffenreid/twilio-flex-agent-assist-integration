@@ -26,7 +26,6 @@ export const SmartReply = () => {
             };
             agentAssistUtils.addSmartReplyHook(onClickInsert)
         }
-
     }, [taskSid]);
 
     return (
