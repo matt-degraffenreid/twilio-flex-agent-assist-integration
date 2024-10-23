@@ -1,8 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
 import { Conversation, Message } from '@twilio/conversations';
 import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
-import { FlexJsClient, ConversationEvent } from '../../../../../types/feature-loader';
-
+import { FlexJsClient, ConversationEvent, AgentAssistAction, invokeAgentAssistAction } from '../../../../../types/feature-loader';
 export const clientName = FlexJsClient.conversationsClient;
 export const eventName = ConversationEvent.messageAdded;
 // when an agent joins a channel for the first time this announces
@@ -19,6 +18,15 @@ export const jsClientHook = function analyzeContentRequest(
   const messageContent = `${message.body}`;
   const participantRole = message.author == workerIdentity ? 'HUMAN_AGENT': 'END_USER';
   const messageSendTime = `${message.dateCreated?.toString()}`;
-
-  agentAssistUtils.analyzeContentRequest(participantRole, messageContent, messageSendTime, conversationId)
+  const request = {
+      conversationId,
+      participantRole,
+      request: {
+          textInput: {
+              text: messageContent,
+              messageSendTime: messageSendTime,
+          },
+      },
+  };
+  invokeAgentAssistAction(AgentAssistAction.analyzeContentRequest, request);
 };

@@ -1,6 +1,6 @@
 
 import * as Flex from '@twilio/flex-ui';
-import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
+import { FlexActionEvent, FlexAction, AgentAssistAction, invokeAgentAssistAction } from '../../../../types/feature-loader';
 import AgentAssistUtils from '../../utils/agentAssist/AgentAssistUtils';
 import logger from '../../../../utils/logger';
 
@@ -12,6 +12,10 @@ export const actionHook = function beforeAcceptTask(flex: typeof Flex, _manager:
     const agentAssistUtils = AgentAssistUtils.instance;
     
     logger.debug(`[Agent-Assist] Setting active conversation to ${conversationSid}`)
-    agentAssistUtils.activeConversationSelected(conversationSid)
+    const conversationName = agentAssistUtils.getConversationName(conversationSid)
+    const request = {
+      conversationName
+    }
+    invokeAgentAssistAction(AgentAssistAction.activeConversationSelected, request);
   });
 };

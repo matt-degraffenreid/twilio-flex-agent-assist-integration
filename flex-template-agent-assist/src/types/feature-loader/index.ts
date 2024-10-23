@@ -8,3 +8,4 @@ export { ConversationEvent } from './ConversationEvent';
 export { VoiceEvent } from './VoiceEvent';
 export { WorkerEvent } from './WorkerEvent';
 export { AgentAssistEvent }from './AgentAssistEvent';
+export { AgentAssistAction, invokeAgentAssistAction } from './AgentAssistAction';

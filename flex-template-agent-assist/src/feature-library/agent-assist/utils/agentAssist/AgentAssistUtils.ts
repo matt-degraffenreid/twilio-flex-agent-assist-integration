@@ -67,41 +67,13 @@ class AgentAssistUtils {
             });
     }
 
-    public activeConversationSelected(conversationId: string): void {
+    public getConversationName(conversationId: string): string {
         const [, projectLocation] =
             getConversationProfile().match(
                 /(^projects\/[^/]+\/locations\/[^/]+)\/conversationProfiles\/[^/]+$/
             ) || [];
         const conversationName = `${projectLocation}/conversations/${conversationId}`;
-        dispatchAgentAssistEvent('active-conversation-selected', {
-            detail: {conversationName},
-        });
-    }
-
-    public analyzeContentRequest(participantRole: string, message: string, messageSendTime: string, conversationId: string): void {
-        const request = {
-            conversationId,
-            participantRole,
-            request: {
-                textInput: {
-                    text: message,
-                    messageSendTime: messageSendTime,
-                },
-            },
-        };
-        logger.debug(`[Agent-Assist] Analyze content requested:`)
-        logger.debug(request)
-        dispatchAgentAssistEvent('analyze-content-requested', {
-            detail: request,
-        });
-    }
-
-    public addSmartReplyHook(hook: any): void {
-        addAgentAssistEventListener('smart-reply-selected', function (event) {
-            const suggestion = event.detail.answer.reply
-            logger.debug(`[Agent-Assist][Smart-Reply] Smart replay suggestion selected: ${suggestion}`)
-            hook(suggestion);
-        });
+        return conversationName;
     }
 }
 
