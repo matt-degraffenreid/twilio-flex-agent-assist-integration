@@ -4,7 +4,7 @@ import { ConnectorConfig,
     UiModuleEventBasedConnector, 
     agentAssistModules 
 } from '../types/AgentAssist';
-import { getCustomApiEndpoint } from '../../config';
+import { getCustomApiEndpoint, getConversationProfile } from '../../config';
 import Cookies from 'js-cookie';
 
 class AgentAssistUtils {
@@ -32,11 +32,12 @@ class AgentAssistUtils {
     public initializeUiConnector(config: ConnectorConfig) {
         if(!AgentAssistUtils.#connector){
             AgentAssistUtils.#connector = new UiModulesConnector();
-            AgentAssistUtils.#connector.init(config);
+            window._uiModuleFlags = {debug: true};
         }
         else {
             console.log("Connection already initialize");
         }
+        AgentAssistUtils.#connector.init(config);
     }
 
     public async getAgentAssistAuthToken(token: string): string {
@@ -59,6 +60,42 @@ class AgentAssistUtils {
                 Cookies.set('CCAI_AGENT_ASSIST_AUTH_TOKEN', data.token, { expires: 7 })
                 return data.token;
             });
+    }
+
+    public activeConversationSelected(conversationId: string): void {
+        const [, projectLocation] =
+            getConversationProfile().match(
+                /(^projects\/[^/]+\/locations\/[^/]+)\/conversationProfiles\/[^/]+$/
+            ) || [];
+        const conversationName = `${projectLocation}/conversations/${conversationId}`;
+        dispatchAgentAssistEvent('active-conversation-selected', {
+            detail: {conversationName},
+        });
+    }
+
+    public analyzeContentRequest(participantRole: string, message: string, messageSendTime: string, conversationId: string): void {
+        const request = {
+            conversationId,
+            participantRole,
+            request: {
+                textInput: {
+                    text: message,
+                    messageSendTime: messageSendTime,
+                },
+            },
+        };
+        console.log(request)
+        dispatchAgentAssistEvent('analyze-content-requested', {
+            detail: request,
+        });
+    }
+
+    public addSmartReplyHook(hook: any): void {
+        addAgentAssistEventListener('smart-reply-selected', function (event) {
+            console.log("trying to set input box");
+            console.log(event)
+            hook(event.detail.answer.reply);
+        });
     }
 }
 

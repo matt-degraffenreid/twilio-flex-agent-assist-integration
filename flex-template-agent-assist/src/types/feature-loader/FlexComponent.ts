@@ -6,6 +6,7 @@ export enum FlexComponent {
   MainHeader = 'MainHeader',
   MessageBubble = 'MessageBubble',
   MessageListItem = 'MessageListItem',
+  MessageInputV2 = 'MessageInputV2',
   MessageInputActions = 'MessageInputActions',
   NoTasksCanvas = 'NoTasksCanvas',
   ParticipantCanvas = 'ParticipantCanvas',

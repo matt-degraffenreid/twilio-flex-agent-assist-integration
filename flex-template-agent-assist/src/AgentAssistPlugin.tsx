@@ -21,6 +21,7 @@ export default class AgentAssist extends FlexPlugin {
   init(flex: typeof Flex, manager: Flex.Manager) {
     loadJS('https://www.gstatic.com/agent-assist-ui-modules/common.js');
     loadJS('https://www.gstatic.com/agent-assist-ui-modules/v1/summarization.js');
+    loadJS('https://www.gstatic.com/agent-assist-ui-modules/v1.2/smart_reply.js');
     initFeatures(flex, manager);
   }
 }

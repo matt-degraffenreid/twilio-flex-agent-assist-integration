@@ -29,6 +29,11 @@ export const addHook = (flex: typeof Flex, manager: Flex.Manager, feature: strin
           hook.jsClientHook(flex, manager, conversation);
         });
       }
+      if (event === ConversationEvent.messageAdded) {
+        manager.conversationsClient.on(ConversationEvent.messageAdded, (message) => {
+          hook.jsClientHook(flex, manager, message);
+        });
+      }
       break;
     case FlexJsClient.voiceClient:
       if (event === VoiceEvent.incoming) {
