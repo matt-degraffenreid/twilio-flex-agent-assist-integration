@@ -4,6 +4,7 @@ export enum StringTemplates {
   ErrorFetching = 'CCAIAgentAssistErrorFetching',
   AgentAssistConnected = 'CCAIAgentAssistConnected',
   AgentAssistDisconnected = 'CCAIAgentAssistDisconnected',
+  ConversationSummarizationTab = 'CCAIConversationSummarizationTab'
 }
 
 export const stringHook = () => ({
@@ -12,5 +13,6 @@ export const stringHook = () => ({
     [StringTemplates.ErrorFetching]: 'There was an error starting Agent Assist. Please reload the page.',
     [StringTemplates.AgentAssistConnected]: 'Google CCAI Agent Assist connected',
     [StringTemplates.AgentAssistDisconnected]: 'Google CCAI Agent Assist disconnected',
+    [StringTemplates.ConversationSummarizationTab]: 'Conversation Summarization',
   },
 });
