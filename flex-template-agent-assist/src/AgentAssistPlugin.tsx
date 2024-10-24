@@ -23,7 +23,8 @@ export default class AgentAssist extends FlexPlugin {
       'https://www.gstatic.com/agent-assist-ui-modules/common.js', 
       'https://www.gstatic.com/agent-assist-ui-modules/v1/summarization.js',
       'https://www.gstatic.com/agent-assist-ui-modules/v1.2/smart_reply.js',
-      'https://www.gstatic.com/agent-assist-ui-modules/v2.8/knowledge_assist.js'
+      'https://www.gstatic.com/agent-assist-ui-modules/v2.8/knowledge_assist.js',
+      'https://www.gstatic.com/agent-assist-ui-modules/v1.0/agent_coaching.js'
     ], 'agent-assist');
     loadjs.ready('agent-assist', function () {
       initAgentAssistFeatures(flex, manager)

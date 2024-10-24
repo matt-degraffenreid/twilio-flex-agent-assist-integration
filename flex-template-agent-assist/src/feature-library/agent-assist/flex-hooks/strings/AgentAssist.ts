@@ -5,7 +5,8 @@ export enum StringTemplates {
   AgentAssistConnected = 'CCAIAgentAssistConnected',
   AgentAssistDisconnected = 'CCAIAgentAssistDisconnected',
   ConversationSummarizationTab = 'CCAIConversationSummarizationTab',
-  GenerativeKnowleadgeAssist = 'CCAIGenerativeKnowleadgeAssist'
+  GenerativeKnowleadgeAssist = 'CCAIGenerativeKnowleadgeAssist',
+  AgentCoaching = 'CCAIAgentCoaching',
 }
 
 export const stringHook = () => ({
@@ -16,5 +17,6 @@ export const stringHook = () => ({
     [StringTemplates.AgentAssistDisconnected]: 'Google CCAI Agent Assist disconnected',
     [StringTemplates.ConversationSummarizationTab]: 'Conversation Summarization',
     [StringTemplates.GenerativeKnowleadgeAssist]: 'Knowleadge Assist',
+    [StringTemplates.AgentCoaching]: 'Agent Coaching',
   },
 });

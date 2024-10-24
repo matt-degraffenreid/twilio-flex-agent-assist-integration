@@ -1,6 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
 
 import { GenerativeKnowleadgeAssist } from '../../custom-components/GenerativeKnowleadgeAssist/GenerativeKnowleadgeAssist';
+import { AgentCoaching } from '../../custom-components/AgentCoaching/AgentCoaching';
 import { FlexActionEvent } from '../../../../types/feature-loader';
 import { StringTemplates } from '../strings/AgentAssist';
 
@@ -21,8 +22,13 @@ export const actionHook = function addAgentAssistContainerToEnhancedCRM(flex: ty
             {
                 title: (manager.strings as any)[StringTemplates.GenerativeKnowleadgeAssist],
                 order: 0,
-                component: <GenerativeKnowleadgeAssist key="agent-assist-crm-container" />,
+                component: <GenerativeKnowleadgeAssist key="agent-assist-generative-knowleadge-assist" />,
             },
+            {
+                title: (manager.strings as any)[StringTemplates.AgentCoaching],
+                order: 0,
+                component: <AgentCoaching key="agent-assist-agent-coaching" />,
+            }
         ];
     });
 };
