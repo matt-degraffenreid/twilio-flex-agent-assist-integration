@@ -100,18 +100,21 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
-  const testCustomApiEndpoint = () => {
-    fetch(`${customApiEndpoint}/register`, {
-      method: 'POST',
-      headers: [['Authorization', agentToken]],
-    })
-    .then(response => {
-      if (!response.ok) {
-        // error coming back from server
-        setCustomApiEndpointConnectionStatus({hasError: true, statusMessage: "Error connecting to the custom api endpoint"})
+  const testCustomApiEndpoint = async () => {
+    try {
+      const response = await fetch(`${customApiEndpoint}/register`, {
+        method: 'POST',
+        headers: [['Authorization', agentToken]],
+      })
+      if (response.ok) {
+        setCustomApiEndpointConnectionStatus({ hasError: false, statusMessage: "Connecting to the custom api endpoint successful" })
+      } else {
+        setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
       }
-      setCustomApiEndpointConnectionStatus({hasError: false, statusMessage: "Connecting to the custom api endpoint successful"})
-    })
+    }
+    catch(error){
+      setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
+    }
   }
 
   return(
@@ -131,17 +134,21 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         </HelpText>}
       </FormControl>
       <FormControl key={'custom-api-endpoint-control'}>
-        <Label htmlFor={'custom-api-endpoint'}>Custom API Endpoint</Label>
-        <Input
-          id={'custom-api-endpoint'}
-          name={'custom-api-endpoint'}
-          type="text"
-          value={customApiEndpoint}
-          onChange={(e) => setCustomApiEndpoint(e.target.value)}
-        />
-        <Stack orientation="horizontal" spacing="space30">
-          <Button variant='primary' onClick={(e) => testCustomApiEndpoint()}>Test Connection</Button>
-          {customApiEndpointConnectionStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpointConnectionStatus.hasError ? "error" : "success"}>{customApiEndpointConnectionStatus.statusMessage}</HelpText>}
+        <Stack orientation="vertical" spacing="space30">
+          <>
+            <Label htmlFor={'custom-api-endpoint'}>Custom API Endpoint</Label>
+            <Input
+              id={'custom-api-endpoint'}
+              name={'custom-api-endpoint'}
+              type="text"
+              value={customApiEndpoint}
+              onChange={(e) => setCustomApiEndpoint(e.target.value)}
+            />
+          </>
+          <Stack orientation="horizontal" spacing="space30">
+            <Button variant='primary' onClick={(e) => testCustomApiEndpoint()}>Test Connection</Button>
+            {customApiEndpointConnectionStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpointConnectionStatus.hasError ? "error" : "success"}>{customApiEndpointConnectionStatus.statusMessage}</HelpText>}
+          </Stack>
         </Stack>
       </FormControl>
       <FormControl key={'agent-assist-feature-control'}>
