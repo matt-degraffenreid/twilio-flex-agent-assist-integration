@@ -10,6 +10,7 @@ import { Separator } from '@twilio-paste/core/separator';
 import { HelpText } from '@twilio-paste/core/help-text';
 import { Button } from '@twilio-paste/core/button';
 import { Stack } from '@twilio-paste/core/stack';
+import { Radio, RadioGroup } from '@twilio-paste/core/radio-group';
 
 interface OwnProps {
     feature: string;
@@ -18,7 +19,7 @@ interface OwnProps {
     setAllowSave: (featureName: string, allowSave: boolean) => void;
 }
 
-interface CustomApiEndpointConnectionStatus {
+interface EndpointConnectionStatus {
   hasError: boolean;
   statusMessage: string;
 }
@@ -31,7 +32,7 @@ interface ConversationProfile {
 export const AgentAssistAdmin = (props: OwnProps) => {
   const [conversationProfile, setConversationProfile] = useState<ConversationProfile>({ hasError: false, name: props.initialConfig?.conversation_profile ?? '' });
   const [customApiEndpoint, setCustomApiEndpoint] = useState(props.initialConfig?.scustom_api_endpoint ?? '');
-  const [customApiEndpointConnectionStatus, setCustomApiEndpointConnectionStatus] = useState<CustomApiEndpointConnectionStatus>({
+  const [customApiEndpointConnectionStatus, setCustomApiEndpointConnectionStatus] = useState<EndpointConnectionStatus>({
     hasError: false,
     statusMessage: ''
   });
@@ -43,6 +44,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);
   const [notifierServerEndpoint, setNotiferServerEndpoint] = useState(props.initialConfig?.notifier_server_endpoint ?? '');
+  const [notifierServerEndpointStatus, setNotifierServerEndpointStatus] = useState<EndpointConnectionStatus>({
+    hasError: false,
+    statusMessage: ''
+  });
   const [isTranscriptionEnabled, setIsTranscriptionEnabled] = useState(props.initialConfig?.transcription ?? false);
   const [isIntermediateTranscriptionEnabled, setIsIntermediateTranscriptionEnabled] = useState(props.initialConfig?.intermediate_transcription ?? false);
 
@@ -95,10 +100,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const conversationProfileHandler = (conversationProfile: string) => {
     const error = validateConversationProfile(conversationProfile);
     if(error){
-      setConversationProfile({ hasError: true, name: conversationProfile})
+      setConversationProfile({ hasError: false, name: conversationProfile })
     }
     else {
-      setConversationProfile({ hasError: false, name: conversationProfile })
+      setConversationProfile({ hasError: true, name: conversationProfile })
     }
   }
 
@@ -119,6 +124,23 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
+  const testNotifierServerEndpointEndpoint = async () => {
+    try {
+      const response = await fetch(`${customApiEndpoint}/register`, {
+        method: 'POST',
+        headers: [['Authorization', agentToken]],
+      })
+      if (response.ok) {
+        setCustomApiEndpointConnectionStatus({ hasError: false, statusMessage: "Connecting to the custom api endpoint successful" })
+      } else {
+        setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
+      }
+    }
+    catch (error) {
+      setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
+    }
+  }
+
   return(
     <>
       <FormSection>
@@ -134,6 +156,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             value={conversationProfile.name}
             hasError={conversationProfile.hasError}
             onChange={(e) => conversationProfileHandler(e.target.value)}
+            required
           />
           {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
             Enter a conversation profile with the format projects/PROJECT_ID/locations/global/conversationProfiles/PROFILE_ID
@@ -149,6 +172,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 type="text"
                 value={customApiEndpoint}
                 onChange={(e) => setCustomApiEndpoint(e.target.value)}
+                required
               />
             </>
             <Stack orientation="horizontal" spacing="space30">
@@ -208,40 +232,53 @@ export const AgentAssistAdmin = (props: OwnProps) => {
           </Switch>
         </FormControl>
         <FormControl key={'notifier-server-endpoint-control'}>
-          <Label htmlFor={'notifier-server-endpoint'}>Notifier Server Endpoint</Label>
-          <Input
-            id={'notifier-server-endpoint'}
-            name={'notifier-server-endpoint'}
-            type="text"
-            value={notifierServerEndpoint}
-            onChange={(e) => setNotiferServerEndpoint(e.target.value)}
-            disabled={!isVoiceEnabled}
-            required={isVoiceEnabled}
-          />
+          <Stack orientation="vertical" spacing="space60">
+            <>
+              <Label htmlFor={'notifier-server-endpoint'}>Notifier Server Endpoint</Label>
+              <Input
+                id={'notifier-server-endpoint'}
+                name={'notifier-server-endpoint'}
+                type="text"
+                value={notifierServerEndpoint}
+                onChange={(e) => setNotiferServerEndpoint(e.target.value)}
+                disabled={!isVoiceEnabled}
+                required={isVoiceEnabled}
+              />
+            </>
+            <Stack orientation="horizontal" spacing="space30">
+              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={notifierServerEndpoint === ''}>Test Connection</Button>
+              {notifierServerEndpointStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={notifierServerEndpointStatus.hasError ? "error" : "success"}>{notifierServerEndpointStatus.statusMessage}</HelpText>}
+            </Stack>
+          </Stack>
         </FormControl>
-        <FormControl key={'voice-features'}>
-          <SwitchGroup
-            name='voice-features'
-            legend={
-              <Text as="span" color="currentColor">
-                Adjust your voice feature settings
-              </Text>
-            }
+        <FormControl key={''}>
+          <Switch
+            checked={isTranscriptionEnabled}
+            onChange={(e) => setIsTranscriptionEnabled(e.target.checked)}
             disabled={!isVoiceEnabled}
           >
-            <Switch
-              checked={isTranscriptionEnabled}
-              onChange={(e) => setIsTranscriptionEnabled(e.target.checked)}
+            Enable Transcription
+          </Switch>
+        </FormControl>
+        <FormControl key={'voice-features'}>
+          <RadioGroup
+            legend="Transcription Version"
+            name="transcription-version"
+            disabled={!isTranscriptionEnabled}
+          >
+            <Radio
+              value="Live Transcription"
+              helpText="Support transcription after a user is done speaking."
             >
-              Transcription
-            </Switch>
-            <Switch
-              checked={isIntermediateTranscriptionEnabled}
-              onChange={(e) => setIsIntermediateTranscriptionEnabled(e.target.checked)}
+              Live Transcription
+            </Radio>
+            <Radio
+              value="Intermediate Transcription"
+              helpText="Supports transcription as a user is speaking."
             >
               Intermediate Transcription
-            </Switch>
-          </SwitchGroup>
+            </Radio>
+          </RadioGroup>
         </FormControl>
       </FormSection>
     </>
