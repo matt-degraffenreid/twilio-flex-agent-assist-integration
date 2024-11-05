@@ -213,7 +213,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 <RadioGroup
                   legend={<></>}
                   name="knowleadge-assist-version"
-                  disabled={!isProactiveGenerativeKnowleadgeAssistEnabled}
+                    disabled={!isProactiveGenerativeKnowleadgeAssistEnabled && (conversationProfile.hasError || conversationProfile.name === '')}
                 >
                   <Radio
                     value="Generative Knowleadge Assist"
@@ -235,7 +235,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               Knowleadge Assist
             </Switch>
             <Switch
-              checked={isSmartReplyEnabled && (conversationProfile.hasError || conversationProfile.name === '')}
+              checked={isSmartReplyEnabled}
               onChange={(e) => setIsSmartReplyEnabled(e.target.checked)}
               helpText={"Provide agents with suggested responses are calculated by a custom model that has been trained on your own conversation data."}
             >
