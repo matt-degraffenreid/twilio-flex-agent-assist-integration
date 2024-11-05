@@ -209,9 +209,9 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               helpText={
               <FormControl key={'knowleadge-assist-version'}>
                 <RadioGroup
-                  legend="Knowleadge Assist Version"
-                    name="knowleadge-assist-version"
-                    disabled={!isProactiveGenerativeKnowleadgeAssistEnabled}
+                  legend={<></>}
+                  name="knowleadge-assist-version"
+                  disabled={!isProactiveGenerativeKnowleadgeAssistEnabled}
                 >
                   <Radio
                     value="Generative Knowleadge Assist"
@@ -223,7 +223,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                       value="Proactive Generative Knowleadge Assist"
                     helpText=""
                   >
-                      Proactive Generative Knowleadge Assist
+                    Knowleadge Assist
                   </Radio>
                 </RadioGroup>
               </FormControl>}
