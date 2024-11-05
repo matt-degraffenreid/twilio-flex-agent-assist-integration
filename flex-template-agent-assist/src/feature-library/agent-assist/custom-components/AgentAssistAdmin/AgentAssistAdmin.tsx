@@ -194,12 +194,14 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             <Switch
               checked={isAgentCoachingEnabled}
               onChange={(e) => setIsAgentCoachingEnabled(e.target.checked)}
+              helpText={"Provide agents with suggestions for how they should respond during a customer service conversation."}
             >
               Agent Coaching
             </Switch>
             <Switch
               checked={isConversationSummaryEnabled}
               onChange={(e) => setIsConversationSummaryEnabled(e.target.checked)}
+              helpText={"Provide summaries to your agents during a conversation."}
             >
               Conversation Summarization
             </Switch>
@@ -215,24 +217,27 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 >
                   <Radio
                     value="Generative Knowleadge Assist"
-                    helpText=""
+                    helpText="Allow agents to search your knowleadge base for articles or FAQ documents."
+                    defaultChecked
                   >
                       Generative Knowleadge Assist
                   </Radio>
                   <Radio
-                      value="Proactive Generative Knowleadge Assist"
-                    helpText=""
+                    value="Proactive Generative Knowleadge Assist"
+                      helpText="Provides answers to your agent's questions based on information in documents you provide."
+                    defaultChecked
                   >
-                    Knowleadge Assist
+                      Proactive Generative Knowleadge Assist
                   </Radio>
                 </RadioGroup>
               </FormControl>}
             >
-              Proactive Generative Knowleadge Assist
+              Knowleadge Assist
             </Switch>
             <Switch
-              checked={isSmartReplyEnabled}
+              checked={isSmartReplyEnabled && (conversationProfile.hasError || conversationProfile.name === '')}
               onChange={(e) => setIsSmartReplyEnabled(e.target.checked)}
+              helpText={"Provide agents with suggested responses are calculated by a custom model that has been trained on your own conversation data."}
             >
               Smart Reply
             </Switch>
@@ -277,29 +282,32 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             checked={isTranscriptionEnabled}
             onChange={(e) => setIsTranscriptionEnabled(e.target.checked)}
             disabled={!isVoiceEnabled}
+            helpText={
+              <FormControl key={'voice-features'}>
+                <RadioGroup
+                  legend={<></>}
+                  name="transcription-version"
+                  disabled={!isTranscriptionEnabled && !isVoiceEnabled}
+                >
+                  <Radio
+                    value="Live Transcription"
+                    helpText="Support transcription after a user is done speaking."
+                    defaultChecked
+                  >
+                    Live Transcription
+                  </Radio>
+                  <Radio
+                    value="Intermediate Transcription"
+                    helpText="Supports transcription as a user is speaking."
+                  >
+                    Intermediate Transcription
+                  </Radio>
+                </RadioGroup>
+              </FormControl>
+            }
           >
             Enable Transcription
           </Switch>
-        </FormControl>
-        <FormControl key={'voice-features'}>
-          <RadioGroup
-            legend="Transcription Version"
-            name="transcription-version"
-            disabled={!isTranscriptionEnabled}
-          >
-            <Radio
-              value="Live Transcription"
-              helpText="Support transcription after a user is done speaking."
-            >
-              Live Transcription
-            </Radio>
-            <Radio
-              value="Intermediate Transcription"
-              helpText="Supports transcription as a user is speaking."
-            >
-              Intermediate Transcription
-            </Radio>
-          </RadioGroup>
         </FormControl>
       </FormSection>
     </>
