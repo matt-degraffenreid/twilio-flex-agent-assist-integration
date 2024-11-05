@@ -206,6 +206,27 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             <Switch
               checked={isProactiveGenerativeKnowleadgeAssistEnabled}
               onChange={(e) => setIsProactiveGenerativeKnowleadgeAssistEnabled(e.target.checked)}
+              helpText={
+              <FormControl key={'knowleadge-assist-version'}>
+                <RadioGroup
+                  legend="Knowleadge Assist Version"
+                    name="knowleadge-assist-version"
+                    disabled={!isProactiveGenerativeKnowleadgeAssistEnabled}
+                >
+                  <Radio
+                    value="Generative Knowleadge Assist"
+                    helpText=""
+                  >
+                      Generative Knowleadge Assist
+                  </Radio>
+                  <Radio
+                      value="Proactive Generative Knowleadge Assist"
+                    helpText=""
+                  >
+                      Proactive Generative Knowleadge Assist
+                  </Radio>
+                </RadioGroup>
+              </FormControl>}
             >
               Proactive Generative Knowleadge Assist
             </Switch>
