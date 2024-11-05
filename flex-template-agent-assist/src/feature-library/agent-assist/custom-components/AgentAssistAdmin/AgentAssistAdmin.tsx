@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useFlexSelector } from '@twilio/flex-ui';
 import { AppState } from '../../../../types/manager';
-import { FormControl } from '@twilio-paste/core/form';
+import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core/form';
 import { Label } from '@twilio-paste/core/label';
 import { Switch, SwitchGroup } from '@twilio-paste/core/switch';
 import { Input } from '@twilio-paste/core/input';
@@ -23,9 +23,13 @@ interface CustomApiEndpointConnectionStatus {
   statusMessage: string;
 }
 
+interface ConversationProfile {
+  hasError: boolean;
+  name: string;
+}
+
 export const AgentAssistAdmin = (props: OwnProps) => {
-  const [conversationProfile, setConversationProfile] = useState(props.initialConfig?.conversation_profile ?? '');
-  const [conversationProfileError, setConversationProfileError] = useState(false);
+  const [conversationProfile, setConversationProfile] = useState<ConversationProfile>({ hasError: false, name: props.initialConfig?.conversation_profile ?? '' });
   const [customApiEndpoint, setCustomApiEndpoint] = useState(props.initialConfig?.scustom_api_endpoint ?? '');
   const [customApiEndpointConnectionStatus, setCustomApiEndpointConnectionStatus] = useState<CustomApiEndpointConnectionStatus>({
     hasError: false,
@@ -56,7 +60,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     props.setModifiedConfig(props.feature, {
       ...props.initialConfig,
       custom_api_endpoint: customApiEndpoint,
-      conversation_profile: conversationProfile,
+      conversation_profile: conversationProfile.name,
       agent_coaching: isAgentCoachingEnabled,
       conversation_summary: isConversationSummaryEnabled,
       smart_reply: isSmartReplyEnabled,
@@ -91,12 +95,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const conversationProfileHandler = (conversationProfile: string) => {
     const error = validateConversationProfile(conversationProfile);
     if(error){
-      setConversationProfileError(true)
+      setConversationProfile({ hasError: true, name: conversationProfile})
     }
     else {
-      if(conversationProfileError)
-        setConversationProfileError(false)
-      setConversationProfile(conversationProfile);
+      setConversationProfile({ hasError: false, name: conversationProfile })
     }
   }
 
@@ -119,119 +121,129 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   return(
     <>
-      <FormControl key={'conversation-profile-control'}>
-        <Label htmlFor={'conversation-profile'}>Conversation Profile</Label>
-        <Input
-          id={'conversation-profile'}
-          name={'conversation-profile'}
-          type="text"
-          value={conversationProfile}
-          hasError={conversationProfileError}
-          onChange={(e) => conversationProfileHandler(e.target.value)}
-        />
-        {conversationProfileError && <HelpText variant="error" id={'conversation-profile-error'}>
-          Enter a conversation profile with the format projects/PROJECT_ID/locations/global/conversationProfiles/PROFILE_ID
-        </HelpText>}
-      </FormControl>
-      <FormControl key={'custom-api-endpoint-control'}>
-        <Stack orientation="vertical" spacing="space30">
-          <>
-            <Label htmlFor={'custom-api-endpoint'}>Custom API Endpoint</Label>
-            <Input
-              id={'custom-api-endpoint'}
-              name={'custom-api-endpoint'}
-              type="text"
-              value={customApiEndpoint}
-              onChange={(e) => setCustomApiEndpoint(e.target.value)}
-            />
-          </>
-          <Stack orientation="horizontal" spacing="space30">
-            <Button variant='primary' onClick={(e) => testCustomApiEndpoint()}>Test Connection</Button>
-            {customApiEndpointConnectionStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpointConnectionStatus.hasError ? "error" : "success"}>{customApiEndpointConnectionStatus.statusMessage}</HelpText>}
+      <FormSection>
+        <FormSectionHeading>
+          General Settings
+        </FormSectionHeading>
+        <FormControl key={'conversation-profile-control'}>
+          <Label htmlFor={'conversation-profile'}>Conversation Profile</Label>
+          <Input
+            id={'conversation-profile'}
+            name={'conversation-profile'}
+            type="text"
+            value={conversationProfile.name}
+            hasError={conversationProfile.hasError}
+            onChange={(e) => conversationProfileHandler(e.target.value)}
+          />
+          {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
+            Enter a conversation profile with the format projects/PROJECT_ID/locations/global/conversationProfiles/PROFILE_ID
+          </HelpText>}
+        </FormControl>
+        <FormControl key={'custom-api-endpoint-control'}>
+          <Stack orientation="vertical" spacing="space60">
+            <>
+              <Label htmlFor={'custom-api-endpoint'}>Custom API Endpoint</Label>
+              <Input
+                id={'custom-api-endpoint'}
+                name={'custom-api-endpoint'}
+                type="text"
+                value={customApiEndpoint}
+                onChange={(e) => setCustomApiEndpoint(e.target.value)}
+              />
+            </>
+            <Stack orientation="horizontal" spacing="space30">
+              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={customApiEndpoint === ''}>Test Connection</Button>
+              {customApiEndpointConnectionStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpointConnectionStatus.hasError ? "error" : "success"}>{customApiEndpointConnectionStatus.statusMessage}</HelpText>}
+            </Stack>
           </Stack>
-        </Stack>
-      </FormControl>
-      <FormControl key={'agent-assist-feature-control'}>
-        <SwitchGroup
-          name='voice-features'
-          legend={
-            <Text as="span" color="currentColor">
-              Enable agent assist features
-            </Text>
-          }
-          disabled={!validateConversationProfile(conversationProfile)}
-        >
-          <Switch
-            checked={isAgentCoachingEnabled}
-            onChange={(e) => setIsAgentCoachingEnabled(e.target.checked)}
+        </FormControl>
+        <FormControl key={'agent-assist-feature-control'}>
+          <SwitchGroup
+            name='agent-assist-features'
+            legend={
+              <Text as="span" color="currentColor">
+                Enable agent assist features
+              </Text>
+            }
+            disabled={conversationProfile.hasError || conversationProfile.name === ''}
           >
-            Agent Coaching
-          </Switch>
-          <Switch
-            checked={isConversationSummaryEnabled}
-            onChange={(e) => setIsConversationSummaryEnabled(e.target.checked)}
-          >
-            Conversation Summarization
-          </Switch>
-          <Switch
-            checked={isProactiveGenerativeKnowleadgeAssistEnabled}
-            onChange={(e) => setIsProactiveGenerativeKnowleadgeAssistEnabled(e.target.checked)}
-          >
-            Proactive Generative Knowleadge Assist
-          </Switch>
-          <Switch
-            checked={isSmartReplyEnabled}
-            onChange={(e) => setIsSmartReplyEnabled(e.target.checked)}
-          >
-            Smart Reply
-          </Switch>
-        </SwitchGroup>
-      </FormControl>
+            <Switch
+              checked={isAgentCoachingEnabled}
+              onChange={(e) => setIsAgentCoachingEnabled(e.target.checked)}
+            >
+              Agent Coaching
+            </Switch>
+            <Switch
+              checked={isConversationSummaryEnabled}
+              onChange={(e) => setIsConversationSummaryEnabled(e.target.checked)}
+            >
+              Conversation Summarization
+            </Switch>
+            <Switch
+              checked={isProactiveGenerativeKnowleadgeAssistEnabled}
+              onChange={(e) => setIsProactiveGenerativeKnowleadgeAssistEnabled(e.target.checked)}
+            >
+              Proactive Generative Knowleadge Assist
+            </Switch>
+            <Switch
+              checked={isSmartReplyEnabled}
+              onChange={(e) => setIsSmartReplyEnabled(e.target.checked)}
+            >
+              Smart Reply
+            </Switch>
+          </SwitchGroup>
+        </FormControl>
+      </FormSection>
       <Separator orientation="horizontal" />
-      <FormControl key={'voice-control'}>
-        <Switch
-          checked={isVoiceEnabled}
-          onChange={(e) => setIsVoiceEnabled(e.target.checked)}
-        >
-          Enable Voice
-        </Switch>
-      </FormControl>
-      <FormControl key={'notifier-server-endpoint-control'}>
-        <Label htmlFor={'notifier-server-endpoint'}>Notifier Server Endpoint</Label>
-        <Input
-          id={'notifier-server-endpoint'}
-          name={'notifier-server-endpoint'}
-          type="text"
-          value={notifierServerEndpoint}
-          onChange={(e) => setNotiferServerEndpoint(e.target.value)}
-          disabled={!isVoiceEnabled}
-          required={isVoiceEnabled}
-        />
-      </FormControl>
-      <FormControl key={'voice-features'}> 
-        <SwitchGroup 
-          name='voice-features'
-          legend={
-            <Text as="span" color="currentColor">
-              Adjust your voice feature settings
-            </Text>
-          }
-          disabled={!isVoiceEnabled}
-          >
+      <FormSection>
+        <FormSectionHeading>
+          Voice Settings
+        </FormSectionHeading>
+        <FormControl key={'voice-control'}>
           <Switch
-            checked={isTranscriptionEnabled}
-            onChange={(e) => setIsTranscriptionEnabled(e.target.checked)}
+            checked={isVoiceEnabled}
+            onChange={(e) => setIsVoiceEnabled(e.target.checked)}
           >
-            Transcription
+            Enable Voice
           </Switch>
-          <Switch
-            checked={isIntermediateTranscriptionEnabled}
-            onChange={(e) => setIsIntermediateTranscriptionEnabled(e.target.checked)}
+        </FormControl>
+        <FormControl key={'notifier-server-endpoint-control'}>
+          <Label htmlFor={'notifier-server-endpoint'}>Notifier Server Endpoint</Label>
+          <Input
+            id={'notifier-server-endpoint'}
+            name={'notifier-server-endpoint'}
+            type="text"
+            value={notifierServerEndpoint}
+            onChange={(e) => setNotiferServerEndpoint(e.target.value)}
+            disabled={!isVoiceEnabled}
+            required={isVoiceEnabled}
+          />
+        </FormControl>
+        <FormControl key={'voice-features'}>
+          <SwitchGroup
+            name='voice-features'
+            legend={
+              <Text as="span" color="currentColor">
+                Adjust your voice feature settings
+              </Text>
+            }
+            disabled={!isVoiceEnabled}
           >
-            Intermediate Transcription
-          </Switch>
-        </SwitchGroup>
-      </FormControl>
+            <Switch
+              checked={isTranscriptionEnabled}
+              onChange={(e) => setIsTranscriptionEnabled(e.target.checked)}
+            >
+              Transcription
+            </Switch>
+            <Switch
+              checked={isIntermediateTranscriptionEnabled}
+              onChange={(e) => setIsIntermediateTranscriptionEnabled(e.target.checked)}
+            >
+              Intermediate Transcription
+            </Switch>
+          </SwitchGroup>
+        </FormControl>
+      </FormSection>
     </>
   )
 }
