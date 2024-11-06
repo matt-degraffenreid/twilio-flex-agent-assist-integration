@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFlexSelector } from '@twilio/flex-ui';
 import { AppState } from '../../../../types/manager';
 import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core/form';
@@ -31,6 +31,20 @@ interface Endpoint {
 interface ConversationProfile {
   hasError: boolean;
   name: string;
+}
+
+interface TestConncetionButtonProps {
+  endpoint: Endpoint;
+  testConnectionFunction: any;
+}
+
+const TestConncetionButton = ({ endpoint, testConnectionFunction }: TestConncetionButtonProps): JSX.Element => {
+  return (
+    <Stack orientation="horizontal" spacing="space30">
+      <Button variant='primary' onClick={(e) => testConnectionFunction()} disabled={endpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
+      {endpoint.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={endpoint.hasError ? "error" : "success"}>{endpoint.statusMessage}</HelpText>}
+    </Stack>
+  )
 }
 
 export const AgentAssistAdmin = (props: OwnProps) => {
@@ -148,7 +162,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }
 
   //Todo: make this connect to the websocket
-  const testNotifierServerEndpointEndpoint = async () => {
+  const testNotifierServerEndpoint = async () => {
     try {
       const response = await fetch(`${customApiEndpoint}/register`, {
         method: 'POST',
@@ -228,10 +242,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required
               />
             </>
-            <Stack orientation="horizontal" spacing="space30">
-              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={customApiEndpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
-              {customApiEndpoint.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpoint.hasError ? "error" : "success"}>{customApiEndpoint.statusMessage}</HelpText>}
-            </Stack>
+            <TestConncetionButton endpoint={customApiEndpoint} testConnectionFunction={testCustomApiEndpoint}/>
           </Stack>
         </FormControl>
         <FormControl key={'agent-assist-feature-control'}>
@@ -321,10 +332,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required={isVoiceEnabled}
               />
             </>
-            <Stack orientation="horizontal" spacing="space30">
-              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={notifierServerEndpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
-              {notifierServerEndpoint.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={notifierServerEndpoint.hasError ? "error" : "success"}>{notifierServerEndpoint.statusMessage}</HelpText>}
-            </Stack>
+            <TestConncetionButton endpoint={notifierServerEndpoint} testConnectionFunction={testNotifierServerEndpoint} />
           </Stack>
         </FormControl>
         <FormControl key={'transcription-control'}>
