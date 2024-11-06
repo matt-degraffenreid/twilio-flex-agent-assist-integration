@@ -6,11 +6,11 @@ export interface Transcription {
   }
 }
 
-export interface KnowleadgeAssist {
+export interface KnowledgeAssist {
   enabled: boolean;
   version: {
-    generative_knowleadge_assist: boolean;
-    proactive_generative_knowleadge_assist: boolean;
+    generative_knowledge_assist: boolean;
+    proactive_generative_knowledge_assist: boolean;
   }
 }
 
@@ -20,7 +20,7 @@ export default interface AgentAssistConfig {
   conversation_profile: string;
   conversation_summary: boolean;
   agent_coaching: boolean;
-  knowleadge_assist: KnowleadgeAssist;
+  knowledge_assist: KnowledgeAssist;
   smart_reply: boolean;
   enable_voice: boolean;
   notifier_server_endpoint: string;

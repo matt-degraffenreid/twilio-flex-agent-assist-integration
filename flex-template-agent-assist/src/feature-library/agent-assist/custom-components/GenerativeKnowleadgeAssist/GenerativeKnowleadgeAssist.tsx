@@ -5,7 +5,7 @@ import { Actions, ITask } from '@twilio/flex-ui';
 import { useEffect } from 'react';
 import logger from '../../../../utils/logger';
 
-export const GenerativeKnowleadgeAssist = () => {
+export const GenerativeKnowledgeAssist = () => {
     return (
         <Box padding="space80" overflowY="auto" width={'100%'} background='white'>
             <Stack orientation="vertical" spacing="space60">

@@ -10,7 +10,7 @@ import { HelpText } from '@twilio-paste/core/help-text';
 import { Button } from '@twilio-paste/core/button';
 import { Stack } from '@twilio-paste/core/stack';
 import { Radio, RadioGroup } from '@twilio-paste/core/radio-group';
-import { KnowleadgeAssist, Transcription } from '../../types/ServiceConfiguration';
+import { KnowledgeAssist, Transcription } from '../../types/ServiceConfiguration';
 import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { templates } from '@twilio/flex-ui';
@@ -43,12 +43,12 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const [isAgentCoachingEnabled, setIsAgentCoachingEnabled] = useState(props.initialConfig?.agent_coaching ?? true);
   const [isConversationSummaryEnabled, setIsConversationSummaryEnabled] = useState(props.initialConfig?.conversation_summary ?? true);
-  const [isKnowleadgeAssistEnabled, setIsKnowleadgeAssistEnabled] = useState<KnowleadgeAssist>(props.initialConfig?.knowleadge_assist ?? 
+  const [isKnowledgeAssistEnabled, setIsKnowledgeAssistEnabled] = useState<KnowledgeAssist>(props.initialConfig?.knowledge_assist ?? 
     {
       enabled: true,
       version: {
-        generative_knowleadge_assist: false,
-        proactive_generative_knowleadge_assist: true
+        generative_knowledge_assist: false,
+        proactive_generative_knowledge_assist: true
       }
     });
   const [isSmartReplyEnabled, setIsSmartReplyEnabled] = useState(props.initialConfig?.smart_reply ?? true);
@@ -72,17 +72,17 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
 
-  const knowleadgeAssistOptions = [
+  const knowledgeAssistOptions = [
     {
-      value: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist](),
-      helpText: templates[AdminUiStringTemplates.ProactiveGenerativeKnowleadgeAssistHelperText](),
-      label: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist](),
+      value: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowledgeAssist](),
+      helpText: templates[AdminUiStringTemplates.ProactiveGenerativeKnowledgeAssistHelperText](),
+      label: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowledgeAssist](),
       defaultChecked: true
     },
     {
-      value: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist](),
-      helpText: templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText](),
-      label: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist](),
+      value: templates[AgentAssistStringTemplates.GenerativeKnowledgeAssist](),
+      helpText: templates[AdminUiStringTemplates.GenerativeKnowledgeAssistHelperText](),
+      label: templates[AgentAssistStringTemplates.GenerativeKnowledgeAssist](),
     }
   ]
 
@@ -104,19 +104,19 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     {
       checked: isAgentCoachingEnabled,
       onChange: setIsAgentCoachingEnabled,
-      HelpText: templates[AdminUiStringTemplates.AgentCoachingHelperText](),
+      helpText: templates[AdminUiStringTemplates.AgentCoachingHelperText](),
       label: templates[AgentAssistStringTemplates.AgentCoaching]()
     },
     {
       checked: isConversationSummaryEnabled,
       onChange: setIsConversationSummaryEnabled,
-      HelpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText](),
+      helpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText](),
       label: templates[AgentAssistStringTemplates.ConversationSummarization]()
     },
     {
       checked: isSmartReplyEnabled,
       onChange: setIsSmartReplyEnabled,
-      HelpText: templates[AdminUiStringTemplates.SmartReplyHelperText](),
+      helpText: templates[AdminUiStringTemplates.SmartReplyHelperText](),
       label: templates[AgentAssistStringTemplates.SmartReply]()
     }
   ]
@@ -132,7 +132,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       ...props.initialConfig,
       custom_api_endpoint: customApiEndpoint.url,
       conversation_profile: conversationProfile.name,
-      knowleadge_assist: isKnowleadgeAssistEnabled,
+      knowledge_assist: isKnowledgeAssistEnabled,
       agent_coaching: isAgentCoachingEnabled,
       conversation_summary: isConversationSummaryEnabled,
       smart_reply: isSmartReplyEnabled,
@@ -154,7 +154,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     notifierServerEndpoint, 
     isTranscriptionEnabled, 
     isDebugEnabled,
-    isKnowleadgeAssistEnabled
+    isKnowledgeAssistEnabled
   ]);
 
   const validateConversationProfile = (conversationProfile: string): boolean => {
@@ -211,26 +211,26 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
-  const knowleadgeAssistVersionHandler = (version: string) => {
+  const knowledgeAssistVersionHandler = (version: string) => {
     switch(version) {
-      case templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist](): 
-        setIsKnowleadgeAssistEnabled(
+      case templates[AgentAssistStringTemplates.GenerativeKnowledgeAssist](): 
+        setIsKnowledgeAssistEnabled(
           {
-            ...isKnowleadgeAssistEnabled, 
+            ...isKnowledgeAssistEnabled, 
             version: {
-              generative_knowleadge_assist: true,
-              proactive_generative_knowleadge_assist: false
+              generative_knowledge_assist: true,
+              proactive_generative_knowledge_assist: false
             }
           })
         break;
-      case templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]():
+      case templates[AgentAssistStringTemplates.ProactiveGenerativeKnowledgeAssist]():
       default:
-        setIsKnowleadgeAssistEnabled(
+        setIsKnowledgeAssistEnabled(
           {
-            ...isKnowleadgeAssistEnabled, 
+            ...isKnowledgeAssistEnabled, 
             version: {
-              generative_knowleadge_assist: false,
-              proactive_generative_knowleadge_assist: true
+              generative_knowledge_assist: false,
+              proactive_generative_knowledge_assist: true
             }
           })
         break;
@@ -281,7 +281,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             required
           />
           {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
-            {templates[AdminUiStringTemplates.ConversationProfileErrorText]}
+            {templates[AdminUiStringTemplates.ConversationProfileErrorText]()}
           </HelpText>}
         </FormControl>
         <FormControl key={'custom-api-endpoint-control'}>
@@ -319,12 +319,12 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               })
             }
             <SwitchWithOptions
-              feature={isKnowleadgeAssistEnabled}
-              featureChangeHandler={setIsKnowleadgeAssistEnabled}
-              featureOptions={knowleadgeAssistOptions}
-              featureLabel={templates[AgentAssistStringTemplates.KnowleadgeAssist]()}
-              optionsChangeHandler={knowleadgeAssistVersionHandler}
-              optionsDisabled={!isKnowleadgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
+              feature={isKnowledgeAssistEnabled}
+              featureChangeHandler={setIsKnowledgeAssistEnabled}
+              featureOptions={knowledgeAssistOptions}
+              featureLabel={templates[AgentAssistStringTemplates.KnowledgeAssist]()}
+              optionsChangeHandler={knowledgeAssistVersionHandler}
+              optionsDisabled={!isKnowledgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
             />
           </SwitchGroup>
         </FormControl>
