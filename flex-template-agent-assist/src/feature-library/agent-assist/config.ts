@@ -7,12 +7,23 @@ const {
   conversation_profile = '',
   conversation_summary = true,
   agent_coaching = true,
-  proactive_generative_knowleadge_assist = true,
+  knowleadge_assist = {
+    enabled: true,
+    version: {
+        generative_knowleadge_assist: false,
+        proactive_generative_knowleadge_assist: true
+    }
+  },
   smart_reply = true,
   enable_voice = false,
   notifier_server_endpoint = '',
-  transcription = false,
-  intermediate_transcription = false,
+  transcription = {
+    enabled: true,
+    version: {
+        live_transcription: true,
+        intermediate_transcription: false
+    }
+  },
   debug = false,
 } = (getFeatureFlags()?.features?.agent_assist as AgentAssistConfig) || {};
 
@@ -29,15 +40,23 @@ export const getConversationProfile = () => {
 };
 
 export const isConversationSummaryEnabled = () => {
-  return conversation_summary;
+  return isFeatureEnabled() && conversation_summary;
 };
 
 export const isAgentCoachingEnabled = () => {
-  return agent_coaching;
+  return isFeatureEnabled() && agent_coaching;
+};
+
+export const isKnowleadgeAssistEnabled = () => {
+  return isFeatureEnabled() && knowleadge_assist.enabled 
+}
+
+export const isGKAEnabled = () => {
+  return isKnowleadgeAssistEnabled() && knowleadge_assist.version.generative_knowleadge_assist;
 };
 
 export const isPGKAEnabled = () => {
-  return proactive_generative_knowleadge_assist;
+  return isKnowleadgeAssistEnabled() && knowleadge_assist.version.proactive_generative_knowleadge_assist;
 };
 
 export const isSmartReplyEnabled = () => {
@@ -45,7 +64,7 @@ export const isSmartReplyEnabled = () => {
 };
 
 export const isVoiceEnabled = () => {
-  return enable_voice;
+  return isFeatureEnabled() && enable_voice;
 };
 
 export const getNotifierServerEndpoint = () => {
@@ -53,11 +72,15 @@ export const getNotifierServerEndpoint = () => {
 };
 
 export const isTranscriptionEnabled = () => {
-  return transcription;
+  return  isVoiceEnabled() && transcription.enabled;
+}
+
+export const isLiveTranscriptionEnabled = () => {
+  return isTranscriptionEnabled() && transcription.version.live_transcription;
 };
 
 export const isIntermediateTranscriptionEnabled = () => {
-  return intermediate_transcription;
+  return isTranscriptionEnabled() && transcription.version.intermediate_transcription;
 };
 
 export const isDebugEnabled = () => {

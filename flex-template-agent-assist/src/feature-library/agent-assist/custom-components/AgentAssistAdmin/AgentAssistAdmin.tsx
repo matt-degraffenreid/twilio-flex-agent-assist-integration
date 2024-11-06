@@ -11,6 +11,7 @@ import { HelpText } from '@twilio-paste/core/help-text';
 import { Button } from '@twilio-paste/core/button';
 import { Stack } from '@twilio-paste/core/stack';
 import { Radio, RadioGroup } from '@twilio-paste/core/radio-group';
+import { KnowleadgeAssist, Transcription } from '../../types/ServiceConfiguration';
 
 interface OwnProps {
     feature: string;
@@ -39,7 +40,14 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const [isAgentCoachingEnabled, setIsAgentCoachingEnabled] = useState(props.initialConfig?.agent_coaching ?? true);
   const [isConversationSummaryEnabled, setIsConversationSummaryEnabled] = useState(props.initialConfig?.conversation_summary ?? true);
-  const [isProactiveGenerativeKnowleadgeAssistEnabled, setIsProactiveGenerativeKnowleadgeAssistEnabled] = useState(props.initialConfig?.proactive_generative_knowleadge_assist ?? true);
+  const [isKnowleadgeAssistEnabled, setIsKnowleadgeAssistEnabled] = useState<KnowleadgeAssist>(props.initialConfig?.knowleadge_assist ?? 
+    {
+      enabled: true,
+      version: {
+        generative_knowleadge_assist: false,
+        proactive_generative_knowleadge_assist: true
+      }
+    });
   const [isSmartReplyEnabled, setIsSmartReplyEnabled] = useState(props.initialConfig?.smart_reply ?? true);
 
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);
@@ -48,8 +56,14 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     hasError: false,
     statusMessage: ''
   });
-  const [isTranscriptionEnabled, setIsTranscriptionEnabled] = useState(props.initialConfig?.transcription ?? false);
-  const [isIntermediateTranscriptionEnabled, setIsIntermediateTranscriptionEnabled] = useState(props.initialConfig?.intermediate_transcription ?? false);
+  const [isTranscriptionEnabled, setIsTranscriptionEnabled] = useState<Transcription>(props.initialConfig?.transcription ?? 
+    {
+      enabled: false,
+      version: {
+        live_transcription: true,
+        intermediate_transcription: false
+      }
+    });
 
   const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
 
@@ -66,14 +80,13 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       ...props.initialConfig,
       custom_api_endpoint: customApiEndpoint,
       conversation_profile: conversationProfile.name,
+      knowleadge_assist: isKnowleadgeAssistEnabled,
       agent_coaching: isAgentCoachingEnabled,
       conversation_summary: isConversationSummaryEnabled,
       smart_reply: isSmartReplyEnabled,
-      proactive_generative_knowleadge_assist: isProactiveGenerativeKnowleadgeAssistEnabled,
+      transcription: isTranscriptionEnabled,
       enable_voice: isVoiceEnabled,
       notifier_server_endpoint: notifierServerEndpoint,
-      transcription: isTranscriptionEnabled,
-      intermediate_transcription: isIntermediateTranscriptionEnabled,
       debug: isDebugEnabled
       },
     );
@@ -84,12 +97,12 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     isAgentCoachingEnabled, 
     isConversationSummaryEnabled,
     isSmartReplyEnabled,
-    isProactiveGenerativeKnowleadgeAssistEnabled, 
+    isTranscriptionEnabled,
     isVoiceEnabled, 
     notifierServerEndpoint, 
     isTranscriptionEnabled, 
-    isIntermediateTranscriptionEnabled, 
-    isDebugEnabled 
+    isDebugEnabled,
+    isKnowleadgeAssistEnabled
   ]);
 
   const validateConversationProfile = (conversationProfile: string): boolean => {
@@ -148,6 +161,31 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
+  const knowleadgeAssistVersionHandler = (version: string) => {
+    switch(version) {
+      case "Generative Knowleadge Assist": 
+        setIsKnowleadgeAssistEnabled(
+          {
+            ...isKnowleadgeAssistEnabled, 
+            version: {
+              generative_knowleadge_assist: true,
+              proactive_generative_knowleadge_assist: false
+            }
+          })
+        break;
+      case "Proactive Generative Knowleadge Assist":
+      default:
+        setIsKnowleadgeAssistEnabled(
+          {
+            ...isKnowleadgeAssistEnabled, 
+            version: {
+              generative_knowleadge_assist: false,
+              proactive_generative_knowleadge_assist: true
+            }
+          })
+        break;
+    }
+  }
   return(
     <>
       <FormSection>
@@ -166,9 +204,15 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             required
           />
           {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
-            Enter a conversation profile with the format projects/PROJECT_ID/locations/global/conversationProfiles/PROFILE_ID
+            Enter a conversation profile with the format projects/PROJECT_ID/locations/LOCATION/conversationProfiles/PROFILE_ID
           </HelpText>}
         </FormControl>
+      </FormSection>
+      <Separator orientation="horizontal" />
+      <FormSection>
+        <FormSectionHeading>
+          Agent Assist Features
+        </FormSectionHeading>
         <FormControl key={'custom-api-endpoint-control'}>
           <Stack orientation="vertical" spacing="space60">
             <>
@@ -191,11 +235,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         <FormControl key={'agent-assist-feature-control'}>
           <SwitchGroup
             name='agent-assist-features'
-            legend={
-              <Text as="span" color="currentColor">
-                Enable agent assist features
-              </Text>
-            }
+            legend={<></>}
             disabled={conversationProfile.hasError || conversationProfile.name === ''}
           >
             <Switch
@@ -213,14 +253,15 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               Conversation Summarization
             </Switch>
             <Switch
-              checked={isProactiveGenerativeKnowleadgeAssistEnabled}
-              onChange={(e) => setIsProactiveGenerativeKnowleadgeAssistEnabled(e.target.checked)}
+              checked={isKnowleadgeAssistEnabled.enabled}
+              onChange={(e) => setIsKnowleadgeAssistEnabled({...isKnowleadgeAssistEnabled, enabled: e.target.checked})}
               helpText={
               <FormControl key={'knowleadge-assist-version'}>
                 <RadioGroup
                   legend={<></>}
                   name="knowleadge-assist-version"
-                    disabled={!isProactiveGenerativeKnowleadgeAssistEnabled && (conversationProfile.hasError || conversationProfile.name === '')}
+                  disabled={!isKnowleadgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
+                  onChange={(e) =>  knowleadgeAssistVersionHandler(e)}
                 >
                   <Radio
                     value="Generative Knowleadge Assist"
@@ -231,7 +272,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                   </Radio>
                   <Radio
                     value="Proactive Generative Knowleadge Assist"
-                      helpText="Provides answers to your agent's questions based on information in documents you provide."
+                    helpText="Provides answers to your agent's questions based on information in documents you provide."
                     defaultChecked
                   >
                       Proactive Generative Knowleadge Assist
@@ -284,17 +325,17 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             </Stack>
           </Stack>
         </FormControl>
-        <FormControl key={''}>
+        <FormControl key={'transcription-control'}>
           <Switch
-            checked={isTranscriptionEnabled}
-            onChange={(e) => setIsTranscriptionEnabled(e.target.checked)}
+            checked={isTranscriptionEnabled.enabled}
+            onChange={(e) => setIsTranscriptionEnabled({ ...isTranscriptionEnabled, enabled: e.target.checked })}
             disabled={!isVoiceEnabled}
             helpText={
               <FormControl key={'voice-features'}>
                 <RadioGroup
                   legend={<></>}
                   name="transcription-version"
-                  disabled={!isTranscriptionEnabled && !isVoiceEnabled}
+                  disabled={!isTranscriptionEnabled.enabled && !isVoiceEnabled}
                 >
                   <Radio
                     value="Live Transcription"
