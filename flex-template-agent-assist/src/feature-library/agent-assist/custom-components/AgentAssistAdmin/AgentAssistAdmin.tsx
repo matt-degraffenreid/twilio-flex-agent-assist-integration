@@ -14,7 +14,7 @@ import { KnowleadgeAssist, Transcription } from '../../types/ServiceConfiguratio
 import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { templates } from '@twilio/flex-ui';
-
+import { TestConnectionButton, SwitchWithOptions } from './AgentAssistAdminComponents';
 interface OwnProps {
     feature: string;
     initialConfig: any;
@@ -31,20 +31,6 @@ interface Endpoint {
 interface ConversationProfile {
   hasError: boolean;
   name: string;
-}
-
-interface TestConncetionButtonProps {
-  endpoint: Endpoint;
-  testConnectionFunction: any;
-}
-
-const TestConncetionButton = ({ endpoint, testConnectionFunction }: TestConncetionButtonProps): JSX.Element => {
-  return (
-    <Stack orientation="horizontal" spacing="space30">
-      <Button variant='primary' onClick={(e) => testConnectionFunction()} disabled={endpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
-      {endpoint.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={endpoint.hasError ? "error" : "success"}>{endpoint.statusMessage}</HelpText>}
-    </Stack>
-  )
 }
 
 export const AgentAssistAdmin = (props: OwnProps) => {
@@ -85,6 +71,55 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
 
   const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
+
+  const knowleadgeAssistOptions = [
+    {
+      value: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist],
+      helpText: templates[AdminUiStringTemplates.ProactiveGenerativeKnowleadgeAssistHelperText],
+      label: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist],
+      defaultChecked: true
+    },
+    {
+      value: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist],
+      helpText: templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText],
+      label: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist],
+    }
+  ]
+
+  const transcriptionOptions = [
+    {
+      value: templates[AgentAssistStringTemplates.LiveTranscription],
+      helpText: templates[AdminUiStringTemplates.LiveTranscriptionHelperText],
+      label: templates[AgentAssistStringTemplates.LiveTranscription],
+      defaultChecked: true
+    },
+    {
+      value: templates[AgentAssistStringTemplates.IntermediateTranscription],
+      helpText: templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText],
+      label: templates[AgentAssistStringTemplates.IntermediateTranscription],
+    }
+  ]
+
+  const agentAssistFeatures = [
+    {
+      checked: isAgentCoachingEnabled,
+      onChange: setIsAgentCoachingEnabled,
+      HelpText: templates[AdminUiStringTemplates.AgentCoachingHelperText],
+      label: templates[AgentAssistStringTemplates.AgentCoaching]
+    },
+    {
+      checked: isConversationSummaryEnabled,
+      onChange: setIsConversationSummaryEnabled,
+      HelpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText],
+      label: templates[AgentAssistStringTemplates.ConversationSummarization]
+    },
+    {
+      checked: isSmartReplyEnabled,
+      onChange: setIsSmartReplyEnabled,
+      HelpText: templates[AdminUiStringTemplates.SmartReplyHelperText],
+      label: templates[AgentAssistStringTemplates.SmartReply]
+    }
+  ]
 
     //TODO: put condition for allowing a save to go through
   const setAllowSave = () => {
@@ -202,6 +237,32 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
+  const transcriptionVersionHandler = (version: string) => {
+    switch (version) {
+      case templates[AgentAssistStringTemplates.LiveTranscription]:
+        setIsTranscriptionEnabled(
+          {
+            ...isTranscriptionEnabled,
+            version: {
+              live_transcription: true,
+              intermediate_transcription: false
+            }
+          })
+        break;
+      case templates[AgentAssistStringTemplates.IntermediateTranscription]:
+      default:
+        setIsTranscriptionEnabled(
+          {
+            ...isTranscriptionEnabled,
+            version: {
+              live_transcription: false,
+              intermediate_transcription: true
+            }
+          })
+        break;
+    }
+  }
+
   return(
     <>
       <FormSection>
@@ -242,7 +303,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required
               />
             </>
-            <TestConncetionButton endpoint={customApiEndpoint} testConnectionFunction={testCustomApiEndpoint}/>
+            <TestConnectionButton endpoint={customApiEndpoint} testConnectionFunction={testCustomApiEndpoint}/>
           </Stack>
         </FormControl>
         <FormControl key={'agent-assist-feature-control'}>
@@ -251,57 +312,20 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             legend={<></>}
             disabled={conversationProfile.hasError || conversationProfile.name === ''}
           >
-            <Switch
-              checked={isAgentCoachingEnabled}
-              onChange={(e) => setIsAgentCoachingEnabled(e.target.checked)}
-              helpText={templates[AdminUiStringTemplates.AgentCoachingHelperText]}
-            >
-              {templates[AgentAssistStringTemplates.AgentCoaching]}
-            </Switch>
-            <Switch
-              checked={isConversationSummaryEnabled}
-              onChange={(e) => setIsConversationSummaryEnabled(e.target.checked)}
-              helpText={templates[AdminUiStringTemplates.ConversationSummarizationHelperText]}
-            >
-              {templates[AgentAssistStringTemplates.ConversationSummarization]}
-            </Switch>
-            <Switch
-              checked={isKnowleadgeAssistEnabled.enabled}
-              onChange={(e) => setIsKnowleadgeAssistEnabled({...isKnowleadgeAssistEnabled, enabled: e.target.checked})}
-              helpText={
-              <FormControl key={'knowleadge-assist-version'}>
-                <RadioGroup
-                  legend={<></>}
-                  name="knowleadge-assist-version"
-                  disabled={!isKnowleadgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
-                  onChange={(e) =>  knowleadgeAssistVersionHandler(e)}
-                >
-                  <Radio
-                    value={templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist]}
-                      helpText={templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText]}
-                    defaultChecked
-                  >
-                      {templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist]}
-                  </Radio>
-                  <Radio
-                      value={templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]}
-                      helpText={templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText]}
-                    defaultChecked
-                  >
-                      {templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]}
-                  </Radio>
-                </RadioGroup>
-              </FormControl>}
-            >
-              {templates[AgentAssistStringTemplates.KnowleadgeAssist]}
-            </Switch>
-            <Switch
-              checked={isSmartReplyEnabled}
-              onChange={(e) => setIsSmartReplyEnabled(e.target.checked)}
-              helpText={templates[AdminUiStringTemplates.SmartReplyHelperText]}
-            >
-              {templates[AgentAssistStringTemplates.SmartReply]}
-            </Switch>
+            {
+              agentAssistFeatures.map(feature => {
+                const {label, ...props} = feature;
+                return (<Switch {...props}>{label}</Switch>)
+              })
+            }
+            <SwitchWithOptions
+              feature={isKnowleadgeAssistEnabled}
+              featureChangeHandler={setIsKnowleadgeAssistEnabled}
+              featureOptions={knowleadgeAssistOptions}
+              featureLabel={templates[AgentAssistStringTemplates.KnowleadgeAssist]}
+              optionsChangeHandler={knowleadgeAssistVersionHandler}
+              optionsDisabled={!isKnowleadgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
+            />
           </SwitchGroup>
         </FormControl>
       </FormSection>
@@ -332,40 +356,18 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required={isVoiceEnabled}
               />
             </>
-            <TestConncetionButton endpoint={notifierServerEndpoint} testConnectionFunction={testNotifierServerEndpoint} />
+            <TestConnectionButton endpoint={notifierServerEndpoint} testConnectionFunction={testNotifierServerEndpoint} />
           </Stack>
         </FormControl>
         <FormControl key={'transcription-control'}>
-          <Switch
-            checked={isTranscriptionEnabled.enabled}
-            onChange={(e) => setIsTranscriptionEnabled({ ...isTranscriptionEnabled, enabled: e.target.checked })}
-            disabled={!isVoiceEnabled}
-            helpText={
-              <FormControl key={'voice-features'}>
-                <RadioGroup
-                  legend={<></>}
-                  name="transcription-version"
-                  disabled={!isTranscriptionEnabled.enabled && !isVoiceEnabled}
-                >
-                  <Radio
-                    value={templates[AgentAssistStringTemplates.LiveTranscription]}
-                    helpText={templates[AdminUiStringTemplates.LiveTranscriptionHelperText]}
-                    defaultChecked
-                  >
-                    {templates[AgentAssistStringTemplates.LiveTranscription]}
-                  </Radio>
-                  <Radio
-                    value={templates[AgentAssistStringTemplates.IntermediateTranscription]}
-                    helpText={templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText]}
-                  >
-                    {templates[AgentAssistStringTemplates.IntermediateTranscription]}
-                  </Radio>
-                </RadioGroup>
-              </FormControl>
-            }
-          >
-            {templates[AgentAssistStringTemplates.Transcription]}
-          </Switch>
+          <SwitchWithOptions
+            feature={isTranscriptionEnabled}
+            featureChangeHandler={setIsTranscriptionEnabled}
+            featureOptions={transcriptionOptions}
+            featureLabel={templates[AgentAssistStringTemplates.Transcription]}
+            optionsChangeHandler={transcriptionVersionHandler}
+            optionsDisabled={!isTranscriptionEnabled.enabled && !isVoiceEnabled}
+          />
         </FormControl>
       </FormSection>
     </>
