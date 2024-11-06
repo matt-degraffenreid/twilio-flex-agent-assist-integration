@@ -107,6 +107,13 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
+  const customApiEndpointHandler = (customApiEndpoint: string) => {
+    const protocalRegExp = new RegExp("^(http|https):\/\/");
+    const hasProtocal = protocalRegExp.test(customApiEndpoint);
+    const url = hasProtocal ? "" : "https://" + customApiEndpoint;
+    setCustomApiEndpoint(url);
+  }
+
   const testCustomApiEndpoint = async () => {
     try {
       const response = await fetch(`${customApiEndpoint}/register`, {
@@ -171,7 +178,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 name={'custom-api-endpoint'}
                 type="text"
                 value={customApiEndpoint}
-                onChange={(e) => setCustomApiEndpoint(e.target.value)}
+                onChange={(e) => customApiEndpointHandler(e.target.value)}
                 required
               />
             </>
@@ -313,4 +320,3 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     </>
   )
 }
-
