@@ -5,13 +5,15 @@ import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core
 import { Label } from '@twilio-paste/core/label';
 import { Switch, SwitchGroup } from '@twilio-paste/core/switch';
 import { Input } from '@twilio-paste/core/input';
-import { Text } from '@twilio-paste/core/text';
 import { Separator } from '@twilio-paste/core/separator';
 import { HelpText } from '@twilio-paste/core/help-text';
 import { Button } from '@twilio-paste/core/button';
 import { Stack } from '@twilio-paste/core/stack';
 import { Radio, RadioGroup } from '@twilio-paste/core/radio-group';
 import { KnowleadgeAssist, Transcription } from '../../types/ServiceConfiguration';
+import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strings/AgentAssistAdmin';
+import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
+import { templates } from '@twilio/flex-ui';
 
 interface OwnProps {
     feature: string;
@@ -20,7 +22,8 @@ interface OwnProps {
     setAllowSave: (featureName: string, allowSave: boolean) => void;
 }
 
-interface EndpointConnectionStatus {
+interface Endpoint {
+  url: string,
   hasError: boolean;
   statusMessage: string;
 }
@@ -32,8 +35,8 @@ interface ConversationProfile {
 
 export const AgentAssistAdmin = (props: OwnProps) => {
   const [conversationProfile, setConversationProfile] = useState<ConversationProfile>({ hasError: false, name: props.initialConfig?.conversation_profile ?? '' });
-  const [customApiEndpoint, setCustomApiEndpoint] = useState(props.initialConfig?.scustom_api_endpoint ?? '');
-  const [customApiEndpointConnectionStatus, setCustomApiEndpointConnectionStatus] = useState<EndpointConnectionStatus>({
+  const [customApiEndpoint, setCustomApiEndpoint] = useState<Endpoint>({
+    url: props.initialConfig?.custom_api_endpoint ?? '',
     hasError: false,
     statusMessage: ''
   });
@@ -51,8 +54,8 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const [isSmartReplyEnabled, setIsSmartReplyEnabled] = useState(props.initialConfig?.smart_reply ?? true);
 
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);
-  const [notifierServerEndpoint, setNotiferServerEndpoint] = useState(props.initialConfig?.notifier_server_endpoint ?? '');
-  const [notifierServerEndpointStatus, setNotifierServerEndpointStatus] = useState<EndpointConnectionStatus>({
+  const [notifierServerEndpoint, setNotiferServerEndpoint] = useState<Endpoint>({
+    url: props.initialConfig?.notifier_server_endpoint ?? '',
     hasError: false,
     statusMessage: ''
   });
@@ -78,7 +81,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     setAllowSave();
     props.setModifiedConfig(props.feature, {
       ...props.initialConfig,
-      custom_api_endpoint: customApiEndpoint,
+      custom_api_endpoint: customApiEndpoint.url,
       conversation_profile: conversationProfile.name,
       knowleadge_assist: isKnowleadgeAssistEnabled,
       agent_coaching: isAgentCoachingEnabled,
@@ -86,7 +89,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       smart_reply: isSmartReplyEnabled,
       transcription: isTranscriptionEnabled,
       enable_voice: isVoiceEnabled,
-      notifier_server_endpoint: notifierServerEndpoint,
+      notifier_server_endpoint: notifierServerEndpoint.url,
       debug: isDebugEnabled
       },
     );
@@ -120,11 +123,11 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
-  const customApiEndpointHandler = (customApiEndpoint: string) => {
+  const customApiEndpointHandler = (endpoint: string) => {
     const protocalRegExp = new RegExp("^(http|https):\/\/");
-    const hasProtocal = protocalRegExp.test(customApiEndpoint);
-    const url = hasProtocal ? "" : "https://" + customApiEndpoint;
-    setCustomApiEndpoint(url);
+    const hasProtocal = protocalRegExp.test(endpoint);
+    const url = hasProtocal ? "" : "https://" + endpoint;
+    setCustomApiEndpoint({...customApiEndpoint, url});
   }
 
   const testCustomApiEndpoint = async () => {
@@ -134,16 +137,17 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         headers: [['Authorization', agentToken]],
       })
       if (response.ok) {
-        setCustomApiEndpointConnectionStatus({ hasError: false, statusMessage: "Connecting to the custom api endpoint successful" })
+        setCustomApiEndpoint({ ...customApiEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]})
       } else {
-        setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
+        setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]})
       }
     }
     catch(error){
-      setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
+      setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]})
     }
   }
 
+  //Todo: make this connect to the websocket
   const testNotifierServerEndpointEndpoint = async () => {
     try {
       const response = await fetch(`${customApiEndpoint}/register`, {
@@ -151,19 +155,16 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         headers: [['Authorization', agentToken]],
       })
       if (response.ok) {
-        setCustomApiEndpointConnectionStatus({ hasError: false, statusMessage: "Connecting to the custom api endpoint successful" })
       } else {
-        setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
       }
     }
     catch (error) {
-      setCustomApiEndpointConnectionStatus({ hasError: true, statusMessage: "Error connecting to the custom api endpoint" })
     }
   }
 
   const knowleadgeAssistVersionHandler = (version: string) => {
     switch(version) {
-      case "Generative Knowleadge Assist": 
+      case templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist]: 
         setIsKnowleadgeAssistEnabled(
           {
             ...isKnowleadgeAssistEnabled, 
@@ -173,7 +174,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             }
           })
         break;
-      case "Proactive Generative Knowleadge Assist":
+      case templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]:
       default:
         setIsKnowleadgeAssistEnabled(
           {
@@ -186,6 +187,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         break;
     }
   }
+
   return(
     <>
       <FormSection>
@@ -193,7 +195,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
           General Settings
         </FormSectionHeading>
         <FormControl key={'conversation-profile-control'}>
-          <Label htmlFor={'conversation-profile'}>Conversation Profile</Label>
+          <Label htmlFor={'conversation-profile'}>{templates[AgentAssistStringTemplates.ConversationProfile]}</Label>
           <Input
             id={'conversation-profile'}
             name={'conversation-profile'}
@@ -204,7 +206,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             required
           />
           {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
-            Enter a conversation profile with the format projects/PROJECT_ID/locations/LOCATION/conversationProfiles/PROFILE_ID
+            {templates[AdminUiStringTemplates.ConversationProfileErrorText]}
           </HelpText>}
         </FormControl>
       </FormSection>
@@ -216,19 +218,19 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         <FormControl key={'custom-api-endpoint-control'}>
           <Stack orientation="vertical" spacing="space60">
             <>
-              <Label htmlFor={'custom-api-endpoint'}>Custom API Endpoint</Label>
+              <Label htmlFor={'custom-api-endpoint'}>{templates[AgentAssistStringTemplates.CustomApiEndpoint]}</Label>
               <Input
                 id={'custom-api-endpoint'}
                 name={'custom-api-endpoint'}
                 type="text"
-                value={customApiEndpoint}
+                value={customApiEndpoint.url}
                 onChange={(e) => customApiEndpointHandler(e.target.value)}
                 required
               />
             </>
             <Stack orientation="horizontal" spacing="space30">
-              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={customApiEndpoint === ''}>Test Connection</Button>
-              {customApiEndpointConnectionStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpointConnectionStatus.hasError ? "error" : "success"}>{customApiEndpointConnectionStatus.statusMessage}</HelpText>}
+              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={customApiEndpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
+              {customApiEndpoint.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={customApiEndpoint.hasError ? "error" : "success"}>{customApiEndpoint.statusMessage}</HelpText>}
             </Stack>
           </Stack>
         </FormControl>
@@ -241,16 +243,16 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             <Switch
               checked={isAgentCoachingEnabled}
               onChange={(e) => setIsAgentCoachingEnabled(e.target.checked)}
-              helpText={"Provide agents with suggestions for how they should respond during a customer service conversation."}
+              helpText={templates[AdminUiStringTemplates.AgentCoachingHelperText]}
             >
-              Agent Coaching
+              {templates[AgentAssistStringTemplates.AgentCoaching]}
             </Switch>
             <Switch
               checked={isConversationSummaryEnabled}
               onChange={(e) => setIsConversationSummaryEnabled(e.target.checked)}
-              helpText={"Provide summaries to your agents during a conversation."}
+              helpText={templates[AdminUiStringTemplates.ConversationSummarizationHelperText]}
             >
-              Conversation Summarization
+              {templates[AgentAssistStringTemplates.ConversationSummarization]}
             </Switch>
             <Switch
               checked={isKnowleadgeAssistEnabled.enabled}
@@ -264,30 +266,30 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                   onChange={(e) =>  knowleadgeAssistVersionHandler(e)}
                 >
                   <Radio
-                    value="Generative Knowleadge Assist"
-                    helpText="Allow agents to search your knowleadge base for articles or FAQ documents."
+                    value={templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist]}
+                      helpText={templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText]}
                     defaultChecked
                   >
-                      Generative Knowleadge Assist
+                      {templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist]}
                   </Radio>
                   <Radio
-                    value="Proactive Generative Knowleadge Assist"
-                    helpText="Provides answers to your agent's questions based on information in documents you provide."
+                      value={templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]}
+                      helpText={templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText]}
                     defaultChecked
                   >
-                      Proactive Generative Knowleadge Assist
+                      {templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]}
                   </Radio>
                 </RadioGroup>
               </FormControl>}
             >
-              Knowleadge Assist
+              {templates[AgentAssistStringTemplates.KnowleadgeAssist]}
             </Switch>
             <Switch
               checked={isSmartReplyEnabled}
               onChange={(e) => setIsSmartReplyEnabled(e.target.checked)}
-              helpText={"Provide agents with suggested responses are calculated by a custom model that has been trained on your own conversation data."}
+              helpText={templates[AdminUiStringTemplates.SmartReplyHelperText]}
             >
-              Smart Reply
+              {templates[AgentAssistStringTemplates.SmartReply]}
             </Switch>
           </SwitchGroup>
         </FormControl>
@@ -308,20 +310,20 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         <FormControl key={'notifier-server-endpoint-control'}>
           <Stack orientation="vertical" spacing="space60">
             <>
-              <Label htmlFor={'notifier-server-endpoint'}>Notifier Server Endpoint</Label>
+              <Label htmlFor={'notifier-server-endpoint'}>{templates[AgentAssistStringTemplates.NotiferServerEnpoint]}</Label>
               <Input
                 id={'notifier-server-endpoint'}
                 name={'notifier-server-endpoint'}
                 type="text"
-                value={notifierServerEndpoint}
-                onChange={(e) => setNotiferServerEndpoint(e.target.value)}
+                value={notifierServerEndpoint.url}
+                onChange={(e) => setNotiferServerEndpoint({...notifierServerEndpoint, url: e.target.value})}
                 disabled={!isVoiceEnabled}
                 required={isVoiceEnabled}
               />
             </>
             <Stack orientation="horizontal" spacing="space30">
-              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={notifierServerEndpoint === ''}>Test Connection</Button>
-              {notifierServerEndpointStatus.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={notifierServerEndpointStatus.hasError ? "error" : "success"}>{notifierServerEndpointStatus.statusMessage}</HelpText>}
+              <Button variant='primary' onClick={(e) => testCustomApiEndpoint()} disabled={notifierServerEndpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
+              {notifierServerEndpoint.statusMessage !== '' && <HelpText id="custom-api-endpoint-help-text" variant={notifierServerEndpoint.hasError ? "error" : "success"}>{notifierServerEndpoint.statusMessage}</HelpText>}
             </Stack>
           </Stack>
         </FormControl>
@@ -338,23 +340,23 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                   disabled={!isTranscriptionEnabled.enabled && !isVoiceEnabled}
                 >
                   <Radio
-                    value="Live Transcription"
-                    helpText="Support transcription after a user is done speaking."
+                    value={templates[AgentAssistStringTemplates.LiveTranscription]}
+                    helpText={templates[AdminUiStringTemplates.LiveTranscriptionHelperText]}
                     defaultChecked
                   >
-                    Live Transcription
+                    {templates[AgentAssistStringTemplates.LiveTranscription]}
                   </Radio>
                   <Radio
-                    value="Intermediate Transcription"
-                    helpText="Supports transcription as a user is speaking."
+                    value={templates[AgentAssistStringTemplates.IntermediateTranscription]}
+                    helpText={templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText]}
                   >
-                    Intermediate Transcription
+                    {templates[AgentAssistStringTemplates.IntermediateTranscription]}
                   </Radio>
                 </RadioGroup>
               </FormControl>
             }
           >
-            Enable Transcription
+            {templates[AgentAssistStringTemplates.Transcription]}
           </Switch>
         </FormControl>
       </FormSection>

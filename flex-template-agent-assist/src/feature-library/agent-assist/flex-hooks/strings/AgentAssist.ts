@@ -4,9 +4,18 @@ export enum StringTemplates {
   ErrorFetching = 'CCAIAgentAssistErrorFetching',
   AgentAssistConnected = 'CCAIAgentAssistConnected',
   AgentAssistDisconnected = 'CCAIAgentAssistDisconnected',
-  ConversationSummarizationTab = 'CCAIConversationSummarizationTab',
+  ConversationSummarization = 'CCAIConversationSummarizationTab',
+  KnowleadgeAssist = 'CCAIKnowleadgeAssist',
   GenerativeKnowleadgeAssist = 'CCAIGenerativeKnowleadgeAssist',
+  ProactiveGenerativeKnowleadgeAssist = 'CCAIProactiveGenerativeKnowleadgeAssist',
+  Transcription = 'CCAITranscription',
+  LiveTranscription = 'CCAILiveTranscription',
+  IntermediateTranscription = 'CCAIIntermediateTranscription',
   AgentCoaching = 'CCAIAgentCoaching',
+  SmartReply = 'CCAISmartReply',
+  ConversationProfile = 'CCAIConversationProfile',
+  CustomApiEndpoint = 'CCAICustomApiEndpoint',
+  NotiferServerEnpoint = 'CCAINotifierServerEndpoint'
 }
 
 export const stringHook = () => ({
@@ -15,8 +24,18 @@ export const stringHook = () => ({
     [StringTemplates.ErrorFetching]: 'There was an error starting Agent Assist. Please reload the page.',
     [StringTemplates.AgentAssistConnected]: 'Google CCAI Agent Assist connected',
     [StringTemplates.AgentAssistDisconnected]: 'Google CCAI Agent Assist disconnected',
-    [StringTemplates.ConversationSummarizationTab]: 'Conversation Summarization',
-    [StringTemplates.GenerativeKnowleadgeAssist]: 'Knowleadge Assist',
+    [StringTemplates.ConversationSummarization]: 'Conversation Summarization',
+    [StringTemplates.KnowleadgeAssist]: 'Knowleadge Assist',
+    [StringTemplates.GenerativeKnowleadgeAssist]: 'Generative Knowleadge Assist',
+    [StringTemplates.ProactiveGenerativeKnowleadgeAssist]: 'Proactive Generative Knowleadge Assist',
+    [StringTemplates.Transcription]: 'Transcription',
+    [StringTemplates.LiveTranscription]: 'Live Transcription',
+    [StringTemplates.IntermediateTranscription]: 'Intermediate Transcription',
     [StringTemplates.AgentCoaching]: 'Agent Coaching',
+    [StringTemplates.ConversationProfile]: 'Conversation Profile',
+    [StringTemplates.SmartReply]: 'Smart Reply',
+    [StringTemplates.CustomApiEndpoint]: 'Custom API Endpoint',
+    [StringTemplates.NotiferServerEnpoint]: 'Notifier Server Endpoint',    
+
   },
 });

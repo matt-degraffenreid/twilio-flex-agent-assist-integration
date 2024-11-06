@@ -10,7 +10,7 @@ export const componentHook = function addConversationSummarizationTab(flex: type
         <Flex.Tab
             key="conversationSummarization"
             uniqueName="conversationSummarization"
-            label={(manager.strings as any)[StringTemplates.ConversationSummarizationTab]}
+            label={(manager.strings as any)[StringTemplates.ConversationSummarization]}
         >
             <ConversationSummarization key="agent-assist-conversation-summarization-tab-content" />
         </Flex.Tab>,
