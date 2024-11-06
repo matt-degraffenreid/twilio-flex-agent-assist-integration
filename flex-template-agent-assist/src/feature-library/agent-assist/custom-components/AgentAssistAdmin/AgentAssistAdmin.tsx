@@ -74,29 +74,29 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const knowleadgeAssistOptions = [
     {
-      value: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist],
-      helpText: templates[AdminUiStringTemplates.ProactiveGenerativeKnowleadgeAssistHelperText],
-      label: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist],
+      value: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist](),
+      helpText: templates[AdminUiStringTemplates.ProactiveGenerativeKnowleadgeAssistHelperText](),
+      label: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist](),
       defaultChecked: true
     },
     {
-      value: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist],
-      helpText: templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText],
-      label: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist],
+      value: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist](),
+      helpText: templates[AdminUiStringTemplates.GenerativeKnowleadgeAssistHelperText](),
+      label: templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist](),
     }
   ]
 
   const transcriptionOptions = [
     {
-      value: templates[AgentAssistStringTemplates.LiveTranscription],
-      helpText: templates[AdminUiStringTemplates.LiveTranscriptionHelperText],
-      label: templates[AgentAssistStringTemplates.LiveTranscription],
+      value: templates[AgentAssistStringTemplates.LiveTranscription](),
+      helpText: templates[AdminUiStringTemplates.LiveTranscriptionHelperText](),
+      label: templates[AgentAssistStringTemplates.LiveTranscription](),
       defaultChecked: true
     },
     {
-      value: templates[AgentAssistStringTemplates.IntermediateTranscription],
-      helpText: templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText],
-      label: templates[AgentAssistStringTemplates.IntermediateTranscription],
+      value: templates[AgentAssistStringTemplates.IntermediateTranscription](),
+      helpText: templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText](),
+      label: templates[AgentAssistStringTemplates.IntermediateTranscription](),
     }
   ]
 
@@ -104,20 +104,20 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     {
       checked: isAgentCoachingEnabled,
       onChange: setIsAgentCoachingEnabled,
-      HelpText: templates[AdminUiStringTemplates.AgentCoachingHelperText],
-      label: templates[AgentAssistStringTemplates.AgentCoaching]
+      HelpText: templates[AdminUiStringTemplates.AgentCoachingHelperText](),
+      label: templates[AgentAssistStringTemplates.AgentCoaching]()
     },
     {
       checked: isConversationSummaryEnabled,
       onChange: setIsConversationSummaryEnabled,
-      HelpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText],
-      label: templates[AgentAssistStringTemplates.ConversationSummarization]
+      HelpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText](),
+      label: templates[AgentAssistStringTemplates.ConversationSummarization]()
     },
     {
       checked: isSmartReplyEnabled,
       onChange: setIsSmartReplyEnabled,
-      HelpText: templates[AdminUiStringTemplates.SmartReplyHelperText],
-      label: templates[AgentAssistStringTemplates.SmartReply]
+      HelpText: templates[AdminUiStringTemplates.SmartReplyHelperText](),
+      label: templates[AgentAssistStringTemplates.SmartReply]()
     }
   ]
 
@@ -186,13 +186,13 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         headers: [['Authorization', agentToken]],
       })
       if (response.ok) {
-        setCustomApiEndpoint({ ...customApiEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]})
+        setCustomApiEndpoint({ ...customApiEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
       } else {
-        setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]})
+        setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
       }
     }
     catch(error){
-      setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]})
+      setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
     }
   }
 
@@ -213,7 +213,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const knowleadgeAssistVersionHandler = (version: string) => {
     switch(version) {
-      case templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist]: 
+      case templates[AgentAssistStringTemplates.GenerativeKnowleadgeAssist](): 
         setIsKnowleadgeAssistEnabled(
           {
             ...isKnowleadgeAssistEnabled, 
@@ -223,7 +223,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             }
           })
         break;
-      case templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]:
+      case templates[AgentAssistStringTemplates.ProactiveGenerativeKnowleadgeAssist]():
       default:
         setIsKnowleadgeAssistEnabled(
           {
@@ -239,7 +239,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const transcriptionVersionHandler = (version: string) => {
     switch (version) {
-      case templates[AgentAssistStringTemplates.LiveTranscription]:
+      case templates[AgentAssistStringTemplates.LiveTranscription]():
         setIsTranscriptionEnabled(
           {
             ...isTranscriptionEnabled,
@@ -249,7 +249,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             }
           })
         break;
-      case templates[AgentAssistStringTemplates.IntermediateTranscription]:
+      case templates[AgentAssistStringTemplates.IntermediateTranscription]():
       default:
         setIsTranscriptionEnabled(
           {
@@ -270,7 +270,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
           General Settings
         </FormSectionHeading>
         <FormControl key={'conversation-profile-control'}>
-          <Label htmlFor={'conversation-profile'}>{templates[AgentAssistStringTemplates.ConversationProfile]}</Label>
+          <Label htmlFor={'conversation-profile'}>{templates[AgentAssistStringTemplates.ConversationProfile]()}</Label>
           <Input
             id={'conversation-profile'}
             name={'conversation-profile'}
@@ -284,16 +284,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             {templates[AdminUiStringTemplates.ConversationProfileErrorText]}
           </HelpText>}
         </FormControl>
-      </FormSection>
-      <Separator orientation="horizontal" />
-      <FormSection>
-        <FormSectionHeading>
-          Agent Assist Features
-        </FormSectionHeading>
         <FormControl key={'custom-api-endpoint-control'}>
           <Stack orientation="vertical" spacing="space60">
             <>
-              <Label htmlFor={'custom-api-endpoint'}>{templates[AgentAssistStringTemplates.CustomApiEndpoint]}</Label>
+              <Label htmlFor={'custom-api-endpoint'}>{templates[AgentAssistStringTemplates.CustomApiEndpoint]()}</Label>
               <Input
                 id={'custom-api-endpoint'}
                 name={'custom-api-endpoint'}
@@ -303,9 +297,15 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required
               />
             </>
-            <TestConnectionButton endpoint={customApiEndpoint} testConnectionFunction={testCustomApiEndpoint}/>
+            <TestConnectionButton endpoint={customApiEndpoint} testConnectionFunction={testCustomApiEndpoint} />
           </Stack>
         </FormControl>
+      </FormSection>
+      <Separator orientation="horizontal" />
+      <FormSection>
+        <FormSectionHeading>
+          Agent Assist Features
+        </FormSectionHeading>
         <FormControl key={'agent-assist-feature-control'}>
           <SwitchGroup
             name='agent-assist-features'
@@ -322,7 +322,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               feature={isKnowleadgeAssistEnabled}
               featureChangeHandler={setIsKnowleadgeAssistEnabled}
               featureOptions={knowleadgeAssistOptions}
-              featureLabel={templates[AgentAssistStringTemplates.KnowleadgeAssist]}
+              featureLabel={templates[AgentAssistStringTemplates.KnowleadgeAssist]()}
               optionsChangeHandler={knowleadgeAssistVersionHandler}
               optionsDisabled={!isKnowleadgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
             />
@@ -345,7 +345,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         <FormControl key={'notifier-server-endpoint-control'}>
           <Stack orientation="vertical" spacing="space60">
             <>
-              <Label htmlFor={'notifier-server-endpoint'}>{templates[AgentAssistStringTemplates.NotiferServerEnpoint]}</Label>
+              <Label htmlFor={'notifier-server-endpoint'}>{templates[AgentAssistStringTemplates.NotiferServerEnpoint]()}</Label>
               <Input
                 id={'notifier-server-endpoint'}
                 name={'notifier-server-endpoint'}
@@ -364,7 +364,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             feature={isTranscriptionEnabled}
             featureChangeHandler={setIsTranscriptionEnabled}
             featureOptions={transcriptionOptions}
-            featureLabel={templates[AgentAssistStringTemplates.Transcription]}
+            featureLabel={templates[AgentAssistStringTemplates.Transcription]()}
             optionsChangeHandler={transcriptionVersionHandler}
             optionsDisabled={!isTranscriptionEnabled.enabled && !isVoiceEnabled}
           />

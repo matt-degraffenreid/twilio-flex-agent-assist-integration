@@ -18,7 +18,7 @@ interface TestConnectionButtonProps {
 export const TestConnectionButton = ({ endpoint, testConnectionFunction }: TestConnectionButtonProps): JSX.Element => {
     return (
         <Stack orientation="horizontal" spacing="space30">
-            <Button variant='primary' onClick={(e) => testConnectionFunction()} disabled={endpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]}</Button>
+            <Button variant='primary' onClick={(e) => testConnectionFunction()} disabled={endpoint.url === ''}>{templates[AdminUiStringTemplates.TestConnectionCTA]()}</Button>
             {endpoint.statusMessage !== '' && <HelpText id="endpoint-help-text" variant={endpoint.hasError ? "error" : "success"}>{endpoint.statusMessage}</HelpText>}
         </Stack>
     )
