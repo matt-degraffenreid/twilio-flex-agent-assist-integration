@@ -18,7 +18,7 @@ const {
   enable_voice = false,
   notifier_server_endpoint = '',
   transcription = {
-    enabled: true,
+    enabled: false,
     version: {
         live_transcription: true,
         intermediate_transcription: false

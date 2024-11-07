@@ -40,7 +40,6 @@
             "proactive_generative_knowledge_assist": true
           }
         },
-        "proactive_general_knowledge_assist": true,
         "smart_reply": true,
         "enable_voice": false,
         "notifier_server_endpoint": "",
