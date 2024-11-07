@@ -170,7 +170,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       const data = await response.json();
       const token = data.token;
 
-      const conversationProfileResponse = await fetch(`${url}/v2beta1/${conversationProfile}`, {
+      const conversationProfileResponse = await fetch(`${url}/v2beta1/${conversationProfile.configItem}`, {
         method: 'GET',
         headers: [['Authorization', token]],
       })
@@ -304,7 +304,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required
               />
             </>
-            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateConversationProfileExisits} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
+            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateCustomeApiEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
           </Stack>
         </FormControl>
         <FormControl key={'conversation-profile-control'}>
@@ -324,7 +324,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 {templates[AdminUiStringTemplates.ConversationProfileErrorText]()}
               </HelpText>}
             </>
-            <ValidationButton configItem={conversationProfile} testConnectionFunction={validateCustomeApiEndpoint} label={templates[AdminUiStringTemplates.TestConversationProfileCTA]()}/>
+            <ValidationButton configItem={conversationProfile} testConnectionFunction={validateConversationProfileExisits} label={templates[AdminUiStringTemplates.TestConversationProfileCTA]()}/>
           </Stack>
         </FormControl>
       </FormSection>
