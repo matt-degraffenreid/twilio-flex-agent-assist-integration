@@ -324,7 +324,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               featureOptions={knowledgeAssistOptions}
               featureLabel={templates[AgentAssistStringTemplates.KnowledgeAssist]()}
               optionsChangeHandler={knowledgeAssistVersionHandler}
-              optionsDisabled={!isKnowledgeAssistEnabled.enabled && (conversationProfile.hasError || conversationProfile.name === '')}
+              optionsDisabled={!isKnowledgeAssistEnabled.enabled || (conversationProfile.hasError || conversationProfile.name === '')}
             />
           </SwitchGroup>
         </FormControl>
