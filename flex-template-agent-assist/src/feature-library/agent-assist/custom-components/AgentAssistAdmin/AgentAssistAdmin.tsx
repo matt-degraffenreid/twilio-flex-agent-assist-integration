@@ -12,7 +12,7 @@ import { KnowledgeAssist, Transcription } from '../../types/ServiceConfiguration
 import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { templates } from '@twilio/flex-ui';
-import { TestConnectionButton, SwitchWithOptions } from './AgentAssistAdminComponents';
+import { ValidationButton, SwitchWithOptions } from './AgentAssistAdminComponents';
 
 interface OwnProps {
     feature: string;
@@ -21,21 +21,17 @@ interface OwnProps {
     setAllowSave: (featureName: string, allowSave: boolean) => void;
 }
 
-interface Endpoint {
-  url: string,
+interface ConfigItem {
+  configItem: string,
   hasError: boolean;
   statusMessage: string;
 }
 
-interface ConversationProfile {
-  hasError: boolean;
-  name: string;
-}
 
 export const AgentAssistAdmin = (props: OwnProps) => {
-  const [conversationProfile, setConversationProfile] = useState<ConversationProfile>({ hasError: false, name: props.initialConfig?.conversation_profile ?? '' });
-  const [customApiEndpoint, setCustomApiEndpoint] = useState<Endpoint>({
-    url: props.initialConfig?.custom_api_endpoint ?? '',
+  const [conversationProfile, setConversationProfile] = useState<ConfigItem>({ configItem: props.initialConfig?.conversation_profile ?? '', hasError: false, statusMessage: '' });
+  const [customApiEndpoint, setCustomApiEndpoint] = useState<ConfigItem>({
+    configItem: props.initialConfig?.custom_api_endpoint ?? '',
     hasError: false,
     statusMessage: ''
   });
@@ -53,8 +49,8 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const [isSmartReplyEnabled, setIsSmartReplyEnabled] = useState(props.initialConfig?.smart_reply ?? true);
 
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);
-  const [notifierServerEndpoint, setNotiferServerEndpoint] = useState<Endpoint>({
-    url: props.initialConfig?.notifier_server_endpoint ?? '',
+  const [notifierServerEndpoint, setNotiferServerEndpoint] = useState<ConfigItem>({
+    configItem: props.initialConfig?.notifier_server_endpoint ?? '',
     hasError: false,
     statusMessage: ''
   });
@@ -129,15 +125,15 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     setAllowSave();
     props.setModifiedConfig(props.feature, {
       ...props.initialConfig,
-      custom_api_endpoint: customApiEndpoint.url,
-      conversation_profile: conversationProfile.name,
+      custom_api_endpoint: customApiEndpoint.configItem,
+      conversation_profile: conversationProfile.configItem,
       knowledge_assist: isKnowledgeAssistEnabled,
       agent_coaching: isAgentCoachingEnabled,
       conversation_summary: isConversationSummaryEnabled,
       smart_reply: isSmartReplyEnabled,
       transcription: isTranscriptionEnabled,
       enable_voice: isVoiceEnabled,
-      notifier_server_endpoint: notifierServerEndpoint.url,
+      notifier_server_endpoint: notifierServerEndpoint.configItem,
       debug: isDebugEnabled
       },
     );
@@ -161,21 +157,50 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     return regExp.test(conversationProfile);
   }
 
-  const conversationProfileHandler = (conversationProfile: string) => {
-    const error = validateConversationProfile(conversationProfile);
-    if(error){
-      setConversationProfile({ hasError: false, name: conversationProfile })
+  const validateConversationProfileExisits = async () => {
+    try {
+      const protocalRegExp = new RegExp("^(http|https):\/\/");
+      const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
+      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
+
+      const response = await fetch(`${url}/register`, {
+        method: 'POST',
+        headers: [['Authorization', agentToken]],
+      })
+      const data = await response.json();
+      const token = data.token;
+
+      const conversationProfileResponse = await fetch(`${url}/v2beta1/${conversationProfile}`, {
+        method: 'GET',
+        headers: [['Authorization', token]],
+      })
+
+      if (conversationProfileResponse.ok) {
+        setConversationProfile({ ...conversationProfile, hasError: false, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileSuccess]() })
+      } else {
+        setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
+      }
     }
-    else {
-      setConversationProfile({ hasError: true, name: conversationProfile })
+    catch (error) {
+      setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
     }
   }
 
-  const testCustomApiEndpoint = async () => {
+  const conversationProfileHandler = (conversationProfile: string) => {
+    const error = validateConversationProfile(conversationProfile);
+    if(error){
+      setConversationProfile({ hasError: false, configItem: conversationProfile, statusMessage: "" })
+    }
+    else {
+      setConversationProfile({ hasError: true, configItem: conversationProfile, statusMessage: "" })
+    }
+  }
+
+  const validateCustomeApiEndpoint = async () => {
     try {
       const protocalRegExp = new RegExp("^(http|https):\/\/");
-      const hasProtocal = protocalRegExp.test(customApiEndpoint.url);
-      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.url}`;
+      const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
+      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
 
       const response = await fetch(`${url}/register`, {
         method: 'POST',
@@ -183,9 +208,9 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       })
 
       if (response.ok) {
-        setCustomApiEndpoint({ url, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
+        setCustomApiEndpoint({ configItem: url, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
       } else {
-        setCustomApiEndpoint({ url, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
+        setCustomApiEndpoint({ configItem: url, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
       }
     }
     catch(error){
@@ -194,7 +219,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }
 
   //Todo: make this connect to the websocket
-  const testNotifierServerEndpoint = async () => {
+  const validateNotifierServerEndpoint = async () => {
     try {
       const response = await fetch(`${customApiEndpoint}/register`, {
         method: 'POST',
@@ -266,21 +291,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         <FormSectionHeading>
           General Settings
         </FormSectionHeading>
-        <FormControl key={'conversation-profile-control'}>
-          <Label htmlFor={'conversation-profile'}>{templates[AgentAssistStringTemplates.ConversationProfile]()}</Label>
-          <Input
-            id={'conversation-profile'}
-            name={'conversation-profile'}
-            type="text"
-            value={conversationProfile.name}
-            hasError={conversationProfile.hasError}
-            onChange={(e) => conversationProfileHandler(e.target.value)}
-            required
-          />
-          {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
-            {templates[AdminUiStringTemplates.ConversationProfileErrorText]()}
-          </HelpText>}
-        </FormControl>
         <FormControl key={'custom-api-endpoint-control'}>
           <Stack orientation="vertical" spacing="space60">
             <>
@@ -289,12 +299,32 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 id={'custom-api-endpoint'}
                 name={'custom-api-endpoint'}
                 type="text"
-                value={customApiEndpoint.url}
-                onChange={(e) => setCustomApiEndpoint({...customApiEndpoint, url: e.target.value})}
+                value={customApiEndpoint.configItem}
+                onChange={(e) => setCustomApiEndpoint({ ...customApiEndpoint, configItem: e.target.value })}
                 required
               />
             </>
-            <TestConnectionButton endpoint={customApiEndpoint} testConnectionFunction={testCustomApiEndpoint} />
+            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateCustomeApiEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
+          </Stack>
+        </FormControl>
+        <FormControl key={'conversation-profile-control'}>
+          <Stack orientation="vertical" spacing="space60">
+            <>
+              <Label htmlFor={'conversation-profile'}>{templates[AgentAssistStringTemplates.ConversationProfile]()}</Label>
+              <Input
+                id={'conversation-profile'}
+                name={'conversation-profile'}
+                type="text"
+                value={conversationProfile.configItem}
+                hasError={conversationProfile.hasError}
+                onChange={(e) => conversationProfileHandler(e.target.value)}
+                required
+              />
+              {conversationProfile.hasError && <HelpText variant="error" id={'conversation-profile-error'}>
+                {templates[AdminUiStringTemplates.ConversationProfileErrorText]()}
+              </HelpText>}
+            </>
+            <ValidationButton configItem={conversationProfile} testConnectionFunction={validateCustomeApiEndpoint} label={templates[AdminUiStringTemplates.TestConversationProfileCTA]()}/>
           </Stack>
         </FormControl>
       </FormSection>
@@ -307,7 +337,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
           <SwitchGroup
             name='agent-assist-features'
             legend={<></>}
-            disabled={conversationProfile.hasError || conversationProfile.name === ''}
+            disabled={conversationProfile.hasError || conversationProfile.configItem === ''}
           >
             {
               agentAssistFeatures.map(feature => {
@@ -321,7 +351,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
               featureOptions={knowledgeAssistOptions}
               featureLabel={templates[AgentAssistStringTemplates.KnowledgeAssist]()}
               optionsChangeHandler={knowledgeAssistVersionHandler}
-              optionsDisabled={!isKnowledgeAssistEnabled.enabled || (conversationProfile.hasError || conversationProfile.name === '')}
+              optionsDisabled={!isKnowledgeAssistEnabled.enabled || (conversationProfile.hasError || conversationProfile.configItem === '')}
             />
           </SwitchGroup>
         </FormControl>
@@ -347,13 +377,13 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 id={'notifier-server-endpoint'}
                 name={'notifier-server-endpoint'}
                 type="text"
-                value={notifierServerEndpoint.url}
-                onChange={(e) => setNotiferServerEndpoint({...notifierServerEndpoint, url: e.target.value})}
+                value={notifierServerEndpoint.configItem}
+                onChange={(e) => setNotiferServerEndpoint({...notifierServerEndpoint, configItem: e.target.value})}
                 disabled={!isVoiceEnabled}
                 required={isVoiceEnabled}
               />
             </>
-            <TestConnectionButton endpoint={notifierServerEndpoint} testConnectionFunction={testNotifierServerEndpoint} />
+            <ValidationButton configItem={notifierServerEndpoint} testConnectionFunction={validateNotifierServerEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
           </Stack>
         </FormControl>
         <FormControl key={'transcription-control'}>

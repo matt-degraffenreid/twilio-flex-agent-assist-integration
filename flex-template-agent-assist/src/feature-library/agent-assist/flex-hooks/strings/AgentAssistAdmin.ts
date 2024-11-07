@@ -13,6 +13,9 @@ export enum StringTemplates {
   SmartReplyHelperText = 'CCAISmartReplyHelperText',
   LiveTranscriptionHelperText = 'CCAILiveTranscriptionHelperText',
   IntermediateTranscriptionHelperText = 'CCAIIntermediateTranscriptionHelperText',
+  TestConversationProfileCTA = 'CCAITestConversationProfileCTA',
+  ValidateConversationProfileError = 'CCAIValidateConversationProfileError',
+  ValidateConversationProfileSuccess = 'CCAIValidateConversationProfileSuccess',
 }
 
 export const stringHook = () => ({
@@ -30,5 +33,8 @@ export const stringHook = () => ({
     [StringTemplates.SmartReplyHelperText]: 'Provide agents with suggested responses are calculated by a custom model that has been trained on your own conversation data.',
     [StringTemplates.LiveTranscriptionHelperText]: 'Support transcription after a user is done speaking.',
     [StringTemplates.IntermediateTranscriptionHelperText]: 'Supports transcription as a user is speaking.',
+    [StringTemplates.TestConversationProfileCTA]: 'Validate Conversation Profile',
+    [StringTemplates.ValidateConversationProfileError]: 'Conversation Profile Error.',
+    [StringTemplates.ValidateConversationProfileSuccess]: 'Conversation Profile Validated.',
   },
 });

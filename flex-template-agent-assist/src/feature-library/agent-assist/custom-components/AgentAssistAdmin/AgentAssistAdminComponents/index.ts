@@ -1,7 +1,7 @@
 import { SwitchWithOptions } from "./SwitchWithOptions";
-import { TestConnectionButton } from "./TestConncetionButton";
+import { ValidationButton } from "./ValidationButton";
 
 export {
     SwitchWithOptions,
-    TestConnectionButton
+    ValidationButton
 }
