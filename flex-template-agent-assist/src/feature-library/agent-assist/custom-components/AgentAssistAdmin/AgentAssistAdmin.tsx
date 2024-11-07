@@ -7,14 +7,13 @@ import { Switch, SwitchGroup } from '@twilio-paste/core/switch';
 import { Input } from '@twilio-paste/core/input';
 import { Separator } from '@twilio-paste/core/separator';
 import { HelpText } from '@twilio-paste/core/help-text';
-import { Button } from '@twilio-paste/core/button';
 import { Stack } from '@twilio-paste/core/stack';
-import { Radio, RadioGroup } from '@twilio-paste/core/radio-group';
 import { KnowledgeAssist, Transcription } from '../../types/ServiceConfiguration';
 import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { templates } from '@twilio/flex-ui';
 import { TestConnectionButton, SwitchWithOptions } from './AgentAssistAdminComponents';
+
 interface OwnProps {
     feature: string;
     initialConfig: any;
@@ -366,7 +365,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             featureOptions={transcriptionOptions}
             featureLabel={templates[AgentAssistStringTemplates.Transcription]()}
             optionsChangeHandler={transcriptionVersionHandler}
-            optionsDisabled={!isTranscriptionEnabled.enabled && !isVoiceEnabled}
+            optionsDisabled={!(isTranscriptionEnabled.enabled && isVoiceEnabled)}
           />
         </FormControl>
       </FormSection>
