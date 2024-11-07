@@ -171,23 +171,21 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
-  const customApiEndpointHandler = (endpoint: string) => {
-    const protocalRegExp = new RegExp("^(http|https):\/\/");
-    const hasProtocal = protocalRegExp.test(endpoint);
-    const url = hasProtocal ? "" : "https://" + endpoint;
-    setCustomApiEndpoint({...customApiEndpoint, url});
-  }
-
   const testCustomApiEndpoint = async () => {
     try {
-      const response = await fetch(`${customApiEndpoint}/register`, {
+      const protocalRegExp = new RegExp("^(http|https):\/\/");
+      const hasProtocal = protocalRegExp.test(customApiEndpoint.url);
+      const url = hasProtocal ? "" : "https://" + customApiEndpoint.url;
+
+      const response = await fetch(`${url}/register`, {
         method: 'POST',
         headers: [['Authorization', agentToken]],
       })
+
       if (response.ok) {
-        setCustomApiEndpoint({ ...customApiEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
+        setCustomApiEndpoint({ url, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
       } else {
-        setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
+        setCustomApiEndpoint({ url, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
       }
     }
     catch(error){
@@ -292,7 +290,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 name={'custom-api-endpoint'}
                 type="text"
                 value={customApiEndpoint.url}
-                onChange={(e) => customApiEndpointHandler(e.target.value)}
+                onChange={(e) => setCustomApiEndpoint({...customApiEndpoint, url: e.target.value})}
                 required
               />
             </>
