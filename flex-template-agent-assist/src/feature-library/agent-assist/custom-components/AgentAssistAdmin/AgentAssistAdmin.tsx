@@ -363,6 +363,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
             feature={isTranscriptionEnabled}
             featureChangeHandler={setIsTranscriptionEnabled}
             featureOptions={transcriptionOptions}
+            featureDisabled={!isVoiceEnabled}
             featureLabel={templates[AgentAssistStringTemplates.Transcription]()}
             optionsChangeHandler={transcriptionVersionHandler}
             optionsDisabled={!(isTranscriptionEnabled.enabled && isVoiceEnabled)}

@@ -7,6 +7,7 @@ interface SwitchWithOptionsProps {
     feature: KnowledgeAssist | Transcription;
     featureLabel: string;
     featureChangeHandler: any;
+    featureDisabled?: boolean;
     featureOptions: {
         value: string;
         helpText: string;
@@ -17,11 +18,12 @@ interface SwitchWithOptionsProps {
     optionsDisabled: boolean;
 }
 
-export const SwitchWithOptions = ({ feature, featureLabel, featureChangeHandler, featureOptions, optionsDisabled, optionsChangeHandler }: SwitchWithOptionsProps): JSX.Element => {
+export const SwitchWithOptions = ({ feature, featureLabel, featureChangeHandler, featureOptions, featureDisabled, optionsDisabled, optionsChangeHandler }: SwitchWithOptionsProps): JSX.Element => {
     return (
         <Switch
             checked={feature.enabled}
             onChange={(e) => featureChangeHandler({ ...feature, enabled: e.target.checked })}
+            disabled={featureDisabled}
             helpText={
                 <FormControl key={`${featureLabel}-version`}>
                     <RadioGroup
