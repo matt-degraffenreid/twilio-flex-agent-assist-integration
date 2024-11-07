@@ -36,7 +36,8 @@
     "react-minimal-pie-chart": "^8.4.0",
     "rrule": "^2.7.1",
     "semver": "^7.6.3",
-    "simple-audio-recorder": "^1.2.3"
+    "simple-audio-recorder": "^1.2.3",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.12.1",
