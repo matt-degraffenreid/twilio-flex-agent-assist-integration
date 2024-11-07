@@ -175,7 +175,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     try {
       const protocalRegExp = new RegExp("^(http|https):\/\/");
       const hasProtocal = protocalRegExp.test(customApiEndpoint.url);
-      const url = hasProtocal ? "" : "https://" + customApiEndpoint.url;
+      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.url}`;
 
       const response = await fetch(`${url}/register`, {
         method: 'POST',
