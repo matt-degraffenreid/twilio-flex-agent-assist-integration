@@ -304,7 +304,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required
               />
             </>
-            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateCustomeApiEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
+            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateConversationProfileExisits} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
           </Stack>
         </FormControl>
         <FormControl key={'conversation-profile-control'}>
