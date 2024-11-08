@@ -14,7 +14,6 @@ import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/
 import { templates } from '@twilio/flex-ui';
 import { ValidationButton, SwitchWithOptions } from './AgentAssistAdminComponents';
 import { io } from "socket.io-client";
-import { ACTION_DETACH_CONVERSATION_FILES } from '@twilio/flex-ui/src/flex-ui-core/src/state/ConversationInputState';
 
 interface OwnProps {
     feature: string;
@@ -234,23 +233,31 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       const data = await response.json();
       const token = data.token;
 
-      const websocketRegExp = new RegExp("^(ws|wss):\/\/");
-      const hasWebsocketProtocal = websocketRegExp.test(notifierServerEndpoint.configItem);
-      const wsUrl = `${hasWebsocketProtocal ? "" : "wss://"}${notifierServerEndpoint.configItem}`;
-      const socket = io(wsUrl, {
-        auth: {
-          token
-        },
-      });
+      try {
+        const websocketRegExp = new RegExp("^(ws|wss):\/\/");
+        const hasWebsocketProtocal = websocketRegExp.test(notifierServerEndpoint.configItem);
+        const wsUrl = `${hasWebsocketProtocal ? "" : "wss://"}${notifierServerEndpoint.configItem}`;
+        const socket = io(wsUrl, {
+          auth: {
+            token
+          },
+        });
 
-      socket.on('connect', () => {
-       console.log("Websocket Success")
-      });
-      
-      socket.on('unauthenticated', () => {
-        console.log("Websocket unauthenticated")
-      });
+        socket.on("connect_error", (err) => {
+          console.log(`connect_error due to ${err.message}`);
+        });
 
+        socket.on('connect', () => {
+          console.log("Websocket Success")
+        });
+
+        socket.on('unauthenticated', () => {
+          console.log("Websocket unauthenticated")
+        });
+      }
+      catch(error){
+
+      }
     }
     catch (error) {
     }
