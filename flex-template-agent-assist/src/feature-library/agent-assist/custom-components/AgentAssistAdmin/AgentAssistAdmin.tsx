@@ -245,18 +245,21 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
         socket.on("connect_error", (err) => {
           console.log(`connect_error due to ${err.message}`);
+          socket.close()
         });
 
         socket.on('connect', () => {
           console.log("Websocket Success")
+          socket.close()
         });
 
         socket.on('unauthenticated', () => {
           console.log("Websocket unauthenticated")
+          socket.close()
         });
       }
       catch(error){
-
+        console.log("Network Error")
       }
     }
     catch (error) {
