@@ -1,10 +1,10 @@
 import { Radio, RadioGroup } from '@twilio-paste/core/radio-group';
-import { KnowledgeAssist, Transcription } from '../../../types/ServiceConfiguration';
+import { Transcription } from '../../../types/ServiceConfiguration';
 import { Switch } from '@twilio-paste/core/switch';
 import { FormControl } from '@twilio-paste/core/form';
 
 interface SwitchWithOptionsProps {
-    feature: KnowledgeAssist | Transcription;
+    feature: Transcription;
     featureLabel: string;
     featureChangeHandler: any;
     featureDisabled?: boolean;
