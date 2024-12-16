@@ -22,7 +22,7 @@ export const SwitchWithOptions = ({ feature, featureLabel, featureChangeHandler,
     return (
         <Switch
             checked={feature.enabled}
-            onChange={(e) => featureChangeHandler({ ...feature, enabled: e.target.checked })}
+            onChange={(e) => featureChangeHandler({ ...feature, enabled: !feature.enabled})}
             disabled={featureDisabled}
             helpText={
                 <FormControl key={`${featureLabel}-version`}>
