@@ -43,13 +43,7 @@
         "smart_reply": true,
         "enable_voice": false,
         "notifier_server_endpoint": "",
-        "transcription": {
-          "enabled": false,
-          "version": {
-            "live_transcription": true,
-            "intermediate_transcription": false
-          }
-        },
+        "transcription": true,
         "debug": false
       },
       "enhanced_crm_container": {

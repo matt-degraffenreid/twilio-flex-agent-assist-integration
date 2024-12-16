@@ -7,13 +7,7 @@ const {
   conversation_profile = '',
   conversation_summary = true,
   agent_coaching = true,
-  knowledge_assist = {
-    enabled: true,
-    version: {
-        generative_knowledge_assist: false,
-        proactive_generative_knowledge_assist: true
-    }
-  },
+  knowledge_assist = true,
   smart_reply = true,
   enable_voice = false,
   notifier_server_endpoint = '',
@@ -48,16 +42,8 @@ export const isAgentCoachingEnabled = () => {
 };
 
 export const isKnowledgeAssistEnabled = () => {
-  return isFeatureEnabled() && knowledge_assist.enabled 
+  return isFeatureEnabled() && knowledge_assist 
 }
-
-export const isGKAEnabled = () => {
-  return isKnowledgeAssistEnabled() && knowledge_assist.version.generative_knowledge_assist;
-};
-
-export const isPGKAEnabled = () => {
-  return isKnowledgeAssistEnabled() && knowledge_assist.version.proactive_generative_knowledge_assist;
-};
 
 export const isSmartReplyEnabled = () => {
   return smart_reply;

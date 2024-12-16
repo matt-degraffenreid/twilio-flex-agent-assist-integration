@@ -8,7 +8,7 @@ import { Input } from '@twilio-paste/core/input';
 import { Separator } from '@twilio-paste/core/separator';
 import { HelpText } from '@twilio-paste/core/help-text';
 import { Stack } from '@twilio-paste/core/stack';
-import { KnowledgeAssist, Transcription } from '../../types/ServiceConfiguration';
+import { Transcription } from '../../types/ServiceConfiguration';
 import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { templates } from '@twilio/flex-ui';
@@ -39,14 +39,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const [isAgentCoachingEnabled, setIsAgentCoachingEnabled] = useState(props.initialConfig?.agent_coaching ?? true);
   const [isConversationSummaryEnabled, setIsConversationSummaryEnabled] = useState(props.initialConfig?.conversation_summary ?? true);
-  const [isKnowledgeAssistEnabled, setIsKnowledgeAssistEnabled] = useState<KnowledgeAssist>(props.initialConfig?.knowledge_assist ?? 
-    {
-      enabled: true,
-      version: {
-        generative_knowledge_assist: false,
-        proactive_generative_knowledge_assist: true
-      }
-    });
+  const [isKnowledgeAssistEnabled, setIsKnowledgeAssistEnabled] = useState(props.initialConfig?.knowledge_assist ?? true);
   const [isSmartReplyEnabled, setIsSmartReplyEnabled] = useState(props.initialConfig?.smart_reply ?? true);
 
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);
@@ -67,20 +60,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
 
   const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
-
-  const knowledgeAssistOptions = [
-    {
-      value: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowledgeAssist](),
-      helpText: templates[AdminUiStringTemplates.ProactiveGenerativeKnowledgeAssistHelperText](),
-      label: templates[AgentAssistStringTemplates.ProactiveGenerativeKnowledgeAssist](),
-      defaultChecked: true
-    },
-    {
-      value: templates[AgentAssistStringTemplates.GenerativeKnowledgeAssist](),
-      helpText: templates[AdminUiStringTemplates.GenerativeKnowledgeAssistHelperText](),
-      label: templates[AgentAssistStringTemplates.GenerativeKnowledgeAssist](),
-    }
-  ]
 
   const transcriptionOptions = [
     {
@@ -114,6 +93,12 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       onChange: setIsSmartReplyEnabled,
       helpText: templates[AdminUiStringTemplates.SmartReplyHelperText](),
       label: templates[AgentAssistStringTemplates.SmartReply]()
+    },
+    {
+      checked: isKnowledgeAssistEnabled,
+      onChange: setIsKnowledgeAssistEnabled,
+      helpText: templates[AdminUiStringTemplates.KnowledgeAssistHelperText](),
+      label: templates[AgentAssistStringTemplates.KnowledgeAssist]()
     }
   ]
 
@@ -266,32 +251,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
-  const knowledgeAssistVersionHandler = (version: string) => {
-    switch(version) {
-      case templates[AgentAssistStringTemplates.GenerativeKnowledgeAssist](): 
-        setIsKnowledgeAssistEnabled(
-          {
-            ...isKnowledgeAssistEnabled, 
-            version: {
-              generative_knowledge_assist: true,
-              proactive_generative_knowledge_assist: false
-            }
-          })
-        break;
-      case templates[AgentAssistStringTemplates.ProactiveGenerativeKnowledgeAssist]():
-      default:
-        setIsKnowledgeAssistEnabled(
-          {
-            ...isKnowledgeAssistEnabled, 
-            version: {
-              generative_knowledge_assist: false,
-              proactive_generative_knowledge_assist: true
-            }
-          })
-        break;
-    }
-  }
-
   const transcriptionVersionHandler = (version: string) => {
     switch (version) {
       case templates[AgentAssistStringTemplates.LiveTranscription]():
@@ -378,14 +337,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 return (<Switch {...props}>{label}</Switch>)
               })
             }
-            <SwitchWithOptions
-              feature={isKnowledgeAssistEnabled}
-              featureChangeHandler={setIsKnowledgeAssistEnabled}
-              featureOptions={knowledgeAssistOptions}
-              featureLabel={templates[AgentAssistStringTemplates.KnowledgeAssist]()}
-              optionsChangeHandler={knowledgeAssistVersionHandler}
-              optionsDisabled={!isKnowledgeAssistEnabled.enabled || (conversationProfile.hasError || conversationProfile.configItem === '')}
-            />
           </SwitchGroup>
         </FormControl>
       </FormSection>
