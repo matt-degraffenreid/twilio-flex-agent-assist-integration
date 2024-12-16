@@ -78,25 +78,25 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const agentAssistFeatures = [
     {
       checked: isAgentCoachingEnabled,
-      onChange: setIsAgentCoachingEnabled,
+      onChange: () => setIsAgentCoachingEnabled(!isAgentCoachingEnabled),
       helpText: templates[AdminUiStringTemplates.AgentCoachingHelperText](),
       label: templates[AgentAssistStringTemplates.AgentCoaching]()
     },
     {
       checked: isConversationSummaryEnabled,
-      onChange: setIsConversationSummaryEnabled,
+      onChange: () => setIsConversationSummaryEnabled(!isConversationSummaryEnabled),
       helpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText](),
       label: templates[AgentAssistStringTemplates.ConversationSummarization]()
     },
     {
       checked: isSmartReplyEnabled,
-      onChange: setIsSmartReplyEnabled,
+      onChange: () => setIsSmartReplyEnabled(!isSmartReplyEnabled),
       helpText: templates[AdminUiStringTemplates.SmartReplyHelperText](),
       label: templates[AgentAssistStringTemplates.SmartReply]()
     },
     {
       checked: isKnowledgeAssistEnabled,
-      onChange: setIsKnowledgeAssistEnabled,
+      onChange: () => setIsKnowledgeAssistEnabled(!isKnowledgeAssistEnabled),
       helpText: templates[AdminUiStringTemplates.KnowledgeAssistHelperText](),
       label: templates[AgentAssistStringTemplates.KnowledgeAssist]()
     }
