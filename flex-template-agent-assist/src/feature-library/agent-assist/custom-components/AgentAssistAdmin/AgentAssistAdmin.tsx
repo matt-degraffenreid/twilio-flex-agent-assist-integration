@@ -373,7 +373,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         <FormControl key={'transcription-control'}>
           <SwitchWithOptions
             feature={isTranscriptionEnabled}
-            featureChangeHandler={setIsTranscriptionEnabled}
+            featureChangeHandler={(e: any) => setIsTranscriptionEnabled({ ...isTranscriptionEnabled, enabled: !isTranscriptionEnabled.enabled})}
             featureOptions={transcriptionOptions}
             featureDisabled={!isVoiceEnabled}
             featureLabel={templates[AgentAssistStringTemplates.Transcription]()}
