@@ -14,6 +14,7 @@ import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/
 import { templates } from '@twilio/flex-ui';
 import { ValidationButton, SwitchWithOptions } from './AgentAssistAdminComponents';
 import AgentAssistUtils from '../../utils/agentAssist/AgentAssistUtils';
+import { AgentAssistAdminVoiceSettings } from './AgentAssistAdminComponents/AgentAssistAdminVoiceSettings';
 
 interface OwnProps {
     feature: string;
@@ -42,39 +43,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const [isKnowledgeAssistEnabled, setIsKnowledgeAssistEnabled] = useState(props.initialConfig?.knowledge_assist ?? true);
   const [isSmartReplyEnabled, setIsSmartReplyEnabled] = useState(props.initialConfig?.smart_reply ?? true);
 
-  const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);
-  const [notifierServerEndpoint, setNotiferServerEndpoint] = useState<ConfigItem>({
-    configItem: props.initialConfig?.notifier_server_endpoint ?? '',
-    hasError: false,
-    statusMessage: ''
-  });
-  const [isTranscriptionEnabled, setIsTranscriptionEnabled] = useState<Transcription>(props.initialConfig?.transcription ?? 
-    {
-      enabled: false,
-      version: {
-        live_transcription: true,
-        intermediate_transcription: false
-      }
-    });
-
   const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
 
   const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
   const agentAssistUtils = AgentAssistUtils.instance
-
-  const transcriptionOptions = [
-    {
-      value: templates[AgentAssistStringTemplates.LiveTranscription](),
-      helpText: templates[AdminUiStringTemplates.LiveTranscriptionHelperText](),
-      label: templates[AgentAssistStringTemplates.LiveTranscription](),
-      defaultChecked: true
-    },
-    {
-      value: templates[AgentAssistStringTemplates.IntermediateTranscription](),
-      helpText: templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText](),
-      label: templates[AgentAssistStringTemplates.IntermediateTranscription](),
-    }
-  ]
 
   const agentAssistFeatures = [
     {
@@ -117,9 +89,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       agent_coaching: isAgentCoachingEnabled,
       conversation_summary: isConversationSummaryEnabled,
       smart_reply: isSmartReplyEnabled,
-      transcription: isTranscriptionEnabled,
-      enable_voice: isVoiceEnabled,
-      notifier_server_endpoint: notifierServerEndpoint.configItem,
       debug: isDebugEnabled
       },
     );
@@ -130,10 +99,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     isAgentCoachingEnabled, 
     isConversationSummaryEnabled,
     isSmartReplyEnabled,
-    isTranscriptionEnabled,
-    isVoiceEnabled, 
-    notifierServerEndpoint, 
-    isTranscriptionEnabled, 
     isDebugEnabled,
     isKnowledgeAssistEnabled
   ]);
@@ -175,45 +140,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
     catch(error){
       setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
-    }
-  }
-
-  //Todo: make this connect to the websocket
-  const validateNotifierServerEndpoint = async () => {
-    const onSuccess = () => setNotiferServerEndpoint({ ...notifierServerEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()});
-    const onError = () => setNotiferServerEndpoint({ ...notifierServerEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()});
-  
-    try {
-      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
-      agentAssistUtils.getWebsocketStatus(notifierServerEndpoint.configItem, onSuccess, onError);
-    }
-    catch (error) {
-    }
-  }
-
-  const transcriptionVersionHandler = (version: string) => {
-    switch (version) {
-      case templates[AgentAssistStringTemplates.LiveTranscription]():
-        setIsTranscriptionEnabled(
-          {
-            ...isTranscriptionEnabled,
-            version: {
-              live_transcription: true,
-              intermediate_transcription: false
-            }
-          })
-        break;
-      case templates[AgentAssistStringTemplates.IntermediateTranscription]():
-      default:
-        setIsTranscriptionEnabled(
-          {
-            ...isTranscriptionEnabled,
-            version: {
-              live_transcription: false,
-              intermediate_transcription: true
-            }
-          })
-        break;
     }
   }
 
@@ -281,47 +207,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
         </FormControl>
       </FormSection>
       <Separator orientation="horizontal" />
-      <FormSection>
-        <FormSectionHeading>
-          Voice Settings
-        </FormSectionHeading>
-        <FormControl key={'voice-control'}>
-          <Switch
-            checked={isVoiceEnabled}
-            onChange={(e) => setIsVoiceEnabled(e.target.checked)}
-          >
-            Enable Voice
-          </Switch>
-        </FormControl>
-        <FormControl key={'notifier-server-endpoint-control'}>
-          <Stack orientation="vertical" spacing="space60">
-            <>
-              <Label htmlFor={'notifier-server-endpoint'}>{templates[AgentAssistStringTemplates.NotiferServerEnpoint]()}</Label>
-              <Input
-                id={'notifier-server-endpoint'}
-                name={'notifier-server-endpoint'}
-                type="text"
-                value={notifierServerEndpoint.configItem}
-                onChange={(e) => setNotiferServerEndpoint({...notifierServerEndpoint, configItem: e.target.value})}
-                disabled={!isVoiceEnabled}
-                required={isVoiceEnabled}
-              />
-            </>
-            <ValidationButton configItem={notifierServerEndpoint} testConnectionFunction={validateNotifierServerEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
-          </Stack>
-        </FormControl>
-        <FormControl key={'transcription-control'}>
-          <SwitchWithOptions
-            feature={isTranscriptionEnabled}
-            featureChangeHandler={(e: any) => setIsTranscriptionEnabled({ ...isTranscriptionEnabled, enabled: !isTranscriptionEnabled.enabled})}
-            featureOptions={transcriptionOptions}
-            featureDisabled={!isVoiceEnabled}
-            featureLabel={templates[AgentAssistStringTemplates.Transcription]()}
-            optionsChangeHandler={transcriptionVersionHandler}
-            optionsDisabled={!(isTranscriptionEnabled.enabled && isVoiceEnabled)}
-          />
-        </FormControl>
-      </FormSection>
+            <AgentAssistAdminVoiceSettings {...props}/>
       <Separator orientation="horizontal" />
       <FormSection>
         <FormSectionHeading>
