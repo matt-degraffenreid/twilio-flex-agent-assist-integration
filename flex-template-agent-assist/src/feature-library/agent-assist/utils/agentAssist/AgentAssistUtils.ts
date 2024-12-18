@@ -7,6 +7,7 @@ import { ConnectorConfig,
 import { getCustomApiEndpoint, getConversationProfile } from '../../config';
 import Cookies from 'js-cookie';
 import logger from '../../../../utils/logger';
+import { io } from "socket.io-client";
 
 class AgentAssistUtils {
     static #agentAssistUtils: AgentAssistUtils;

@@ -13,7 +13,6 @@ import { StringTemplates as AdminUiStringTemplates} from '../../flex-hooks/strin
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { templates } from '@twilio/flex-ui';
 import { ValidationButton, SwitchWithOptions } from './AgentAssistAdminComponents';
-import { io } from "socket.io-client";
 import AgentAssistUtils from '../../utils/agentAssist/AgentAssistUtils';
 
 interface OwnProps {
