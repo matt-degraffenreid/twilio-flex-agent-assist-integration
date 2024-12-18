@@ -14,9 +14,9 @@ const {
   transcription = {
     enabled: false,
     version: {
-        live_transcription: true,
-        intermediate_transcription: false
-    }
+      live_transcription: true,
+      intermediate_transcription: false,
+    },
   },
   debug = false,
 } = (getFeatureFlags()?.features?.agent_assist as AgentAssistConfig) || {};
@@ -42,8 +42,8 @@ export const isAgentCoachingEnabled = () => {
 };
 
 export const isKnowledgeAssistEnabled = () => {
-  return isFeatureEnabled() && knowledge_assist 
-}
+  return isFeatureEnabled() && knowledge_assist;
+};
 
 export const isSmartReplyEnabled = () => {
   return smart_reply;
@@ -58,8 +58,8 @@ export const getNotifierServerEndpoint = () => {
 };
 
 export const isTranscriptionEnabled = () => {
-  return  isVoiceEnabled() && transcription.enabled;
-}
+  return isVoiceEnabled() && transcription.enabled;
+};
 
 export const isLiveTranscriptionEnabled = () => {
   return isTranscriptionEnabled() && transcription.version.live_transcription;

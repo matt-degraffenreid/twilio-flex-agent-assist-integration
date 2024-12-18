@@ -1,15 +1,10 @@
 import * as Flex from '@twilio/flex-ui';
+import Cookies from 'js-cookie';
 
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import AgentAssistUtils from '../../utils/agentAssist/AgentAssistUtils';
-import { 
-  isVoiceEnabled, 
-  getConversationProfile, 
-  getCustomApiEndpoint, 
-  getNotifierServerEndpoint 
-} from '../../config';
+import { isVoiceEnabled, getConversationProfile, getCustomApiEndpoint, getNotifierServerEndpoint } from '../../config';
 import { updateAgentAssistState } from '../states/AgentAssist';
-import Cookies from 'js-cookie';
 import logger from '../../../../utils/logger';
 
 export const actionEvent = FlexActionEvent.after;
@@ -18,7 +13,7 @@ export const actionHook = function afterSetActivity(flex: typeof Flex, _manager:
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload, abortFunction) => {
     const { activityName } = payload;
     const agentAssistUtils = AgentAssistUtils.instance;
-    switch(activityName){
+    switch (activityName) {
       case 'Available':
         loginFlow(agentAssistUtils, _manager);
         break;
@@ -26,17 +21,19 @@ export const actionHook = function afterSetActivity(flex: typeof Flex, _manager:
       case 'Offline':
       case 'Unavailable':
         Cookies.remove('CCAI_AGENT_ASSIST_AUTH_TOKEN');
-        _manager.store.dispatch(updateAgentAssistState({
-          status: 'disconnected',
-          authToken: ""
-        }))
+        _manager.store.dispatch(
+          updateAgentAssistState({
+            status: 'disconnected',
+            authToken: '',
+          }),
+        );
         break;
     }
   });
 };
 
 const loginFlow = async (agentAssistUtils: AgentAssistUtils, manager: Flex.Manager) => {
-  logger.debug('[Agent-Assist] Initialzing UI Modules')
+  logger.debug('[Agent-Assist] Initialzing UI Modules');
   const agentToken = manager.store.getState().flex.session.ssoTokenPayload.token;
   const authToken = await agentAssistUtils.getAgentAssistAuthToken(agentToken);
   const connectorConfig = {
@@ -51,11 +48,13 @@ const loginFlow = async (agentAssistUtils: AgentAssistUtils, manager: Flex.Manag
       transport: 'websocket',
       library: 'SocketIo',
       notifierServerEndpoint: getNotifierServerEndpoint(),
-    }
-  }
+    },
+  };
   agentAssistUtils.initializeUiConnector(connectorConfig);
-  manager.store.dispatch(updateAgentAssistState({
-    status: 'connected',
-    authToken
-  }))
-}
+  manager.store.dispatch(
+    updateAgentAssistState({
+      status: 'connected',
+      authToken,
+    }),
+  );
+};

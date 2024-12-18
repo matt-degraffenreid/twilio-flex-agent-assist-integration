@@ -1,7 +1,4 @@
-import { SwitchWithOptions } from "./SwitchWithOptions";
-import { ValidationButton } from "./ValidationButton";
+import { SwitchWithOptions } from './SwitchWithOptions';
+import { ValidationButton } from './ValidationButton';
 
-export {
-    SwitchWithOptions,
-    ValidationButton
-}
+export { SwitchWithOptions, ValidationButton };

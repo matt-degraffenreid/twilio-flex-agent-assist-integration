@@ -31,7 +31,8 @@ export default abstract class ApiService {
     if (process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN)
       this.serverlessDomain = process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN;
 
-    if (custom_data?.serverless_functions_domain_agent_assist) this.serverlessDomain = custom_data.serverless_functions_domain_agent_assist;
+    if (custom_data?.serverless_functions_domain_agent_assist)
+      this.serverlessDomain = custom_data.serverless_functions_domain_agent_assist;
 
     if (custom_data?.serverless_functions_protocol) this.serverlessProtocol = custom_data.serverless_functions_protocol;
 

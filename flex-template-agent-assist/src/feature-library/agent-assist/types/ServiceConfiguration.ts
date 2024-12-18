@@ -3,7 +3,7 @@ export interface Transcription {
   version: {
     live_transcription: boolean;
     intermediate_transcription: boolean;
-  }
+  };
 }
 
 export default interface AgentAssistConfig {

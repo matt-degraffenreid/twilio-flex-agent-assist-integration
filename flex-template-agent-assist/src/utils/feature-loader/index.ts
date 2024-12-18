@@ -161,7 +161,7 @@ export const initAgentAssistFeatures = (flex: typeof Flex, manager: Flex.Manager
       const feature = file.register() as FeatureDefinition;
 
       if (feature && feature.name) {
-        loadAgentAssistEvents(flex, manager, feature)
+        loadAgentAssistEvents(flex, manager, feature);
       }
     } catch (error) {
       console.error('Error loading feature:', error);
@@ -173,8 +173,8 @@ export const loadAgentAssistEvents = async (flex: typeof Flex, manager: Flex.Man
   const name = feature.name ?? 'unknown';
   const hooks = feature.hooks ?? [];
   for (const hook of hooks) {
-    if(hook.agentAssistEventHook) {
-      AgentAssistEvents.addHook(flex, manager, name, hook)
+    if (hook.agentAssistEventHook) {
+      AgentAssistEvents.addHook(flex, manager, name, hook);
     }
   }
-}
+};

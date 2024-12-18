@@ -2,34 +2,33 @@ import React, { useEffect } from 'react';
 import { Flex as PasteFlexComponent } from '@twilio-paste/core/flex';
 import { IconButton, templates } from '@twilio/flex-ui';
 import * as Flex from '@twilio/flex-ui';
+import { useDispatch, useSelector } from 'react-redux';
+import { Tooltip } from '@twilio-paste/core/tooltip';
+
 import { AgentAssistIcon } from '../../flex-hooks/icons/AgentAssistIcon.jsx';
 import { AppState } from '../../../../types/manager';
 import { reduxNamespace } from '../../../../utils/state';
-import { useDispatch, useSelector } from 'react-redux';
 import { AgentAssistState } from '../../flex-hooks/states/AgentAssist';
 import AgentAssistUtils from '../../utils/agentAssist/AgentAssistUtils';
 import { isVoiceEnabled, getConversationProfile, getCustomApiEndpoint, getNotifierServerEndpoint } from '../../config';
 import { updateAgentAssistState } from '../../flex-hooks/states/AgentAssist';
-import { Tooltip } from '@twilio-paste/core/tooltip';
 import { StringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import logger from '../../../../utils/logger';
 
 export const AgentAssistAlertButton = () => {
   const dispatch = useDispatch();
 
-  const { status } = useSelector(
-    (state: AppState) => state[reduxNamespace].agentAssist as AgentAssistState,
-  );
+  const { status } = useSelector((state: AppState) => state[reduxNamespace].agentAssist as AgentAssistState);
   const isAvailable = Flex.useFlexSelector((state: AppState) => state.flex.worker.activity.available);
   const agentToken = Flex.useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
 
   useEffect(() => {
-    const agentAssistUtils = AgentAssistUtils.instance
+    const agentAssistUtils = AgentAssistUtils.instance;
     const fetchAuthToken = async () => {
       return await agentAssistUtils.getAgentAssistAuthToken(agentToken);
-    }
-    if(isAvailable){
-      logger.debug('[Agent-Assist] Agent marked as available on page load. Setting up UI Modules')
+    };
+    if (isAvailable) {
+      logger.debug('[Agent-Assist] Agent marked as available on page load. Setting up UI Modules');
       fetchAuthToken().then((authToken) => {
         const connectorConfig = {
           channel: isVoiceEnabled() ? 'voice' : 'chat',
@@ -43,13 +42,15 @@ export const AgentAssistAlertButton = () => {
             transport: 'websocket',
             library: 'SocketIo',
             notifierServerEndpoint: getNotifierServerEndpoint(),
-          }
-        }
+          },
+        };
         agentAssistUtils.initializeUiConnector(connectorConfig);
-        dispatch(updateAgentAssistState({
-          status: 'connected',
-          authToken
-        }))
+        dispatch(
+          updateAgentAssistState({
+            status: 'connected',
+            authToken,
+          }),
+        );
       });
     }
   }, []);
@@ -65,13 +66,12 @@ export const AgentAssistAlertButton = () => {
         placement="left"
       >
         <IconButton
-          disabled={status === 'connected' ? false : true}
+          disabled={status !== 'connected'}
           icon={<AgentAssistIcon />}
           size="small"
-          style={{ backgroundColor: 'transparent'}}
+          style={{ backgroundColor: 'transparent' }}
         />
       </Tooltip>
-      
     </PasteFlexComponent>
   );
 };

@@ -1,5 +1,6 @@
-//@ts-nocheck
+// @ts-nocheck
 import * as Flex from '@twilio/flex-ui';
+
 import { AgentAssistEvent } from '../../types/feature-loader';
 
 export const addHook = (flex: typeof Flex, manager: Flex.Manager, feature: string, hook: any) => {
@@ -9,7 +10,7 @@ export const addHook = (flex: typeof Flex, manager: Flex.Manager, feature: strin
   }
   const event = hook.agentAssistEventName as AgentAssistEvent;
 
-    console.info(
+  console.info(
     `Feature ${feature} registered %c${event} %cevent hook: %c${hook.agentAssistEventHook.name}`,
     'font-weight:bold',
     'font-weight:normal',
@@ -19,4 +20,4 @@ export const addHook = (flex: typeof Flex, manager: Flex.Manager, feature: strin
   addAgentAssistEventListener(event, function (eventPayload: any) {
     hook.agentAssistEventHook(flex, manager, eventPayload);
   });
-}
+};
