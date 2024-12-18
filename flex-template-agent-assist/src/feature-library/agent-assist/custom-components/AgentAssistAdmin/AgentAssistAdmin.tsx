@@ -104,7 +104,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
     //TODO: put condition for allowing a save to go through
   const setAllowSave = () => {
-
+    props.setAllowSave(props.feature, true);
   }
 
   useEffect(() => {
