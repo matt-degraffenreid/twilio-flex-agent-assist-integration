@@ -22,20 +22,6 @@ interface ConfigItem {
     statusMessage: string;
 }
 
-const transcriptionOptions = [
-    {
-        value: templates[AgentAssistStringTemplates.LiveTranscription](),
-        helpText: templates[AdminUiStringTemplates.LiveTranscriptionHelperText](),
-        label: templates[AgentAssistStringTemplates.LiveTranscription](),
-        defaultChecked: true
-    },
-    {
-        value: templates[AgentAssistStringTemplates.IntermediateTranscription](),
-        helpText: templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText](),
-        label: templates[AgentAssistStringTemplates.IntermediateTranscription](),
-    }
-];
-
 export const AgentAssistAdminVoiceSettings = (props: OwnProps) => {
     const [isVoiceEnabled, setIsVoiceEnabled] = useState(props.initialConfig?.enable_voice ?? false);   
     const [notifierServerEndpoint, setNotiferServerEndpoint] = useState<ConfigItem>({
@@ -55,6 +41,20 @@ export const AgentAssistAdminVoiceSettings = (props: OwnProps) => {
     const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
     const agentAssistUtils = AgentAssistUtils.instance
 
+    const transcriptionOptions = [
+        {
+            value: templates[AgentAssistStringTemplates.LiveTranscription](),
+            helpText: templates[AdminUiStringTemplates.LiveTranscriptionHelperText](),
+            label: templates[AgentAssistStringTemplates.LiveTranscription](),
+            defaultChecked: true
+        },
+        {
+            value: templates[AgentAssistStringTemplates.IntermediateTranscription](),
+            helpText: templates[AdminUiStringTemplates.IntermediateTranscriptionHelperText](),
+            label: templates[AgentAssistStringTemplates.IntermediateTranscription](),
+        }
+    ];
+    
     const setAllowSave = () => {
         props.setAllowSave(props.feature, true);
     }
