@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { ConnectorConfig, 
     UiModuleConnector, 
     UiModuleEventBasedConnector, 
@@ -82,7 +82,7 @@ class AgentAssistUtils {
             logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
             return;
         }
-        const endpoint = validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint())
+        const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint())
         return fetch(`${endpoint}/v2beta1/${conversationProfile}`, {
             method: 'GET',
             headers: [['Authorization', authToken]],
@@ -101,7 +101,7 @@ class AgentAssistUtils {
     }
 
     public getStatus(customApiEndpoint?: string): boolean {
-        const endpoint = validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
+        const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
         return fetch(`${endpoint}/status`, {
             method: 'GET'
             })
