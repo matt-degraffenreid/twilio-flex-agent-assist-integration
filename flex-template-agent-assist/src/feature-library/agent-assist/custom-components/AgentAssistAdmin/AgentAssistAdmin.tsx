@@ -4,9 +4,7 @@ import { Switch } from '@twilio-paste/core/switch';
 import { Separator } from '@twilio-paste/core/separator';
 import { templates } from '@twilio/flex-ui';
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
-import { AgentAssistAdminVoiceSettings } from './AgentAssistAdminComponents/AgentAssistAdminVoiceSettings';
-import { AgentAssistAdminGeneralSettings } from './AgentAssistAdminComponents/AgentAssistAdminGeneralSettings';
-import { AgentAssistAdminFeatureSettings } from './AgentAssistAdminComponents/AgentAssistAdminFeatureSettings';
+import { AgentAssistAdminVoiceSettings, AgentAssistAdminGeneralSettings, AgentAssistAdminFeatureSettings } from './AgentAssistAdminComponents/';
 
 interface OwnProps {
   feature: string;
