@@ -139,11 +139,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     isKnowledgeAssistEnabled
   ]);
 
-  const validateConversationProfile = (conversationProfile: string): boolean => {
-    const regExp = new RegExp("(^projects\/[^\/]+\/locations\/[^\/]+)\/conversationProfiles\/[^\/]+$");
-    return regExp.test(conversationProfile);
-  }
-
   const validateConversationProfileExisits = async () => {
     try {
       await agentAssistUtils.getAgentAssistAuthToken(agentToken);
@@ -160,7 +155,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }
 
   const conversationProfileHandler = (conversationProfile: string) => {
-    const error = validateConversationProfile(conversationProfile);
+    const error = AgentAssistUtils.validateConversationProfile(conversationProfile);
     if(error){
       setConversationProfile({ hasError: false, configItem: conversationProfile, statusMessage: "" })
     }

@@ -119,6 +119,11 @@ class AgentAssistUtils {
         const validUrl = `${hasProtocal ? "" : "https://"}${url}`;
         return validUrl
     }
+
+    static validateConversationProfile = (conversationProfile: string): boolean => {
+        const regExp = new RegExp("(^projects\/[^\/]+\/locations\/[^\/]+)\/conversationProfiles\/[^\/]+$");
+        return regExp.test(conversationProfile);
+    }
 }
 
 export default AgentAssistUtils;
