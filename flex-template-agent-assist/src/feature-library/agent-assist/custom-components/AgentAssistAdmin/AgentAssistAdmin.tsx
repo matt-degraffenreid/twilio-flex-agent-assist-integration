@@ -230,21 +230,25 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
         socket.on("connect_error", (err) => {
           console.log(`connect_error due to ${err.message}`);
+          setNotiferServerEndpoint({ configItem: wsUrl, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()})
           socket.close()
         });
 
         socket.on('connect', () => {
           console.log("Websocket Success")
+          setNotiferServerEndpoint({ configItem: wsUrl, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
           socket.close()
         });
 
         socket.on('unauthenticated', () => {
           console.log("Websocket unauthenticated")
+          setNotiferServerEndpoint({ configItem: wsUrl, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()})
           socket.close()
         });
       }
       catch(error){
         console.log("Network Error")
+        setNotiferServerEndpoint({ ...notifierServerEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()})
       }
     }
     catch (error) {
