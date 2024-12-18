@@ -100,7 +100,7 @@ class AgentAssistUtils {
             });
     }
 
-    public getStatus(conversationProfile: string, customApiEndpoint?: string): boolean {
+    public getStatus(customApiEndpoint?: string): boolean {
         const endpoint = validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
         return fetch(`${endpoint}/status`, {
             method: 'GET'

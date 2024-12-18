@@ -164,26 +164,19 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   }
 
-  const validateCustomeApiEndpoint = async () => {
-    // try {
-    //   const protocalRegExp = new RegExp("^(http|https):\/\/");
-    //   const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
-    //   const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
-
-    //   const response = await fetch(`${url}/register`, {
-    //     method: 'POST',
-    //     headers: [['Authorization', agentToken]],
-    //   })
-
-    //   if (response.ok) {
-    //     setCustomApiEndpoint({ configItem: url, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
-    //   } else {
-    //     setCustomApiEndpoint({ configItem: url, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
-    //   }
-    // }
-    // catch(error){
-    //   setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
-    // }
+  const validateCustomApiEndpoint = async () => {
+    try {
+      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      const isValid = await agentAssistUtils.getStatus(customApiEndpoint.configItem)
+      if (isValid) {
+        setCustomApiEndpoint({ ...customApiEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
+      } else {
+        setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
+      }
+    }
+    catch(error){
+      setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
+    }
   }
 
   //Todo: make this connect to the websocket
@@ -282,7 +275,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
                 required
               />
             </>
-            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateCustomeApiEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
+            <ValidationButton configItem={customApiEndpoint} testConnectionFunction={validateCustomApiEndpoint} label={templates[AdminUiStringTemplates.TestConnectionCTA]()} />
           </Stack>
         </FormControl>
         <FormControl key={'conversation-profile-control'}>
