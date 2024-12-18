@@ -219,9 +219,9 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       const token = data.token;
 
       try {
-        const websocketRegExp = new RegExp("^(ws|wss):\/\/");
+        const websocketRegExp = new RegExp("^(http|https):\/\/");
         const hasWebsocketProtocal = websocketRegExp.test(notifierServerEndpoint.configItem);
-        const wsUrl = `${hasWebsocketProtocal ? "" : "wss://"}${notifierServerEndpoint.configItem}`;
+        const wsUrl = `${hasWebsocketProtocal ? "" : "https://"}${notifierServerEndpoint.configItem}`;
         const socket = io(wsUrl, {
           auth: {
             token
