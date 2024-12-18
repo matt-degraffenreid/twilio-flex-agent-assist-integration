@@ -145,34 +145,18 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }
 
   const validateConversationProfileExisits = async () => {
-    agentAssistUtils.getAgentAssistAuthToken(agentToken);
-    agentAssistUtils.getConversationProfile(conversationProfile.configItem, `https://${customApiEndpoint.configItem}`)
-    // try {
-    //   const protocalRegExp = new RegExp("^(http|https):\/\/");
-    //   const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
-    //   const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
-
-    //   const response = await fetch(`${url}/register`, {
-    //     method: 'POST',
-    //     headers: [['Authorization', agentToken]],
-    //   })
-    //   const data = await response.json();
-    //   const token = data.token;
-
-    //   const conversationProfileResponse = await fetch(`${url}/v2beta1/${conversationProfile.configItem}`, {
-    //     method: 'GET',
-    //     headers: [['Authorization', token]],
-    //   })
-
-    //   if (conversationProfileResponse.ok) {
-    //     setConversationProfile({ ...conversationProfile, hasError: false, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileSuccess]() })
-    //   } else {
-    //     setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
-    //   }
-    // }
-    // catch (error) {
-    //   setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
-    // }
+    try {
+      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      const conversationProfileName = await agentAssistUtils.getConversationProfile(conversationProfile.configItem, customApiEndpoint.configItem);
+      if (conversationProfileName) {
+        setConversationProfile({ ...conversationProfile, hasError: false, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileSuccess]() })
+      } else {
+        setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
+      }
+    }
+    catch (error) {
+      setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
+    }
   }
 
   const conversationProfileHandler = (conversationProfile: string) => {

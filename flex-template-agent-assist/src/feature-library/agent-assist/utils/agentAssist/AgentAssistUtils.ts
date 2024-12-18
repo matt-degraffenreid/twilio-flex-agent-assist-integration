@@ -82,21 +82,28 @@ class AgentAssistUtils {
             logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
             return;
         }
-        return fetch(`${customApiEndpoint ? customApiEndpoint: getCustomApiEndpoint()}/v2beta1/${conversationProfile}`, {
+        const endpoint = validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint())
+        return fetch(`${endpoint}/v2beta1/${conversationProfile}`, {
             method: 'GET',
             headers: [['Authorization', authToken]],
             })
             .then(response => {
                 if (!response.ok) {
-                // error coming back from server
-                throw Error('could not fetch the data for that resource');
+                    // error coming back from server
+                    throw Error('could not fetch the data for that resource');
                 }
-                return response.json();
             })
             .then(data => {
                 logger.debug('[Agent-Assist] Conversation profile retrived');
                 return data.name;
             });
+    }
+
+    private validateUrl(url: string): string {
+        const protocalRegExp = new RegExp("^(http|https):\/\/");
+        const hasProtocal = protocalRegExp.test(url);
+        const validUrl = `${hasProtocal ? "" : "https://"}${url}`;
+        return validUrl
     }
 }
 
