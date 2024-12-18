@@ -117,7 +117,7 @@ class AgentAssistUtils {
     public getWebsocketStatus(notifierServerEndpoint: string, onSuccess: any, onError: any): void {
         const endpoint = this.validateUrl(notifierServerEndpoint);
         const token = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
-        if(!authToken){
+        if(!token){
             logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
             return;
         }
