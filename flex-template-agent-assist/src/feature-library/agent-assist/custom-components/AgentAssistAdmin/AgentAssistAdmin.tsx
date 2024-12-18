@@ -146,7 +146,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   const validateConversationProfileExisits = async () => {
     agentAssistUtils.getAgentAssistAuthToken(agentToken);
-    agentAssistUtils.getConversationProfile(conversationProfile.configItem, `"https://"${customApiEndpoint.configItem}`)
+    agentAssistUtils.getConversationProfile(conversationProfile.configItem, `https://${customApiEndpoint.configItem}`)
     // try {
     //   const protocalRegExp = new RegExp("^(http|https):\/\/");
     //   const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
