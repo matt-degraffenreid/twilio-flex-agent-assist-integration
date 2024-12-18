@@ -181,50 +181,12 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   //Todo: make this connect to the websocket
   const validateNotifierServerEndpoint = async () => {
+    const onSuccess = () => setNotiferServerEndpoint({ ...notifierServerEndpoint, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()});
+    const onError = () => setNotiferServerEndpoint({ ...notifierServerEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()});
+  
     try {
-      const protocalRegExp = new RegExp("^(http|https):\/\/");
-      const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
-      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
-      
-      const response = await fetch(`${url}/register`, {
-        method: 'POST',
-        headers: [['Authorization', agentToken]],
-      })
-      const data = await response.json();
-      const token = data.token;
-
-      try {
-        const websocketRegExp = new RegExp("^(http|https):\/\/");
-        const hasWebsocketProtocal = websocketRegExp.test(notifierServerEndpoint.configItem);
-        const wsUrl = `${hasWebsocketProtocal ? "" : "https://"}${notifierServerEndpoint.configItem}`;
-        const socket = io(wsUrl, {
-          auth: {
-            token
-          },
-        });
-
-        socket.on("connect_error", (err) => {
-          console.log(`connect_error due to ${err.message}`);
-          setNotiferServerEndpoint({ configItem: wsUrl, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()})
-          socket.close()
-        });
-
-        socket.on('connect', () => {
-          console.log("Websocket Success")
-          setNotiferServerEndpoint({ configItem: wsUrl, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
-          socket.close()
-        });
-
-        socket.on('unauthenticated', () => {
-          console.log("Websocket unauthenticated")
-          setNotiferServerEndpoint({ configItem: wsUrl, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()})
-          socket.close()
-        });
-      }
-      catch(error){
-        console.log("Network Error")
-        setNotiferServerEndpoint({ ...notifierServerEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError]()})
-      }
+      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      agentAssistUtils.getWebsocketStatus(notifierServerEndpoint.configItem, onSuccess, onError);
     }
     catch (error) {
     }

@@ -113,6 +113,44 @@ class AgentAssistUtils {
             })
     }
 
+    public getWebsocketStatus(notifierServerEndpoint: string, onSuccess: any, onError: any): void {
+        const endpoint = this.validateUrl(notifierServerEndpoint);
+        const token = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
+        if(!authToken){
+            logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
+            return;
+        }
+        try {
+            const socket = io(endpoint, {
+              auth: {
+                token
+              },
+            });
+    
+            socket.on("connect_error", (err) => {
+                console.log(`connect_error due to ${err.message}`);
+                onError();
+                socket.close()
+            });
+    
+            socket.on('connect', () => {
+                console.log("Websocket Success")
+                onSuccess()
+                socket.close()
+            });
+    
+            socket.on('unauthenticated', () => {
+              console.log("Websocket unauthenticated")
+              onError();
+              socket.close()
+            });
+          }
+          catch(error){
+            console.log("Network Error")
+            onError();
+          }
+    }
+
     private validateUrl(url: string): string {
         const protocalRegExp = new RegExp("^(http|https):\/\/");
         const hasProtocal = protocalRegExp.test(url);
