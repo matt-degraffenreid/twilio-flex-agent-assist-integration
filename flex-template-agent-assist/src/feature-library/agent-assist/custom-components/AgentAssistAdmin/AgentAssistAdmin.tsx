@@ -14,6 +14,7 @@ import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/
 import { templates } from '@twilio/flex-ui';
 import { ValidationButton, SwitchWithOptions } from './AgentAssistAdminComponents';
 import { io } from "socket.io-client";
+import AgentAssistUtils from '../../utils/agentAssist/AgentAssistUtils';
 
 interface OwnProps {
     feature: string;
@@ -60,6 +61,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
 
   const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
+  const agentAssistUtils = AgentAssistUtils.instance
 
   const transcriptionOptions = [
     {
@@ -102,7 +104,6 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     }
   ]
 
-    //TODO: put condition for allowing a save to go through
   const setAllowSave = () => {
     props.setAllowSave(props.feature, true);
   }
@@ -144,32 +145,34 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }
 
   const validateConversationProfileExisits = async () => {
-    try {
-      const protocalRegExp = new RegExp("^(http|https):\/\/");
-      const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
-      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
+    agentAssistUtils.getAgentAssistAuthToken(agentToken);
+    agentAssistUtils.getConversationProfile(conversationProfile.configItem, `"https://"${customApiEndpoint.configItem}`)
+    // try {
+    //   const protocalRegExp = new RegExp("^(http|https):\/\/");
+    //   const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
+    //   const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
 
-      const response = await fetch(`${url}/register`, {
-        method: 'POST',
-        headers: [['Authorization', agentToken]],
-      })
-      const data = await response.json();
-      const token = data.token;
+    //   const response = await fetch(`${url}/register`, {
+    //     method: 'POST',
+    //     headers: [['Authorization', agentToken]],
+    //   })
+    //   const data = await response.json();
+    //   const token = data.token;
 
-      const conversationProfileResponse = await fetch(`${url}/v2beta1/${conversationProfile.configItem}`, {
-        method: 'GET',
-        headers: [['Authorization', token]],
-      })
+    //   const conversationProfileResponse = await fetch(`${url}/v2beta1/${conversationProfile.configItem}`, {
+    //     method: 'GET',
+    //     headers: [['Authorization', token]],
+    //   })
 
-      if (conversationProfileResponse.ok) {
-        setConversationProfile({ ...conversationProfile, hasError: false, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileSuccess]() })
-      } else {
-        setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
-      }
-    }
-    catch (error) {
-      setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
-    }
+    //   if (conversationProfileResponse.ok) {
+    //     setConversationProfile({ ...conversationProfile, hasError: false, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileSuccess]() })
+    //   } else {
+    //     setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
+    //   }
+    // }
+    // catch (error) {
+    //   setConversationProfile({ ...conversationProfile, hasError: true, statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError]() })
+    // }
   }
 
   const conversationProfileHandler = (conversationProfile: string) => {
@@ -183,25 +186,25 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }
 
   const validateCustomeApiEndpoint = async () => {
-    try {
-      const protocalRegExp = new RegExp("^(http|https):\/\/");
-      const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
-      const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
+    // try {
+    //   const protocalRegExp = new RegExp("^(http|https):\/\/");
+    //   const hasProtocal = protocalRegExp.test(customApiEndpoint.configItem);
+    //   const url = `${hasProtocal ? "" : "https://"}${customApiEndpoint.configItem}`;
 
-      const response = await fetch(`${url}/register`, {
-        method: 'POST',
-        headers: [['Authorization', agentToken]],
-      })
+    //   const response = await fetch(`${url}/register`, {
+    //     method: 'POST',
+    //     headers: [['Authorization', agentToken]],
+    //   })
 
-      if (response.ok) {
-        setCustomApiEndpoint({ configItem: url, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
-      } else {
-        setCustomApiEndpoint({ configItem: url, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
-      }
-    }
-    catch(error){
-      setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
-    }
+    //   if (response.ok) {
+    //     setCustomApiEndpoint({ configItem: url, hasError: false, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess]()})
+    //   } else {
+    //     setCustomApiEndpoint({ configItem: url, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
+    //   }
+    // }
+    // catch(error){
+    //   setCustomApiEndpoint({ ...customApiEndpoint, hasError: true, statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]() })
+    // }
   }
 
   //Todo: make this connect to the websocket

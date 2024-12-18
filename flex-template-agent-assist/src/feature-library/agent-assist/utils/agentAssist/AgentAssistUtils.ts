@@ -75,6 +75,29 @@ class AgentAssistUtils {
         const conversationName = `${projectLocation}/conversations/${conversationId}`;
         return conversationName;
     }
+
+    public getConversationProfile(conversationProfile: string, customApiEndpoint?: string): string {
+        const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
+        if(!authToken){
+            logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
+            return;
+        }
+        return fetch(`${customApiEndpoint ? customApiEndpoint: getCustomApiEndpoint()}/v2beta1/${conversationProfile}`, {
+            method: 'GET',
+            headers: [['Authorization', authToken]],
+            })
+            .then(response => {
+                if (!response.ok) {
+                // error coming back from server
+                throw Error('could not fetch the data for that resource');
+                }
+                return response.json();
+            })
+            .then(data => {
+                logger.debug('[Agent-Assist] Conversation profile retrived');
+                return data.name;
+            });
+    }
 }
 
 export default AgentAssistUtils;
