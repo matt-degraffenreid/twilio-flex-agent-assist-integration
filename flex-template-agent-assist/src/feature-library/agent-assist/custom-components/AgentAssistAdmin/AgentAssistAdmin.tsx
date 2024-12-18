@@ -386,6 +386,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
           />
         </FormControl>
       </FormSection>
+      <Separator orientation="horizontal" />
       <FormSection>
         <FormSectionHeading>
           Troubleshooting
