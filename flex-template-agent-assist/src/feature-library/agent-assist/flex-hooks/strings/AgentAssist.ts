@@ -13,7 +13,8 @@ export enum StringTemplates {
   SmartReply = 'CCAISmartReply',
   ConversationProfile = 'CCAIConversationProfile',
   CustomApiEndpoint = 'CCAICustomApiEndpoint',
-  NotiferServerEnpoint = 'CCAINotifierServerEndpoint'
+  NotiferServerEnpoint = 'CCAINotifierServerEndpoint',
+  Debug = 'CCAIDebug'
 }
 
 export const stringHook = () => ({
@@ -32,6 +33,6 @@ export const stringHook = () => ({
     [StringTemplates.SmartReply]: 'Smart Reply',
     [StringTemplates.CustomApiEndpoint]: 'Custom API Endpoint',
     [StringTemplates.NotiferServerEnpoint]: 'Notifier Server Endpoint',    
-
+    [StringTemplates.Debug]: 'Debug',  
   },
 });

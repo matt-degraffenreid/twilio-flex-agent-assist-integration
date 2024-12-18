@@ -386,6 +386,14 @@ export const AgentAssistAdmin = (props: OwnProps) => {
           />
         </FormControl>
       </FormSection>
+      <FormSection>
+        <FormSectionHeading>
+          Troubleshooting
+        </FormSectionHeading>
+        <FormControl key={'debug-control'}>
+            <Switch checked={isDebugEnabled} onChange={() => setIsDebugEnabled(!isDebugEnabled)}>{templates[AgentAssistStringTemplates.Debug]()}</Switch>
+        </FormControl>
+      </FormSection>
     </>
   )
 }
