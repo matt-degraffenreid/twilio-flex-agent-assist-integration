@@ -92,11 +92,25 @@ class AgentAssistUtils {
                     // error coming back from server
                     throw Error('could not fetch the data for that resource');
                 }
+                return response.json();
             })
             .then(data => {
                 logger.debug('[Agent-Assist] Conversation profile retrived');
                 return data.name;
             });
+    }
+
+    public getStatus(conversationProfile: string, customApiEndpoint?: string): boolean {
+        const endpoint = validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
+        return fetch(`${endpoint}/status`, {
+            method: 'GET'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return false
+                }
+                return true
+            })
     }
 
     private validateUrl(url: string): string {
