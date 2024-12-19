@@ -1,6 +1,7 @@
 import { templates } from '@twilio/flex-ui';
 import { useEffect, useState } from 'react';
-import { FormSection, FormSectionHeading, FormControl, SwitchGroup, Switch } from '@twilio-paste/core';
+import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core/form';
+import { Switch, SwitchGroup } from '@twilio-paste/core/switch';
 
 import { StringTemplates as AgentAssistStringTemplates } from '../../../flex-hooks/strings/AgentAssist';
 import { StringTemplates as AdminUiStringTemplates } from '../../../flex-hooks/strings/AgentAssistAdmin';

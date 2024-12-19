@@ -1,5 +1,9 @@
 import { templates, useFlexSelector } from '@twilio/flex-ui';
-import { FormSection, FormSectionHeading, FormControl, Stack, Label, Input, HelpText } from '@twilio-paste/core';
+import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core/form';
+import { Stack } from '@twilio-paste/core/stack';
+import { Label } from '@twilio-paste/core/label';
+import { Input } from '@twilio-paste/core/input';
+import { HelpText } from '@twilio-paste/core/help-text';
 import { useEffect, useState } from 'react';
 
 import { StringTemplates as AgentAssistStringTemplates } from '../../../flex-hooks/strings/AgentAssist';

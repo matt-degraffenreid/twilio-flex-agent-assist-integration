@@ -1,5 +1,9 @@
-import { FormSection, FormSectionHeading, FormControl, Switch, Stack, Label, Input } from '@twilio-paste/core';
+import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core/form';
+import { Stack } from '@twilio-paste/core/stack';
+import { Label } from '@twilio-paste/core/label';
+import { Input } from '@twilio-paste/core/input';
 import { templates, useFlexSelector } from '@twilio/flex-ui';
+import { Switch } from '@twilio-paste/core/switch';
 import { useEffect, useState } from 'react';
 
 import { AppState } from '../../../../../types/manager';
