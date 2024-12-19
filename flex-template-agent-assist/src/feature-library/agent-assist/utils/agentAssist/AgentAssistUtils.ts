@@ -32,8 +32,14 @@ class AgentAssistUtils {
     if (!AgentAssistUtils.#agentAssistUtils) {
       AgentAssistUtils.#agentAssistUtils = new AgentAssistUtils();
     }
+    logger.debug('[Agent-Assist] connector already instantiated');
     return AgentAssistUtils.#agentAssistUtils;
   }
+
+  static validateConversationProfile = (conversationProfile: string): boolean => {
+    const regExp = new RegExp('(^projects/[^/]+/locations/[^/]+)/conversationProfiles/[^/]+$');
+    return regExp.test(conversationProfile);
+  };
 
   public initializeUiConnector(config: ConnectorConfig) {
     if (!AgentAssistUtils.#connector) {
@@ -53,7 +59,8 @@ class AgentAssistUtils {
     }
 
     logger.debug('[Agent-Assist] Making request for Agent Assist auth token');
-    return fetch(`${getCustomApiEndpoint()}/register`, {
+    const endpoint = this.validateUrl(getCustomApiEndpoint());
+    return fetch(`${endpoint}/register`, {
       method: 'POST',
       headers: [['Authorization', token]],
     })
@@ -81,7 +88,7 @@ class AgentAssistUtils {
     const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
     if (!authToken) {
       logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
-      return;
+      return undefined;
     }
     const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
     return fetch(`${endpoint}/v2beta1/${conversationProfile}`, {
@@ -105,12 +112,16 @@ class AgentAssistUtils {
     const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
     return fetch(`${endpoint}/status`, {
       method: 'GET',
-    }).then((response) => {
-      if (!response.ok) {
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return false;
+        }
+        return true;
+      })
+      .catch(() => {
         return false;
-      }
-      return true;
-    });
+      });
   }
 
   public getWebsocketStatus(notifierServerEndpoint: string, onSuccess: any, onError: any): void {
@@ -128,24 +139,24 @@ class AgentAssistUtils {
       });
 
       socket.on('connect_error', (err) => {
-        console.log(`connect_error due to ${err.message}`);
+        logger.debug(`[Agent-Assist] connect_error due to ${err.message}`);
         onError();
         socket.close();
       });
 
       socket.on('connect', () => {
-        console.log('Websocket Success');
+        logger.debug('[Agent-Assist] Websocket connection successful');
         onSuccess();
         socket.close();
       });
 
       socket.on('unauthenticated', () => {
-        console.log('Websocket unauthenticated');
+        logger.debug('[Agent-Assist] Websocket unauthenticated');
         onError();
         socket.close();
       });
     } catch (error) {
-      console.log('Network Error');
+      logger.debug('Network Error');
       onError();
     }
   }
@@ -155,11 +166,6 @@ class AgentAssistUtils {
     const hasProtocal = protocalRegExp.test(url);
     return `${hasProtocal ? '' : 'https://'}${url}`;
   }
-
-  static validateConversationProfile = (conversationProfile: string): boolean => {
-    const regExp = new RegExp('(^projects/[^/]+/locations/[^/]+)/conversationProfiles/[^/]+$');
-    return regExp.test(conversationProfile);
-  };
 }
 
 export default AgentAssistUtils;

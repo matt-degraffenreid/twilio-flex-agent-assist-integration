@@ -24,7 +24,12 @@ const mockedUiAttributes: UIAttributes = {
     serverless_functions_port: '443',
     serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
     language: 'default',
-    features: {},
+    features: {
+      agent_assist: {
+        custom_api_endpoint: "mockUiconnectorBackendDomain",
+        conversation_profile: "projects/mockGcpProject/locations/mockLocation/conversationProfiles/mockConversationProfileId",
+      }
+    },
   },
 };
 
