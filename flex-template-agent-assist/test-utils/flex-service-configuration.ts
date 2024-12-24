@@ -26,9 +26,23 @@ const mockedUiAttributes: UIAttributes = {
     language: 'default',
     features: {
       agent_assist: {
-        custom_api_endpoint: "mockUiconnectorBackendDomain",
-        conversation_profile: "projects/mockGcpProject/locations/mockLocation/conversationProfiles/mockConversationProfileId",
-      }
+        custom_api_endpoint: 'mockUiconnectorBackendDomain',
+        conversation_profile:
+          'projects/mockGcpProject/locations/mockLocation/conversationProfiles/mockConversationProfileId',
+        smart_reply: true,
+        conversation_summary: true,
+        agent_coaching: false,
+        knowledge_assist: false,
+        enable_voice: true,
+        notifier_server_endpoint: 'mockNotifierServerEndpoint',
+        transcription: {
+          enabled: true,
+          version: {
+            live_transcription: true,
+            intermediate_transcription: false,
+          },
+        },
+      },
     },
   },
 };
@@ -144,7 +158,7 @@ export const resetServiceConfiguration = () => {
     ui_dependencies: {},
   };
 };
-export const setServiceConfiguration = (serviceConfiguration: Partial<ServiceConfigurationUpdate>) => {
+export const setServiceConfiguration = (serviceConfiguration: Partial<ServiceConfigurationUpdate>, p0: any) => {
   mergeWith(mockedServiceConfiguration, serviceConfiguration, (_objValue, srcValue, key, obj) => {
     if (srcValue === undefined) {
       unset(obj, key);
