@@ -75,7 +75,11 @@ export const AgentAssistAdminFeatureSettings = (props: OwnProps) => {
         >
           {agentAssistFeatures.map((feature) => {
             const { label, ...props } = feature;
-            return <Switch {...props}>{label}</Switch>;
+            return (
+              <Switch data-testid={`enable-${label}-switch`} {...props}>
+                {label}
+              </Switch>
+            );
           })}
         </SwitchGroup>
       </FormControl>
