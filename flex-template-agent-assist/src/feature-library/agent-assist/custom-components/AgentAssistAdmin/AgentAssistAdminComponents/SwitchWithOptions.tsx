@@ -32,12 +32,14 @@ export const SwitchWithOptions = ({
     <Switch
       checked={feature.enabled}
       onChange={(e) => featureChangeHandler()}
+      data-testid={`enable-${featureLabel}-switch`}
       disabled={featureDisabled}
       helpText={
         <FormControl key={`${featureLabel}-version`}>
           <RadioGroup
             legend={<></>}
             name={`${featureLabel}-version`}
+            data-testid={`${featureLabel}-version-radio-group`}
             disabled={optionsDisabled}
             onChange={(e) => optionsChangeHandler(e)}
           >
