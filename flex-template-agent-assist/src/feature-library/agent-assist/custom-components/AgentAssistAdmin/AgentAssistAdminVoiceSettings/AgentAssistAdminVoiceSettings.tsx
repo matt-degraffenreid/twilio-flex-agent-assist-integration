@@ -2,13 +2,12 @@ import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core
 import { Stack } from '@twilio-paste/core/stack';
 import { Label } from '@twilio-paste/core/label';
 import { Input } from '@twilio-paste/core/input';
-import { templates, useFlexSelector } from '@twilio/flex-ui';
+import { templates } from '@twilio/flex-ui';
 import { Switch } from '@twilio-paste/core/switch';
 import { useEffect, useState } from 'react';
+import * as Flex from '@twilio/flex-ui';
 
-import { AppState } from '../../../../../types/manager';
-import { SwitchWithOptions } from './SwitchWithOptions';
-import { ValidationButton } from './ValidationButton';
+import { SwitchWithOptions, ValidationButton } from '../AgentAssistAdminComponents';
 import { StringTemplates as AdminUiStringTemplates } from '../../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../../flex-hooks/strings/AgentAssist';
 import { Transcription } from '../../../types/ServiceConfiguration';
@@ -44,7 +43,8 @@ export const AgentAssistAdminVoiceSettings = (props: OwnProps) => {
     },
   );
 
-  const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
+  const manager = Flex.Manager.getInstance();
+  const agentToken = manager.user.token;
   const agentAssistUtils = AgentAssistUtils.instance;
 
   const transcriptionOptions = [
@@ -123,7 +123,11 @@ export const AgentAssistAdminVoiceSettings = (props: OwnProps) => {
     <FormSection>
       <FormSectionHeading>Voice Settings</FormSectionHeading>
       <FormControl key={'voice-control'}>
-        <Switch checked={isVoiceEnabled} onChange={(e) => setIsVoiceEnabled(e.target.checked)}>
+        <Switch
+          data-testid={'enable-voice-switch'}
+          checked={isVoiceEnabled}
+          onChange={(e) => setIsVoiceEnabled(e.target.checked)}
+        >
           Enable Voice
         </Switch>
       </FormControl>
@@ -135,6 +139,7 @@ export const AgentAssistAdminVoiceSettings = (props: OwnProps) => {
             </Label>
             <Input
               id={'notifier-server-endpoint'}
+              data-testid="notifier-server-endpoint-input"
               name={'notifier-server-endpoint'}
               type="text"
               value={notifierServerEndpoint.configItem}
@@ -144,6 +149,7 @@ export const AgentAssistAdminVoiceSettings = (props: OwnProps) => {
             />
           </>
           <ValidationButton
+            dataTestId="validate-notifier-server-endpoint-btn"
             configItem={notifierServerEndpoint}
             testConnectionFunction={validateNotifierServerEndpoint}
             label={templates[AdminUiStringTemplates.TestConnectionCTA]()}
