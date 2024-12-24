@@ -102,23 +102,26 @@ describe('AgentAssistAdminGeneralSettings', () => {
 
   describe('When no values are stored in the configuration service', () => {
     beforeEach(() => {
-      setServiceConfiguration({
-        ui_attributes: {
-          custom_data: {
-            serverless_functions_protocol: 'https',
-            serverless_functions_port: '443',
-            serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
-            language: 'default',
-            common: null,
-            features: {
-              agent_assist: {
-                custom_api_endpoint: null,
-                conversation_profile: null,
+      setServiceConfiguration(
+        {
+          ui_attributes: {
+            custom_data: {
+              serverless_functions_protocol: 'https',
+              serverless_functions_port: '443',
+              serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
+              language: 'default',
+              common: null,
+              features: {
+                agent_assist: {
+                  custom_api_endpoint: null,
+                  conversation_profile: null,
+                },
               },
             },
           },
         },
-      });
+        null,
+      );
       ownProps.initialConfig = { ...getMockedServiceConfiguration().ui_attributes.custom_data.features.agent_assist };
     });
 
@@ -154,37 +157,41 @@ describe('AgentAssistAdminGeneralSettings', () => {
     });
 
     it('should be able to provide a conversation profile', async () => {
-      const customApiEndpoint =
+      const conversationProfile =
         'projects/mockGcpProject/locations/mockLocation/conversationProfiles/mockConversationProfileId';
 
       render(<AgentAssistAdminGeneralSettings {...ownProps} />);
 
       const input = await screen.findByTestId('conversation-profile-input');
-      await userEvent.type(input, customApiEndpoint);
 
-      expect(input).toHaveProperty('value', customApiEndpoint);
+      await userEvent.type(input, conversationProfile);
+
+      expect(input).toHaveProperty('value', conversationProfile);
     });
   });
 
   describe('When provided values are not in the correct format', () => {
     beforeEach(() => {
-      setServiceConfiguration({
-        ui_attributes: {
-          custom_data: {
-            serverless_functions_protocol: 'https',
-            serverless_functions_port: '443',
-            serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
-            language: 'default',
-            common: null,
-            features: {
-              agent_assist: {
-                custom_api_endpoint: null,
-                conversation_profile: null,
+      setServiceConfiguration(
+        {
+          ui_attributes: {
+            custom_data: {
+              serverless_functions_protocol: 'https',
+              serverless_functions_port: '443',
+              serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
+              language: 'default',
+              common: null,
+              features: {
+                agent_assist: {
+                  custom_api_endpoint: null,
+                  conversation_profile: null,
+                },
               },
             },
           },
         },
-      });
+        null,
+      );
       ownProps.initialConfig = { ...getMockedServiceConfiguration().ui_attributes.custom_data.features.agent_assist };
     });
 

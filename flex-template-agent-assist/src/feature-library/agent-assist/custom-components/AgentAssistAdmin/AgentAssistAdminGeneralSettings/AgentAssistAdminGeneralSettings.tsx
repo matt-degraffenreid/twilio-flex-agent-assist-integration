@@ -1,16 +1,16 @@
-import { templates, useFlexSelector } from '@twilio/flex-ui';
+import { templates } from '@twilio/flex-ui';
 import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core/form';
 import { Stack } from '@twilio-paste/core/stack';
 import { Label } from '@twilio-paste/core/label';
 import { Input } from '@twilio-paste/core/input';
 import { HelpText } from '@twilio-paste/core/help-text';
 import { useEffect, useState } from 'react';
+import * as Flex from '@twilio/flex-ui';
 
 import { StringTemplates as AgentAssistStringTemplates } from '../../../flex-hooks/strings/AgentAssist';
 import { StringTemplates as AdminUiStringTemplates } from '../../../flex-hooks/strings/AgentAssistAdmin';
-import { ValidationButton } from './ValidationButton';
+import { ValidationButton } from '../AgentAssistAdminComponents';
 import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
-import { AppState } from '../../../../../types/manager';
 
 interface OwnProps {
   feature: string;
@@ -31,13 +31,14 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
     hasError: false,
     statusMessage: '',
   });
+  const [hasConversationProfileValidationError, setHasConversationProfileValidationError] = useState<boolean>(false);
   const [customApiEndpoint, setCustomApiEndpoint] = useState<ConfigItem>({
     configItem: props.initialConfig?.custom_api_endpoint ?? '',
     hasError: false,
     statusMessage: '',
   });
-
-  const agentToken = useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
+  const manager = Flex.Manager.getInstance();
+  const agentToken = manager.user.token;
   const agentAssistUtils = AgentAssistUtils.instance;
 
   const setAllowSave = () => {
@@ -111,9 +112,9 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
   const conversationProfileHandler = (conversationProfile: string) => {
     const error = AgentAssistUtils.validateConversationProfile(conversationProfile);
     if (error) {
-      setConversationProfile({ hasError: false, configItem: conversationProfile, statusMessage: '' });
+      setHasConversationProfileValidationError(false);
     } else {
-      setConversationProfile({ hasError: true, configItem: conversationProfile, statusMessage: '' });
+      setHasConversationProfileValidationError(true);
     }
   };
 
@@ -125,10 +126,12 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
           <>
             <Label htmlFor={'custom-api-endpoint'}>{templates[AgentAssistStringTemplates.CustomApiEndpoint]()}</Label>
             <Input
+              data-testid="custom-api-endpoint-input"
               id={'custom-api-endpoint'}
               name={'custom-api-endpoint'}
               type="text"
               value={customApiEndpoint.configItem}
+              placeholder="Enter custom api endpoint"
               onChange={(e) => setCustomApiEndpoint({ ...customApiEndpoint, configItem: e.target.value })}
               required
             />
@@ -137,6 +140,7 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
             configItem={customApiEndpoint}
             testConnectionFunction={validateCustomApiEndpoint}
             label={templates[AdminUiStringTemplates.TestConnectionCTA]()}
+            dataTestId="validate-custom-api-endpoint-btn"
           />
         </Stack>
       </FormControl>
@@ -147,21 +151,24 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
               {templates[AgentAssistStringTemplates.ConversationProfile]()}
             </Label>
             <Input
+              data-testid="conversation-profile-input"
               id={'conversation-profile'}
               name={'conversation-profile'}
               type="text"
               value={conversationProfile.configItem}
-              hasError={conversationProfile.hasError}
+              hasError={hasConversationProfileValidationError}
               onChange={(e) => conversationProfileHandler(e.target.value)}
+              placeholder="Enter conversation profile id"
               required
             />
-            {conversationProfile.hasError && (
-              <HelpText variant="error" id={'conversation-profile-error'}>
+            {hasConversationProfileValidationError && (
+              <HelpText data-testid="conversation-profile-error" variant="error" id={'conversation-profile-error'}>
                 {templates[AdminUiStringTemplates.ConversationProfileErrorText]()}
               </HelpText>
             )}
           </>
           <ValidationButton
+            dataTestId="validate-conversation-profile-btn"
             configItem={conversationProfile}
             testConnectionFunction={validateConversationProfileExisits}
             label={templates[AdminUiStringTemplates.TestConversationProfileCTA]()}
