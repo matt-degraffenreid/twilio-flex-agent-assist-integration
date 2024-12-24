@@ -3,8 +3,11 @@ import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core
 import { Switch } from '@twilio-paste/core/switch';
 import { Separator } from '@twilio-paste/core/separator';
 import { templates } from '@twilio/flex-ui';
+
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
-import { AgentAssistAdminVoiceSettings, AgentAssistAdminGeneralSettings, AgentAssistAdminFeatureSettings } from './AgentAssistAdminComponents/';
+import { AgentAssistAdminVoiceSettings } from './AgentAssistAdminVoiceSettings';
+import { AgentAssistAdminFeatureSettings } from './AgentAssistAdminFeatureSettings';
+import { AgentAssistAdminGeneralSettings } from './AgentAssistAdminGeneralSettings';
 
 interface OwnProps {
   feature: string;
@@ -25,9 +28,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       ...props.initialConfig,
       debug: isDebugEnabled,
     });
-  }, [
-    isDebugEnabled,
-  ]);
+  }, [isDebugEnabled]);
 
   return (
     <>
