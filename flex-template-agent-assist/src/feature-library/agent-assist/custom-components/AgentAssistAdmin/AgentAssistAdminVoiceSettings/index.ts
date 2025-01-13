@@ -1,3 +1,1 @@
-import { AgentAssistAdminVoiceSettings } from './AgentAssistAdminVoiceSettings';
-
-export { AgentAssistAdminVoiceSettings };
+export { AgentAssistAdminVoiceSettings } from './AgentAssistAdminVoiceSettings';

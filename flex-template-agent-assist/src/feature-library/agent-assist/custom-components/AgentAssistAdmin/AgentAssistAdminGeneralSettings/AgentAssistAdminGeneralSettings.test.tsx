@@ -10,6 +10,7 @@ import {
 } from '../../../../../../test-utils/flex-service-configuration';
 import { StringTemplates as AdminUiStringTemplates } from '../../../flex-hooks/strings/AgentAssistAdmin';
 import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
+import { renderWithProviders } from '../../../../../../test-utils/test-utils';
 
 describe('AgentAssistAdminGeneralSettings', () => {
   const ownProps = {
@@ -23,14 +24,14 @@ describe('AgentAssistAdminGeneralSettings', () => {
       const { custom_data } = Flex.Manager.getInstance().configuration;
       const { custom_api_endpoint } = custom_data.features.agent_assist;
 
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
+      renderWithProviders(<AgentAssistAdminGeneralSettings {...ownProps} />);
 
       const input = await screen.findByTestId('custom-api-endpoint-input');
 
       expect(input).toHaveProperty('value', custom_api_endpoint);
     });
 
-    it('Should display store value from configuration service for custom api endpoint', async () => {
+    it('Should display store value from configuration service for conversation profile', async () => {
       const { custom_data } = Flex.Manager.getInstance().configuration;
       const { conversation_profile } = custom_data.features.agent_assist;
 

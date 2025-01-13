@@ -6,74 +6,54 @@ import { Input } from '@twilio-paste/core/input';
 import { HelpText } from '@twilio-paste/core/help-text';
 import { useEffect, useState } from 'react';
 import * as Flex from '@twilio/flex-ui';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { AppState } from '../../../../../types/manager';
+import { reduxNamespace } from '../../../../../utils/state';
+import { AgentAssistAdminState, updateAgentAssistAdminState } from '../../../flex-hooks/states/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../../flex-hooks/strings/AgentAssist';
 import { StringTemplates as AdminUiStringTemplates } from '../../../flex-hooks/strings/AgentAssistAdmin';
 import { ValidationButton } from '../AgentAssistAdminComponents';
 import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
 
-interface OwnProps {
-  feature: string;
-  initialConfig: any;
-  setModifiedConfig: (featureName: string, newConfig: any) => void;
-  setAllowSave: (featureName: string, allowSave: boolean) => void;
-}
-
-interface ConfigItem {
-  configItem: string;
+interface ConfigError {
   hasError: boolean;
   statusMessage: string;
 }
 
-export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
-  const [conversationProfile, setConversationProfile] = useState<ConfigItem>({
-    configItem: props.initialConfig?.conversation_profile ?? '',
+export const AgentAssistAdminGeneralSettings = () => {
+  const dispatch = useDispatch();
+  const { conversationProfile, customApiEndpoint } = useSelector(
+    (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
+  );
+  const [hasConversationApiError, setHasConversationApiError] = useState<ConfigError>({
     hasError: false,
     statusMessage: '',
   });
   const [hasConversationProfileValidationError, setHasConversationProfileValidationError] = useState<boolean>(false);
-  const [customApiEndpoint, setCustomApiEndpoint] = useState<ConfigItem>({
-    configItem: props.initialConfig?.custom_api_endpoint ?? '',
+  const [hasCustomApiEndpointApiError, setCustomApiEndpointApiError] = useState<ConfigError>({
     hasError: false,
     statusMessage: '',
   });
+
   const manager = Flex.Manager.getInstance();
   const agentToken = manager.user.token;
   const agentAssistUtils = AgentAssistUtils.instance;
 
-  const setAllowSave = () => {
-    props.setAllowSave(props.feature, true);
-  };
-
-  useEffect(() => {
-    setAllowSave();
-    props.setModifiedConfig(props.feature, {
-      ...props.initialConfig,
-      custom_api_endpoint: customApiEndpoint.configItem,
-      conversation_profile: conversationProfile.configItem,
-    });
-  }, [customApiEndpoint, conversationProfile]);
+  useEffect(() => {}, [customApiEndpoint, conversationProfile]);
 
   const validateCustomApiEndpoint = async () => {
     try {
       await agentAssistUtils.getAgentAssistAuthToken(agentToken);
-      const isValid = await agentAssistUtils.getStatus(customApiEndpoint.configItem);
-      if (isValid) {
-        setCustomApiEndpoint({
-          ...customApiEndpoint,
-          hasError: false,
-          statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointSuccess](),
-        });
-      } else {
-        setCustomApiEndpoint({
-          ...customApiEndpoint,
+      const isValid = await agentAssistUtils.getStatus(customApiEndpoint);
+      if (!isValid) {
+        setHasConversationApiError({
           hasError: true,
           statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError](),
         });
       }
     } catch (error) {
-      setCustomApiEndpoint({
-        ...customApiEndpoint,
+      setHasConversationApiError({
         hasError: true,
         statusMessage: templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError](),
       });
@@ -84,25 +64,17 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
     try {
       await agentAssistUtils.getAgentAssistAuthToken(agentToken);
       const conversationProfileName = await agentAssistUtils.getConversationProfile(
-        conversationProfile.configItem,
-        customApiEndpoint.configItem,
+        conversationProfile,
+        customApiEndpoint,
       );
-      if (conversationProfileName) {
-        setConversationProfile({
-          ...conversationProfile,
-          hasError: false,
-          statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileSuccess](),
-        });
-      } else {
-        setConversationProfile({
-          ...conversationProfile,
+      if (!conversationProfileName) {
+        setCustomApiEndpointApiError({
           hasError: true,
           statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError](),
         });
       }
     } catch (error) {
-      setConversationProfile({
-        ...conversationProfile,
+      setCustomApiEndpointApiError({
         hasError: true,
         statusMessage: templates[AdminUiStringTemplates.ValidateConversationProfileError](),
       });
@@ -110,9 +82,9 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
   };
 
   const conversationProfileHandler = (conversationProfile: string) => {
-    const error = AgentAssistUtils.validateConversationProfile(conversationProfile);
-    if (error) {
-      setHasConversationProfileValidationError(false);
+    const isValid = AgentAssistUtils.validateConversationProfile(conversationProfile);
+    if (isValid) {
+      dispatch(updateAgentAssistAdminState({ conversationProfile }));
     } else {
       setHasConversationProfileValidationError(true);
     }
@@ -130,9 +102,9 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
               id={'custom-api-endpoint'}
               name={'custom-api-endpoint'}
               type="text"
-              value={customApiEndpoint.configItem}
+              value={customApiEndpoint}
               placeholder="Enter custom api endpoint"
-              onChange={(e) => setCustomApiEndpoint({ ...customApiEndpoint, configItem: e.target.value })}
+              onChange={(e) => dispatch(updateAgentAssistAdminState({ customApiEndpoint: e.target.value }))}
               required
             />
           </>
@@ -155,7 +127,7 @@ export const AgentAssistAdminGeneralSettings = (props: OwnProps) => {
               id={'conversation-profile'}
               name={'conversation-profile'}
               type="text"
-              value={conversationProfile.configItem}
+              value={conversationProfile}
               hasError={hasConversationProfileValidationError}
               onChange={(e) => conversationProfileHandler(e.target.value)}
               placeholder="Enter conversation profile id"

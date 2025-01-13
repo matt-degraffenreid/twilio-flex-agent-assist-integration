@@ -23,3 +23,4 @@ const agentAssistSlice = createSlice({
 });
 export const { updateAgentAssistState } = agentAssistSlice.actions;
 export const reducerHook = () => ({ agentAssist: agentAssistSlice.reducer });
+export default agentAssistSlice.reducer;

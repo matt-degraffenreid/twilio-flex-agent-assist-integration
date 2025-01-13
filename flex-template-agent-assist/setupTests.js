@@ -1,7 +1,8 @@
-import 'regenerator-runtime/runtime';
 import fetch from 'jest-fetch-mock';
-import { resetReduxState } from './test-utils/flex-redux';
 import { resetServiceConfiguration } from './test-utils/flex-service-configuration';
+import { toHaveNoViolations } from 'jest-axe';
+
+expect.extend(toHaveNoViolations);
 
 // Global test lifecycle handlers
 beforeAll(() => {
@@ -14,5 +15,4 @@ beforeEach(() => {
 
 afterEach(() => {
   resetServiceConfiguration();
-  resetReduxState();
 });

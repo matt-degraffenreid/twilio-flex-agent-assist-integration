@@ -1,7 +1,6 @@
 import * as Flex from '@twilio/flex-ui';
 import { Message } from '@twilio/conversations';
 
-import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
 import {
   FlexJsClient,
   ConversationEvent,

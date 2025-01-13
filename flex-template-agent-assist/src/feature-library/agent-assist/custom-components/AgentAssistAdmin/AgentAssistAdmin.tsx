@@ -3,11 +3,13 @@ import { FormControl, FormSection, FormSectionHeading } from '@twilio-paste/core
 import { Switch } from '@twilio-paste/core/switch';
 import { Separator } from '@twilio-paste/core/separator';
 import { templates } from '@twilio/flex-ui';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/strings/AgentAssist';
 import { AgentAssistAdminVoiceSettings } from './AgentAssistAdminVoiceSettings';
 import { AgentAssistAdminFeatureSettings } from './AgentAssistAdminFeatureSettings';
 import { AgentAssistAdminGeneralSettings } from './AgentAssistAdminGeneralSettings';
+import { updateAgentAssistAdminState } from '../../flex-hooks/states/AgentAssistAdmin';
 
 interface OwnProps {
   feature: string;
@@ -17,10 +19,14 @@ interface OwnProps {
 }
 
 export const AgentAssistAdmin = (props: OwnProps) => {
+  const dispatch = useDispatch();
   const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
   const setAllowSave = () => {
     props.setAllowSave(props.feature, true);
   };
+  useEffect(() => {
+    dispatch(updateAgentAssistAdminState({ ...props.initialConfig }));
+  }, []);
 
   useEffect(() => {
     setAllowSave();
