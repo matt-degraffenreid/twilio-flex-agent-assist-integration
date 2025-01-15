@@ -46,11 +46,7 @@ export const AgentAssistAdminFeatureSettings = () => {
     <FormSection>
       <FormSectionHeading>Agent Assist Features</FormSectionHeading>
       <FormControl key={'agent-assist-feature-control'}>
-        <SwitchGroup
-          name="agent-assist-features"
-          legend={<></>}
-          // disabled={conversationProfile.hasError || conversationProfile.configItem === ''}
-        >
+        <SwitchGroup name="agent-assist-features" legend={<></>}>
           {agentAssistFeatures.map((feature) => {
             const { label, ...props } = feature;
             return (

@@ -13,123 +13,11 @@ import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
 import { renderWithProviders } from '../../../../../../test-utils/test-utils';
 
 describe('AgentAssistAdminGeneralSettings', () => {
-  const ownProps = {
-    feature: 'mockFeature',
-    initialConfig: { ...getMockedServiceConfiguration().ui_attributes.custom_data.features.agent_assist },
-    setModifiedConfig: jest.fn(),
-    setAllowSave: jest.fn(),
-  };
-  describe('When configuration values are stored', () => {
-    it('Should display store value from configuration service for custom api endpoint', async () => {
-      const { custom_data } = Flex.Manager.getInstance().configuration;
-      const { custom_api_endpoint } = custom_data.features.agent_assist;
-
-      renderWithProviders(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('custom-api-endpoint-input');
-
-      expect(input).toHaveProperty('value', custom_api_endpoint);
-    });
-
-    it('Should display store value from configuration service for conversation profile', async () => {
-      const { custom_data } = Flex.Manager.getInstance().configuration;
-      const { conversation_profile } = custom_data.features.agent_assist;
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('conversation-profile-input');
-
-      expect(input).toHaveProperty('value', conversation_profile);
-    });
-
-    it('should be able to replace custom api endpoint', async () => {
-      const customApiEndpoint = 'https://8.8.8.8';
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('custom-api-endpoint-input');
-      await userEvent.clear(input);
-      await userEvent.type(input, customApiEndpoint);
-
-      expect(input).toHaveProperty('value', customApiEndpoint);
-    });
-
-    it('should be able to replace a conversation profile', async () => {
-      const customApiEndpoint =
-        'projects/mockGcpProject/locations/mockLocation/conversationProfiles/mockConversationProfileId';
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('conversation-profile-input');
-      await userEvent.clear(input);
-      await userEvent.type(input, customApiEndpoint);
-
-      expect(input).toHaveProperty('value', customApiEndpoint);
-    });
-  });
-
-  describe('when validating configuration values', () => {
-    it('should display an display success message when conversation profile exist', async () => {
-      const { custom_data } = Flex.Manager.getInstance().configuration;
-      const { conversation_profile } = custom_data.features.agent_assist;
-
-      const agentAssistUtils = AgentAssistUtils.instance;
-      agentAssistUtils.getAgentAssistAuthToken = jest.fn().mockImplementationOnce(() => 'mockAuthToken');
-      agentAssistUtils.getConversationProfile = jest.fn().mockImplementationOnce(() => conversation_profile);
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const button = await screen.findByTestId('validate-conversation-profile-btn');
-      await userEvent.click(button);
-      const successMessage = await screen.findByText(AdminUiStringTemplates.ValidateConversationProfileSuccess);
-
-      expect(successMessage).toBeDefined();
-    });
-
-    it('should display an display error message when conversation profile does not exist', async () => {
-      const agentAssistUtils = AgentAssistUtils.instance;
-      agentAssistUtils.getAgentAssistAuthToken = jest.fn().mockImplementationOnce(() => 'mockAuthToken');
-      agentAssistUtils.getConversationProfile = jest.fn().mockImplementationOnce(() => undefined);
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const button = await screen.findByTestId('validate-conversation-profile-btn');
-      await userEvent.click(button);
-      const errorMessage = await screen.findByText(AdminUiStringTemplates.ValidateConversationProfileError);
-
-      expect(errorMessage).toBeDefined();
-    });
-  });
-
-  describe('When no values are stored in the configuration service', () => {
-    beforeEach(() => {
-      setServiceConfiguration(
-        {
-          ui_attributes: {
-            custom_data: {
-              serverless_functions_protocol: 'https',
-              serverless_functions_port: '443',
-              serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
-              language: 'default',
-              common: null,
-              features: {
-                agent_assist: {
-                  custom_api_endpoint: null,
-                  conversation_profile: null,
-                },
-              },
-            },
-          },
-        },
-        null,
-      );
-      ownProps.initialConfig = { ...getMockedServiceConfiguration().ui_attributes.custom_data.features.agent_assist };
-    });
-
-    it('should have placeholder text for custom api endpoint input', async () => {
+  describe('When the form is empty', () => {
+    it('should display place holder text for the custom api input box', async () => {
       const placeholderText = 'Enter custom api endpoint';
 
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
 
       const input = await screen.findByPlaceholderText(placeholderText);
 
@@ -139,90 +27,125 @@ describe('AgentAssistAdminGeneralSettings', () => {
     it('should have placeholder text for conversation profile input', async () => {
       const placeholderText = 'Enter conversation profile id';
 
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
 
       const input = await screen.findByPlaceholderText(placeholderText);
 
       expect(input).toBeDefined();
     });
 
-    it('should be able to provide custom api endpoint', async () => {
-      const customApiEndpoint = 'https://8.8.8.8';
+    it('should have test button disabled when conversationProfile and customeApiEndpoint are empty', async () => {
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
 
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('custom-api-endpoint-input');
-      await userEvent.type(input, customApiEndpoint);
-
-      expect(input).toHaveProperty('value', customApiEndpoint);
-    });
-
-    it('should be able to provide a conversation profile', async () => {
-      const conversationProfile =
-        'projects/mockGcpProject/locations/mockLocation/conversationProfiles/mockConversationProfileId';
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('conversation-profile-input');
-
-      await userEvent.type(input, conversationProfile);
-
-      expect(input).toHaveProperty('value', conversationProfile);
-    });
-  });
-
-  describe('When provided values are not in the correct format', () => {
-    beforeEach(() => {
-      setServiceConfiguration(
-        {
-          ui_attributes: {
-            custom_data: {
-              serverless_functions_protocol: 'https',
-              serverless_functions_port: '443',
-              serverless_functions_domain_agent_assist: 'mockServerlessFunctionsDomain',
-              language: 'default',
-              common: null,
-              features: {
-                agent_assist: {
-                  custom_api_endpoint: null,
-                  conversation_profile: null,
-                },
-              },
-            },
-          },
-        },
-        null,
-      );
-      ownProps.initialConfig = { ...getMockedServiceConfiguration().ui_attributes.custom_data.features.agent_assist };
-    });
-
-    it('should display an error message for conversation profile', async () => {
-      const conversationProfile = 'not a valid conversation profile';
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-
-      const input = await screen.findByTestId('conversation-profile-input');
-      await userEvent.type(input, conversationProfile);
-      const conversationProfileErrorText = await screen.findAllByText(
-        AdminUiStringTemplates.ConversationProfileErrorText,
-      );
-      expect(conversationProfileErrorText).toBeDefined();
-    });
-
-    it('should not be able to validate conversation profile', async () => {
-      const conversationProfile = 'not a valid conversation profile';
-
-      render(<AgentAssistAdminGeneralSettings {...ownProps} />);
-      const input = await screen.findByTestId('conversation-profile-input');
-      await userEvent.type(input, conversationProfile);
-      const button = await screen.findByTestId('validate-conversation-profile-btn');
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
 
       expect(button).toHaveProperty('disabled', true);
     });
   });
 
+  describe('when filling out configuration values', () => {
+    it('should not enable test button if only custom api endpoint is filled', async () => {
+      const customApiEndpoint = 'https://8.8.8.8';
+
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
+
+      const input = await screen.findByTestId('custom-api-endpoint-input');
+      await userEvent.type(input, customApiEndpoint);
+
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
+
+      expect(button).toHaveProperty('disabled', true);
+    });
+
+    it('should not enable test button if only conversation profile is filled', async () => {
+      const conversationProfile = 'mockConversationProfile';
+
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
+
+      const input = await screen.findByTestId('conversation-profile-input');
+      await userEvent.type(input, conversationProfile);
+
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
+
+      expect(button).toHaveProperty('disabled', true);
+    });
+
+    it('should enable test button if both conversation profile and custom api endpoint are filled', async () => {
+      const conversationProfile = 'mockConversationProfile';
+      const customApiEndpoint = 'https://8.8.8.8';
+
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
+
+      const customApiEndpointInput = await screen.findByTestId('custom-api-endpoint-input');
+      await userEvent.type(customApiEndpointInput, customApiEndpoint);
+
+      const conversationProfileInput = await screen.findByTestId('conversation-profile-input');
+      await userEvent.type(conversationProfileInput, conversationProfile);
+
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
+
+      expect(button).toHaveProperty('disabled', false);
+    });
+  });
+
+  describe('When validating the agent assist config', () => {
+    beforeEach(async () => {
+      const conversationProfile = 'mockConversationProfile';
+      const customApiEndpoint = 'https://8.8.8.8';
+
+      renderWithProviders(<AgentAssistAdminGeneralSettings />);
+
+      const customApiEndpointInput = await screen.findByTestId('custom-api-endpoint-input');
+      await userEvent.type(customApiEndpointInput, customApiEndpoint);
+
+      const conversationProfileInput = await screen.findByTestId('conversation-profile-input');
+      await userEvent.type(conversationProfileInput, conversationProfile);
+    });
+
+    it('should provide an error message when there is an issue with the custom api endpoint', async () => {
+      const agentAssistUtils = AgentAssistUtils.instance;
+      agentAssistUtils.getAgentAssistAuthToken = jest.fn().mockImplementationOnce(() => 'mockAuthToken');
+      agentAssistUtils.getStatus = jest.fn().mockImplementationOnce(() => false);
+
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
+      await userEvent.click(button);
+
+      const errorMessage = await screen.findByText(AdminUiStringTemplates.ConnectingToCustomApiEndpointError);
+
+      expect(errorMessage).toBeDefined();
+    });
+
+    it('should provide an error message when there is an issue with the conversation profile', async () => {
+      const agentAssistUtils = AgentAssistUtils.instance;
+      agentAssistUtils.getAgentAssistAuthToken = jest.fn().mockImplementationOnce(() => 'mockAuthToken');
+      agentAssistUtils.getStatus = jest.fn().mockImplementationOnce(() => true);
+      agentAssistUtils.getConversationProfile = jest.fn().mockImplementationOnce(() => undefined);
+
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
+      await userEvent.click(button);
+
+      const errorMessage = await screen.findByText(AdminUiStringTemplates.ValidateConversationProfileError);
+
+      expect(errorMessage).toBeDefined();
+    });
+
+    it('should provide an success message when the provide config is valid', async () => {
+      const agentAssistUtils = AgentAssistUtils.instance;
+      agentAssistUtils.getAgentAssistAuthToken = jest.fn().mockImplementationOnce(() => 'mockAuthToken');
+      agentAssistUtils.getStatus = jest.fn().mockImplementationOnce(() => true);
+      agentAssistUtils.getConversationProfile = jest.fn().mockImplementationOnce(() => 'mockConversationProfile');
+
+      const button = await screen.findByTestId('validate-agent-assist-config-btn');
+      await userEvent.click(button);
+
+      const errorMessage = await screen.findByText(AdminUiStringTemplates.ValidateConfigSuccess);
+
+      expect(errorMessage).toBeDefined();
+    });
+  });
+
   it('should pass accessibility test', async () => {
-    const { container } = render(<AgentAssistAdminGeneralSettings {...ownProps} />);
+    const { container } = renderWithProviders(<AgentAssistAdminGeneralSettings />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });

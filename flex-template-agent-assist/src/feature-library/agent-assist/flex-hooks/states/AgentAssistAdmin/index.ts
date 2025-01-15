@@ -24,10 +24,7 @@ const agentAssistSlice = createSlice({
   initialState,
   reducers: {
     updateAgentAssistAdminState(state, action: PayloadAction<Partial<AgentAssistAdminState>>) {
-      state = {
-        ...state,
-        ...action.payload,
-      };
+      return { ...state, ...action.payload };
     },
   },
 });

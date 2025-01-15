@@ -14,7 +14,7 @@ export enum StringTemplates {
   IntermediateTranscriptionHelperText = 'CCAIIntermediateTranscriptionHelperText',
   TestConversationProfileCTA = 'CCAITestConversationProfileCTA',
   ValidateConversationProfileError = 'CCAIValidateConversationProfileError',
-  ValidateConversationProfileSuccess = 'CCAIValidateConversationProfileSuccess',
+  ValidateConfigSuccess = 'CCAIValidateConversationProfileSuccess',
 }
 
 export const stringHook = () => ({
@@ -39,6 +39,6 @@ export const stringHook = () => ({
     [StringTemplates.IntermediateTranscriptionHelperText]: 'Supports transcription as a user is speaking.',
     [StringTemplates.TestConversationProfileCTA]: 'Validate Conversation Profile',
     [StringTemplates.ValidateConversationProfileError]: 'Conversation Profile Error.',
-    [StringTemplates.ValidateConversationProfileSuccess]: 'Conversation Profile Validated.',
+    [StringTemplates.ValidateConfigSuccess]: 'Configuraion values validated.',
   },
 });
