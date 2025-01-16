@@ -139,7 +139,7 @@ export const AgentAssistAdminVoiceSettings = () => {
               {templates[AdminUiStringTemplates.TestConnectionCTA]()}
             </Button>
             {statusMessage && (
-              <HelpText id="endpoint-help-text" variant={statusMessage.type ? 'error' : 'success'}>
+              <HelpText id="endpoint-help-text" variant={statusMessage.type}>
                 {statusMessage.message}
               </HelpText>
             )}
