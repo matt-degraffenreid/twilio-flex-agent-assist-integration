@@ -25,7 +25,7 @@ interface StatusMessage {
 
 export const AgentAssistAdminVoiceSettings = () => {
   const dispatch = useDispatch();
-  const { enableVoice, transcription, notifierServerEndpoint, hasError } = useSelector(
+  const { enable_voice, transcription, notifier_server_endpoint, hasError } = useSelector(
     (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
   );
   const [statusMessage, setStatusMessage] = useState<StatusMessage>();
@@ -110,8 +110,8 @@ export const AgentAssistAdminVoiceSettings = () => {
       <FormControl key={'voice-control'}>
         <Switch
           data-testid={'enable-voice-switch'}
-          checked={enableVoice}
-          onChange={(e) => dispatch(updateAgentAssistAdminState({ enableVoice: e.target.checked }))}
+          checked={enable_voice}
+          onChange={(e) => dispatch(updateAgentAssistAdminState({ enable_voice: e.target.checked }))}
         >
           Enable Voice
         </Switch>
@@ -127,17 +127,17 @@ export const AgentAssistAdminVoiceSettings = () => {
               data-testid="notifier-server-endpoint-input"
               name={'notifier-server-endpoint'}
               type="text"
-              value={notifierServerEndpoint}
-              onChange={(e) => dispatch(updateAgentAssistAdminState({ notifierServerEndpoint: e.target.value }))}
-              disabled={!enableVoice}
+              value={notifier_server_endpoint}
+              onChange={(e) => dispatch(updateAgentAssistAdminState({ notifier_server_endpoint: e.target.value }))}
+              disabled={!enable_voice}
             />
           </>
           <Stack orientation="horizontal" spacing="space30">
             <Button
               variant="primary"
-              onClick={async () => validateNotifierServerEndpoint(notifierServerEndpoint)}
+              onClick={async () => validateNotifierServerEndpoint(notifier_server_endpoint)}
               data-testid={'validate-notifier-server-endpoint-btn'}
-              disabled={isBlank(notifierServerEndpoint)}
+              disabled={isBlank(notifier_server_endpoint)}
             >
               {templates[AdminUiStringTemplates.TestConnectionCTA]()}
             </Button>
@@ -163,10 +163,10 @@ export const AgentAssistAdminVoiceSettings = () => {
             )
           }
           featureOptions={transcriptionOptions}
-          featureDisabled={!enableVoice}
+          featureDisabled={!enable_voice}
           featureLabel={templates[AgentAssistStringTemplates.Transcription]()}
           optionsChangeHandler={transcriptionVersionHandler}
-          optionsDisabled={!(transcription.enabled && enableVoice)}
+          optionsDisabled={!(transcription.enabled && enable_voice)}
         />
       </FormControl>
     </FormSection>

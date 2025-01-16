@@ -23,7 +23,7 @@ interface StatusMessage {
 
 export const AgentAssistAdminGeneralSettings = () => {
   const dispatch = useDispatch();
-  const { conversationProfile, customApiEndpoint, hasError } = useSelector(
+  const { conversation_profile, custom_api_endpoint, hasError } = useSelector(
     (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
   );
   const [statusMessage, setStatusMessage] = useState<StatusMessage>();
@@ -93,9 +93,9 @@ export const AgentAssistAdminGeneralSettings = () => {
             id={'custom-api-endpoint'}
             name={'custom-api-endpoint'}
             type="text"
-            value={customApiEndpoint}
+            value={custom_api_endpoint}
             placeholder="Enter custom api endpoint"
-            onChange={(e) => dispatch(updateAgentAssistAdminState({ customApiEndpoint: e.target.value }))}
+            onChange={(e) => dispatch(updateAgentAssistAdminState({ custom_api_endpoint: e.target.value }))}
           />
         </Stack>
       </FormControl>
@@ -110,17 +110,17 @@ export const AgentAssistAdminGeneralSettings = () => {
               id={'conversation-profile'}
               name={'conversation-profile'}
               type="text"
-              value={conversationProfile}
-              onChange={(e) => dispatch(updateAgentAssistAdminState({ conversationProfile: e.target.value }))}
+              value={conversation_profile}
+              onChange={(e) => dispatch(updateAgentAssistAdminState({ conversation_profile: e.target.value }))}
               placeholder="Enter conversation profile id"
             />
           </>
           <Stack orientation="horizontal" spacing="space30">
             <Button
               variant="primary"
-              onClick={async () => validateAgentAssistConfiguration(conversationProfile, customApiEndpoint)}
+              onClick={async () => validateAgentAssistConfiguration(conversation_profile, custom_api_endpoint)}
               data-testid={'validate-agent-assist-config-btn'}
-              disabled={isBlank(conversationProfile) || isBlank(customApiEndpoint)}
+              disabled={isBlank(conversation_profile) || isBlank(custom_api_endpoint)}
             >
               {templates[AdminUiStringTemplates.TestConnectionCTA]()}
             </Button>

@@ -1,35 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface AgentAssistAdminState {
-  conversationProfile: string;
-  customApiEndpoint: string;
-  agentCoaching: boolean;
-  conversationSummary: boolean;
-  knowledgeAssist: boolean;
-  smartReply: boolean;
-  enableVoice: boolean;
-  notifierServerEndpoint: string;
-  transcription: {
-    enabled: boolean;
-    version: {
-      live_transcription: boolean;
-      intermediate_transcription: boolean;
-    };
-  };
-  debug: boolean;
+import AgentAssistConfig from '../../../types/ServiceConfiguration';
+
+export interface AgentAssistAdminState extends Omit<AgentAssistConfig, 'enabled'> {
   hasError: boolean;
 }
 
 const initialState = {
-  conversationProfile: '',
-  customApiEndpoint: '',
-  agentCoaching: false,
-  conversationSummary: false,
-  knowledgeAssist: false,
-  smartReply: false,
-  enableVoice: false,
-  notifierServerEndpoint: '',
+  conversation_profile: '',
+  custom_api_endpoint: '',
+  agent_coaching: false,
+  conversation_summary: false,
+  knowledge_assist: false,
+  smart_reply: false,
+  enable_voice: false,
+  notifier_server_endpoint: '',
   transcription: {
     enabled: false,
     version: {
