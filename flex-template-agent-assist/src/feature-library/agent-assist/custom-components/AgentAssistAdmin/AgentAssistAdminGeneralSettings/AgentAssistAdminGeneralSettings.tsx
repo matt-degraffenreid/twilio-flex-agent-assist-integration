@@ -23,7 +23,7 @@ interface StatusMessage {
 
 export const AgentAssistAdminGeneralSettings = () => {
   const dispatch = useDispatch();
-  const { conversationProfile, customApiEndpoint } = useSelector(
+  const { conversationProfile, customApiEndpoint, hasError } = useSelector(
     (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
   );
   const [statusMessage, setStatusMessage] = useState<StatusMessage>();
@@ -32,7 +32,9 @@ export const AgentAssistAdminGeneralSettings = () => {
   const agentToken = manager.user.token;
   const agentAssistUtils = AgentAssistUtils.instance;
 
-  // useEffect(() => {}, [customApiEndpoint, conversationProfile]);
+  useEffect(() => {
+    dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError && statusMessage?.type === 'error') }));
+  }, [statusMessage]);
 
   const isBlank = (str: string): boolean => {
     return !str || /^\s*$/.test(str);

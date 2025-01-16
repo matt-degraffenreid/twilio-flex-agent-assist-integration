@@ -4,7 +4,7 @@ import { Label } from '@twilio-paste/core/label';
 import { Input } from '@twilio-paste/core/input';
 import { templates } from '@twilio/flex-ui';
 import { Switch } from '@twilio-paste/core/switch';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Flex from '@twilio/flex-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@twilio-paste/core/button';
@@ -25,10 +25,14 @@ interface StatusMessage {
 
 export const AgentAssistAdminVoiceSettings = () => {
   const dispatch = useDispatch();
-  const { enableVoice, transcription, notifierServerEndpoint } = useSelector(
+  const { enableVoice, transcription, notifierServerEndpoint, hasError } = useSelector(
     (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
   );
   const [statusMessage, setStatusMessage] = useState<StatusMessage>();
+
+  useEffect(() => {
+    dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError && statusMessage?.type === 'error') }));
+  }, [statusMessage]);
 
   const manager = Flex.Manager.getInstance();
   const agentToken = manager.user.token;

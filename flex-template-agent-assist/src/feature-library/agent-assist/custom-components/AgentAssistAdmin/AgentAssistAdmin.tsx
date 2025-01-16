@@ -26,7 +26,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
     (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
   );
 
-  const setAllowSave = () => {
+  const setAllowSave = (allowSave: boolean) => {
     props.setAllowSave(props.feature, true);
   };
 
@@ -35,9 +35,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   }, []);
 
   useEffect(() => {
-    setAllowSave();
+    const { hasError, ...rest } = agentAssistAdminState;
+    setAllowSave(!hasError);
     props.setModifiedConfig(props.feature, {
-      ...agentAssistAdminState,
+      ...rest,
     });
   }, [agentAssistAdminState]);
 
