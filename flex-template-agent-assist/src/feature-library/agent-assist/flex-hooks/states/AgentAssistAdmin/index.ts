@@ -27,6 +27,7 @@ const initialState = {
   knowledgeAssist: false,
   smartReply: false,
   enableVoice: false,
+  notifierServerEndpoint: '',
   transcription: {
     enabled: false,
     version: {
