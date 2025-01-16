@@ -9,7 +9,9 @@ import { StringTemplates as AgentAssistStringTemplates } from '../../flex-hooks/
 import { AgentAssistAdminVoiceSettings } from './AgentAssistAdminVoiceSettings';
 import { AgentAssistAdminFeatureSettings } from './AgentAssistAdminFeatureSettings';
 import { AgentAssistAdminGeneralSettings } from './AgentAssistAdminGeneralSettings';
-import { updateAgentAssistAdminState } from '../../flex-hooks/states/AgentAssistAdmin';
+import { AppState } from '../../../../types/manager';
+import { reduxNamespace } from '../../../../utils/state';
+import { AgentAssistAdminState, updateAgentAssistAdminState } from '../../flex-hooks/states/AgentAssistAdmin';
 
 interface OwnProps {
   feature: string;
@@ -20,10 +22,14 @@ interface OwnProps {
 
 export const AgentAssistAdmin = (props: OwnProps) => {
   const dispatch = useDispatch();
-  const [isDebugEnabled, setIsDebugEnabled] = useState(props.initialConfig?.debug ?? false);
+  const agentAssistAdminState = useSelector(
+    (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
+  );
+
   const setAllowSave = () => {
     props.setAllowSave(props.feature, true);
   };
+
   useEffect(() => {
     dispatch(updateAgentAssistAdminState({ ...props.initialConfig }));
   }, []);
@@ -31,10 +37,9 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   useEffect(() => {
     setAllowSave();
     props.setModifiedConfig(props.feature, {
-      ...props.initialConfig,
-      debug: isDebugEnabled,
+      ...agentAssistAdminState,
     });
-  }, [isDebugEnabled]);
+  }, [agentAssistAdminState]);
 
   return (
     <>
@@ -47,7 +52,10 @@ export const AgentAssistAdmin = (props: OwnProps) => {
       <FormSection>
         <FormSectionHeading>Troubleshooting</FormSectionHeading>
         <FormControl key={'debug-control'}>
-          <Switch checked={isDebugEnabled} onChange={() => setIsDebugEnabled(!isDebugEnabled)}>
+          <Switch
+            checked={agentAssistAdminState.debug}
+            onChange={(e) => dispatch(updateAgentAssistAdminState({ debug: e.target.checked }))}
+          >
             {templates[AgentAssistStringTemplates.Debug]()}
           </Switch>
         </FormControl>

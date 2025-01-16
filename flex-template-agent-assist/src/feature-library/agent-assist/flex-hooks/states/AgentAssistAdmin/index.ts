@@ -17,6 +17,7 @@ export interface AgentAssistAdminState {
       intermediate_transcription: boolean;
     };
   };
+  debug: boolean;
 }
 
 const initialState = {
@@ -35,6 +36,7 @@ const initialState = {
       intermediate_transcription: false,
     },
   },
+  debug: true,
 } as AgentAssistAdminState;
 
 const agentAssistAdminSlice = createSlice({
