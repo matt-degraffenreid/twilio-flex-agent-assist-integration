@@ -4,16 +4,15 @@ import { Label } from '@twilio-paste/core/label';
 import { Input } from '@twilio-paste/core/input';
 import { templates } from '@twilio/flex-ui';
 import { Switch } from '@twilio-paste/core/switch';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as Flex from '@twilio/flex-ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@twilio-paste/core/button';
 import { HelpText } from '@twilio-paste/core/help-text';
 
-import { SwitchWithOptions, ValidationButton } from '../AgentAssistAdminComponents';
+import { SwitchWithOptions } from '../AgentAssistAdminComponents';
 import { StringTemplates as AdminUiStringTemplates } from '../../../flex-hooks/strings/AgentAssistAdmin';
 import { StringTemplates as AgentAssistStringTemplates } from '../../../flex-hooks/strings/AgentAssist';
-import { Transcription } from '../../../types/ServiceConfiguration';
 import AgentAssistUtils from '../../../utils/agentAssist/AgentAssistUtils';
 import { AppState } from '../../../../../types/manager';
 import { reduxNamespace } from '../../../../../utils/state';
