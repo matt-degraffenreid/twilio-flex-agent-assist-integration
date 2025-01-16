@@ -8,6 +8,15 @@ export interface AgentAssistAdminState {
   conversationSummary: boolean;
   knowledgeAssist: boolean;
   smartReply: boolean;
+  enableVoice: boolean;
+  notifierServerEndpoint: string;
+  transcription: {
+    enabled: boolean;
+    version: {
+      live_transcription: boolean;
+      intermediate_transcription: boolean;
+    };
+  };
 }
 
 const initialState = {

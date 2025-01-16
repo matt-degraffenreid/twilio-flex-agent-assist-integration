@@ -7,7 +7,7 @@ import { HelpText } from '@twilio-paste/core/help-text';
 import { useEffect, useState } from 'react';
 import * as Flex from '@twilio/flex-ui';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@twilio-paste/core/dist/button';
+import { Button } from '@twilio-paste/core/button';
 
 import { AppState } from '../../../../../types/manager';
 import { reduxNamespace } from '../../../../../utils/state';

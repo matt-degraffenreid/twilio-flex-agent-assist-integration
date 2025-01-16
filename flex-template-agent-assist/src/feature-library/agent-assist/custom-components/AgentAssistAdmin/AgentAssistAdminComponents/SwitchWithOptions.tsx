@@ -5,7 +5,7 @@ import { FormControl } from '@twilio-paste/core/form';
 import { Transcription } from '../../../types/ServiceConfiguration';
 
 interface SwitchWithOptionsProps {
-  feature: Transcription;
+  isEnabled: boolean;
   featureLabel: string;
   featureChangeHandler: any;
   featureDisabled?: boolean;
@@ -20,7 +20,7 @@ interface SwitchWithOptionsProps {
 }
 
 export const SwitchWithOptions = ({
-  feature,
+  isEnabled,
   featureLabel,
   featureChangeHandler,
   featureOptions,
@@ -30,7 +30,7 @@ export const SwitchWithOptions = ({
 }: SwitchWithOptionsProps): JSX.Element => {
   return (
     <Switch
-      checked={feature.enabled}
+      checked={isEnabled}
       onChange={(e) => featureChangeHandler()}
       data-testid={`enable-${featureLabel}-switch`}
       disabled={featureDisabled}
