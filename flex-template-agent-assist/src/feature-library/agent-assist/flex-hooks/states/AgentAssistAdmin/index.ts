@@ -37,7 +37,7 @@ const initialState = {
   },
 } as AgentAssistAdminState;
 
-const agentAssistSlice = createSlice({
+const agentAssistAdminSlice = createSlice({
   name: 'agentAssistAdmin',
   initialState,
   reducers: {
@@ -46,6 +46,6 @@ const agentAssistSlice = createSlice({
     },
   },
 });
-export const { updateAgentAssistAdminState } = agentAssistSlice.actions;
-export const reducerHook = () => ({ agentAssist: agentAssistSlice.reducer });
-export default agentAssistSlice.reducer;
+export const { updateAgentAssistAdminState } = agentAssistAdminSlice.actions;
+export const reducerHook = () => ({ agentAssistAdmin: agentAssistAdminSlice.reducer });
+export default agentAssistAdminSlice.reducer;
