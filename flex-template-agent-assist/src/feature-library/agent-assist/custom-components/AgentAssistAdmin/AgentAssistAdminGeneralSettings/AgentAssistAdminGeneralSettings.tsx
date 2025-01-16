@@ -52,7 +52,7 @@ export const AgentAssistAdminGeneralSettings = () => {
 
   const validateConversationProfileExists = async (conversationProfile: string, customApiEndpoint: string) => {
     try {
-      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      await agentAssistUtils.getAgentAssistAuthToken(agentToken, customApiEndpoint);
       const conversationProfileName = await agentAssistUtils.getConversationProfile(
         conversationProfile,
         customApiEndpoint,
