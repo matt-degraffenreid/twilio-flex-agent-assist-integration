@@ -18,25 +18,25 @@ export const AgentAssistAdminFeatureSettings = () => {
   const agentAssistFeatures = [
     {
       checked: agentCoaching,
-      onChange: () => dispatch(updateAgentAssistAdminState({ agentCoaching })),
+      onChange: (e) => dispatch(updateAgentAssistAdminState({ agentCoaching: e.target.checked })),
       helpText: templates[AdminUiStringTemplates.AgentCoachingHelperText](),
       label: templates[AgentAssistStringTemplates.AgentCoaching](),
     },
     {
       checked: conversationSummary,
-      onChange: () => dispatch(updateAgentAssistAdminState({ conversationSummary })),
+      onChange: (e) => dispatch(updateAgentAssistAdminState({ conversationSummary: e.target.checked })),
       helpText: templates[AdminUiStringTemplates.ConversationSummarizationHelperText](),
       label: templates[AgentAssistStringTemplates.ConversationSummarization](),
     },
     {
       checked: smartReply,
-      onChange: () => dispatch(updateAgentAssistAdminState({ smartReply })),
+      onChange: (e) => dispatch(updateAgentAssistAdminState({ smartReply: e.target.checked })),
       helpText: templates[AdminUiStringTemplates.SmartReplyHelperText](),
       label: templates[AgentAssistStringTemplates.SmartReply](),
     },
     {
       checked: knowledgeAssist,
-      onChange: () => dispatch(updateAgentAssistAdminState({ knowledgeAssist })),
+      onChange: (e) => dispatch(updateAgentAssistAdminState({ knowledgeAssist: e.target.checked })),
       helpText: templates[AdminUiStringTemplates.KnowledgeAssistHelperText](),
       label: templates[AgentAssistStringTemplates.KnowledgeAssist](),
     },
