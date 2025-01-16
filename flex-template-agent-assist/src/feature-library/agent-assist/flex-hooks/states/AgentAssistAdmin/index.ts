@@ -26,6 +26,14 @@ const initialState = {
   conversationSummary: false,
   knowledgeAssist: false,
   smartReply: false,
+  enableVoice: false,
+  transcription: {
+    enabled: false,
+    version: {
+      live_transcription: true,
+      intermediate_transcription: false,
+    },
+  },
 } as AgentAssistAdminState;
 
 const agentAssistSlice = createSlice({
