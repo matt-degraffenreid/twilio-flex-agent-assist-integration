@@ -31,7 +31,7 @@ export const AgentAssistAdminVoiceSettings = () => {
   const [statusMessage, setStatusMessage] = useState<StatusMessage>();
 
   useEffect(() => {
-    dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError || statusMessage?.type === 'error') }));
+    //dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError || statusMessage?.type === 'error') }));
   }, [statusMessage]);
 
   const manager = Flex.Manager.getInstance();
