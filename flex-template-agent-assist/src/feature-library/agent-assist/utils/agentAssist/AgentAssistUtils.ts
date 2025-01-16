@@ -83,7 +83,7 @@ class AgentAssistUtils {
    * @param {string} token CCaaS platform token for the agent.
    * @returns {string} JWT token to authenticate with the UI connector backend.
    */
-  public async getAgentAssistAuthToken(token: string): string {
+  public async getAgentAssistAuthToken(token: string, customApiEndpoint?: string): string {
     const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
     if (authToken) {
       logger.debug('[Agent-Assist] AuthToken retrieved from cookies');
@@ -91,7 +91,7 @@ class AgentAssistUtils {
     }
 
     logger.debug('[Agent-Assist] Making request for Agent Assist auth token');
-    const endpoint = this.validateUrl(getCustomApiEndpoint());
+    const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
     return fetch(`${endpoint}/register`, {
       method: 'POST',
       headers: [['Authorization', token]],
