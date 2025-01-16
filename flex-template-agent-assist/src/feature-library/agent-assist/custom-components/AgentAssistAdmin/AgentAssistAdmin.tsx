@@ -27,7 +27,7 @@ export const AgentAssistAdmin = (props: OwnProps) => {
   );
 
   const setAllowSave = (allowSave: boolean) => {
-    props.setAllowSave(props.feature, true);
+    props.setAllowSave(props.feature, allowSave);
   };
 
   useEffect(() => {
