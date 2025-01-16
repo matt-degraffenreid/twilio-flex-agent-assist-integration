@@ -33,7 +33,7 @@ export const AgentAssistAdminGeneralSettings = () => {
   const agentAssistUtils = AgentAssistUtils.instance;
 
   useEffect(() => {
-    dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError && statusMessage?.type === 'error') }));
+    dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError || statusMessage?.type === 'error') }));
   }, [statusMessage]);
 
   const isBlank = (str: string): boolean => {
