@@ -65,7 +65,7 @@ export const AgentAssistAdminVoiceSettings = () => {
         message: templates[AdminUiStringTemplates.ConnectingToNotifierServerEndpointError](),
       });
     try {
-      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      await agentAssistUtils.getAgentAssistAuthToken(agentToken, notifierServerEndpoint);
       agentAssistUtils.getWebsocketStatus(notifierServerEndpoint, onSuccess, onError);
     } catch (error) {}
   };
