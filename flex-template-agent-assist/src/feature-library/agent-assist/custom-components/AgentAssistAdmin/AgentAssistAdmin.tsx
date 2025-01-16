@@ -38,11 +38,11 @@ export const AgentAssistAdmin = (props: OwnProps) => {
 
   return (
     <>
-      <AgentAssistAdminGeneralSettings {...props} />
+      <AgentAssistAdminGeneralSettings />
       <Separator orientation="horizontal" />
-      <AgentAssistAdminFeatureSettings {...props} />
+      <AgentAssistAdminFeatureSettings />
       <Separator orientation="horizontal" />
-      <AgentAssistAdminVoiceSettings {...props} />
+      <AgentAssistAdminVoiceSettings />
       <Separator orientation="horizontal" />
       <FormSection>
         <FormSectionHeading>Troubleshooting</FormSectionHeading>
