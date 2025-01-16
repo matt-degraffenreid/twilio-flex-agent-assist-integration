@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Box } from '@twilio-paste/core/box';
-import { Stack } from '@twilio-paste/core';
+import { Stack } from '@twilio-paste/core/stack';
 import { Actions, ITask } from '@twilio/flex-ui';
 import { useEffect } from 'react';
 

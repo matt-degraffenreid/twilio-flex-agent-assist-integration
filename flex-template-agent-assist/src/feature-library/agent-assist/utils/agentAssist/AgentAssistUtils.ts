@@ -1,3 +1,16 @@
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 // @ts-nocheck
 import Cookies from 'js-cookie';
 import { io } from 'socket.io-client';
@@ -11,6 +24,10 @@ import {
 import { getCustomApiEndpoint, getConversationProfile } from '../../config';
 import logger from '../../../../utils/logger';
 
+/**
+ * Service for managing the Agent Assist UI Modules.
+ * @class
+ */
 class AgentAssistUtils {
   static #agentAssistUtils: AgentAssistUtils;
 
@@ -36,11 +53,21 @@ class AgentAssistUtils {
     return AgentAssistUtils.#agentAssistUtils;
   }
 
+  /**
+   *  Makes sure the conversation profile is correctly formatted
+   * @param {string} conversationProfile the conversation profile name that is being checked.
+   * @returns {boolean} value to determine if the conversation profile name is valid or not.
+   */
   static validateConversationProfile = (conversationProfile: string): boolean => {
     const regExp = new RegExp('(^projects/[^/]+/locations/[^/]+)/conversationProfiles/[^/]+$');
     return regExp.test(conversationProfile);
   };
 
+  /**
+   * Initialize the UI module connectors.
+   * @param {ConnectorConfig} config configuration to initialize the ui modules.
+   * See {@link https://cloud.google.com/agent-assist/docs/ui-modules#implement_the_ui_module_connector Implement the UI module connector}.
+   */
   public initializeUiConnector(config: ConnectorConfig) {
     if (!AgentAssistUtils.#connector) {
       AgentAssistUtils.#connector = new UiModulesConnector();
@@ -51,7 +78,12 @@ class AgentAssistUtils {
     AgentAssistUtils.#connector.init(config);
   }
 
-  public async getAgentAssistAuthToken(token: string): string {
+  /**
+   * Retrieves JWT token from backend service
+   * @param {string} token CCaaS platform token for the agent.
+   * @returns {string} JWT token to authenticate with the UI connector backend.
+   */
+  public async getAgentAssistAuthToken(token: string, customApiEndpoint?: string): string {
     const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
     if (authToken) {
       logger.debug('[Agent-Assist] AuthToken retrieved from cookies');
@@ -59,7 +91,7 @@ class AgentAssistUtils {
     }
 
     logger.debug('[Agent-Assist] Making request for Agent Assist auth token');
-    const endpoint = this.validateUrl(getCustomApiEndpoint());
+    const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
     return fetch(`${endpoint}/register`, {
       method: 'POST',
       headers: [['Authorization', token]],
@@ -78,20 +110,32 @@ class AgentAssistUtils {
       });
   }
 
+  /**
+   * Generate the conversation name based off the conversation profile string.
+   * @param {string} conversationId ID for the specific conversation.
+   * @returns {string} The full conversation profile name.
+   */
   public getConversationName(conversationId: string): string {
     const [, projectLocation] =
       getConversationProfile().match(/(^projects\/[^/]+\/locations\/[^/]+)\/conversationProfiles\/[^/]+$/) || [];
     return `${projectLocation}/conversations/${conversationId}`;
   }
 
-  public getConversationProfile(conversationProfile: string, customApiEndpoint?: string): string {
+  /**
+   * Returns the name of the conversation profile which validates it is created and the UI
+   * moudle connector backend has access to the resource.
+   * @param {string} conversationProfileName The full conversation profile name.
+   * @param {string} customApiEndpoint Url where the UI module connector backend is located.
+   * @returns {string} returns the name of the conversation profile.
+   */
+  public getConversationProfile(conversationProfileName: string, customApiEndpoint?: string): string {
     const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
     if (!authToken) {
       logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
       return undefined;
     }
     const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
-    return fetch(`${endpoint}/v2beta1/${conversationProfile}`, {
+    return fetch(`${endpoint}/v2beta1/${conversationProfileName}`, {
       method: 'GET',
       headers: [['Authorization', authToken]],
     })
@@ -108,6 +152,11 @@ class AgentAssistUtils {
       });
   }
 
+  /**
+   * Gets the status of the UI module connector backend.
+   * @param {string} customApiEndpoint Url where the UI module connector backend is located.
+   * @returns {boolean} Value to determine if the UI module connector backend is up.
+   */
   public getStatus(customApiEndpoint?: string): boolean {
     const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
     return fetch(`${endpoint}/status`, {
@@ -124,6 +173,13 @@ class AgentAssistUtils {
       });
   }
 
+  /**
+   * Gets the status of the UI module connector backend websocket.
+   * @param {string} notifierServerEndpoint Notifier server endpoint where the UI module connector backend websocket is located.
+   * @param {any} onSuccess function to fire when the websocket status is up
+   * @param {any} onError function to fire when the websocket status is down
+   * @returns {void}
+   */
   public getWebsocketStatus(notifierServerEndpoint: string, onSuccess: any, onError: any): void {
     const endpoint = this.validateUrl(notifierServerEndpoint);
     const token = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
@@ -161,6 +217,11 @@ class AgentAssistUtils {
     }
   }
 
+  /**
+   * Validates a url and adds protocal prefix to url string.
+   * @param {string} url string representing a url.
+   * @returns {string} url string with the protocal prefixed to the string.
+   */
   private validateUrl(url: string): string {
     const protocalRegExp = new RegExp('^(http|https)://');
     const hasProtocal = protocalRegExp.test(url);

@@ -19,8 +19,9 @@ export const AgentAssistAlertButton = () => {
   const dispatch = useDispatch();
 
   const { status } = useSelector((state: AppState) => state[reduxNamespace].agentAssist as AgentAssistState);
-  const isAvailable = Flex.useFlexSelector((state: AppState) => state.flex.worker.activity.available);
-  const agentToken = Flex.useFlexSelector((state: AppState) => state.flex.session.ssoTokenPayload.token);
+  const manager = Flex.Manager.getInstance();
+  const agentToken = manager.user.token;
+  const isAvailable = useSelector((state: AppState) => state.flex.worker.activity.available);
 
   useEffect(() => {
     const agentAssistUtils = AgentAssistUtils.instance;
@@ -66,6 +67,7 @@ export const AgentAssistAlertButton = () => {
         placement="left"
       >
         <IconButton
+          title="agent-assist-icon"
           disabled={status !== 'connected'}
           icon={<AgentAssistIcon />}
           size="small"

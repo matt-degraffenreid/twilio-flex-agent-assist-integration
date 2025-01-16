@@ -33,13 +33,7 @@
         "conversation_profile": "",
         "conversation_summary": true,
         "agent_coaching": true,
-        "knowledge_assist": {
-          "enabled": true,
-          "version": {
-            "generative_knowledge_assist": false,
-            "proactive_generative_knowledge_assist": true
-          }
-        },
+        "knowledge_assist": true,
         "smart_reply": true,
         "enable_voice": false,
         "notifier_server_endpoint": "",
