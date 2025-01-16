@@ -40,7 +40,7 @@ export const AgentAssistAdminGeneralSettings = () => {
 
   const validateCustomApiEndpoint = async (customApiEndpoint: string) => {
     try {
-      await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      await agentAssistUtils.getAgentAssistAuthToken(agentToken, customApiEndpoint);
       const isValid = await agentAssistUtils.getStatus(customApiEndpoint);
       if (!isValid) {
         throw new Error(templates[AdminUiStringTemplates.ConnectingToCustomApiEndpointError]());
