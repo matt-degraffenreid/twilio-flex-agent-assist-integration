@@ -1,6 +1,6 @@
 import * as Flex from '@twilio/flex-ui';
 
-import { AgentCoaching } from '../../custom-components/AgentCoaching/AgentCoaching';
+import { AgentAssistContainerTab } from '../../custom-components/AgentAssistContainerTab/AgentAssistContainerTab';
 import { FlexActionEvent } from '../../../../types/feature-loader';
 import { StringTemplates } from '../strings/AgentAssist';
 
@@ -19,9 +19,9 @@ export const actionHook = function addAgentAssistContainerToEnhancedCRM(flex: ty
     payload.components = [
       ...payload.components,
       {
-        title: (manager.strings as any)[StringTemplates.AgentCoaching],
+        title: (manager.strings as any)[StringTemplates.AgentAssist],
         order: 0,
-        component: <AgentCoaching key="agent-assist-agent-coaching" />,
+        component: <AgentAssistContainerTab key="agent-assist-agent-coaching" />,
       },
     ];
   });
