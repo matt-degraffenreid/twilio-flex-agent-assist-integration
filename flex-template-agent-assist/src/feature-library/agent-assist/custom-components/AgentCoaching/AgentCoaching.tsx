@@ -1,15 +1,17 @@
 // @ts-nocheck
-import { Box } from '@twilio-paste/core/box';
-import { Stack } from '@twilio-paste/core/stack';
+import { Card } from '@twilio-paste/core/card';
+import { Heading } from '@twilio-paste/core/heading';
+import { Paragraph } from '@twilio-paste/core/paragraph';
 
 export const AgentCoaching = () => {
   return (
-    <Box padding="space80" overflowY="auto" width={'100%'} background="white">
-      <Stack orientation="vertical" spacing="space60">
-        <Box>
-          <agent-assist-agent-coaching></agent-assist-agent-coaching>
-        </Box>
-      </Stack>
-    </Box>
+    <Card padding="space120">
+      <Heading as="h2" variant="heading20">
+        Agent Coaching
+      </Heading>
+      <Paragraph>
+        <agent-assist-agent-coaching></agent-assist-agent-coaching>
+      </Paragraph>
+    </Card>
   );
 };
