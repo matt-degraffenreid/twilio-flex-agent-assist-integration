@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Box } from '@twilio-paste/core/box';
-import { Stack } from '@twilio-paste/core';
+import { Stack } from '@twilio-paste/core/stack';
 
 export const GenerativeKnowledgeAssist = () => {
   return (
