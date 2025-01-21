@@ -25,13 +25,13 @@ interface StatusMessage {
 
 export const AgentAssistAdminVoiceSettings = () => {
   const dispatch = useDispatch();
-  const { enable_voice, transcription, notifier_server_endpoint, hasError } = useSelector(
+  const { enable_voice, transcription, notifier_server_endpoint } = useSelector(
     (state: AppState) => state[reduxNamespace].agentAssistAdmin as AgentAssistAdminState,
   );
   const [statusMessage, setStatusMessage] = useState<StatusMessage>();
 
   useEffect(() => {
-    //dispatch(updateAgentAssistAdminState({ hasError: Boolean(hasError || statusMessage?.type === 'error') }));
+    dispatch(updateAgentAssistAdminState({ hasError: statusMessage?.type === 'error' }));
   }, [statusMessage]);
 
   const manager = Flex.Manager.getInstance();
@@ -129,6 +129,7 @@ export const AgentAssistAdminVoiceSettings = () => {
               type="text"
               value={notifier_server_endpoint}
               onChange={(e) => dispatch(updateAgentAssistAdminState({ notifier_server_endpoint: e.target.value }))}
+              placeholder="Enter notifier server endpoint"
               disabled={!enable_voice}
             />
           </>
