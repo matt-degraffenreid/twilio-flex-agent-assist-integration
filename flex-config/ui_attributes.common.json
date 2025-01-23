@@ -53,6 +53,9 @@
         "display_url_when_no_tasks": "{{serverless.url}}/features/enhanced-crm-container/index.html",
         "enable_url_tab": false,
         "url_tab_title": "Web Page"
+      },
+      "order_management": {
+        "enabled": false
       }
     }
   }
