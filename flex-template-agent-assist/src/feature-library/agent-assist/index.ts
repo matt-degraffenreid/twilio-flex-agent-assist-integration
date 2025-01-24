@@ -5,5 +5,5 @@ import hooks from './flex-hooks/**/*.*';
 
 export const register = (): FeatureDefinition => {
   if (!isFeatureEnabled()) return {};
-  return { name: 'agent-assist', hooks: typeof hooks === 'undefined' ? [] : hooks };
+  return { name: 'agent-assist', hooks: typeof hooks === 'undefined' ? [] : []};
 };
