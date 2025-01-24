@@ -1,12 +1,12 @@
-import { Button } from '@twilio-paste/core/Button';
-import { Stack } from '@twilio-paste/core/Stack';
-import { Box } from '@twilio-paste/core/Box';
-import { Heading } from '@twilio-paste/core/Heading';
-import { Form, FormControl, FormActions } from '@twilio-paste/core/Form';
+import { Button } from '@twilio-paste/core/button';
+import { Stack } from '@twilio-paste/core/stack';
+import { Box } from '@twilio-paste/core/box';
+import { Heading } from '@twilio-paste/core/heading';
+import { Form, FormControl, FormActions } from '@twilio-paste/core/form';
 import { useToaster, Toaster } from '@twilio-paste/core/toast';
-import { Label } from '@twilio-paste/core/Label';
-import { TextArea } from '@twilio-paste/core/TextArea';
-import { Input } from '@twilio-paste/core/Input';
+import { Label } from '@twilio-paste/core/label';
+import { TextArea } from '@twilio-paste/core/textarea';
+import { Input } from '@twilio-paste/core/input';
 import { DeleteIcon } from '@twilio-paste/icons/esm/DeleteIcon';
 import { ArrowBackIcon } from '@twilio-paste/icons/esm/ArrowBackIcon';
 

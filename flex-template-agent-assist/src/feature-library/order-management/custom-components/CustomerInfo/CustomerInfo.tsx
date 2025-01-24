@@ -5,9 +5,9 @@ import {
   DescriptionListTerm,
   DescriptionListDetails,
 } from '@twilio-paste/core/description-list';
-import { Button } from '@twilio-paste/core/Button';
-import { Heading } from '@twilio-paste/core/Heading';
-import { Box } from '@twilio-paste/core/Box';
+import { Button } from '@twilio-paste/core/button';
+import { Heading } from '@twilio-paste/core/heading';
+import { Box } from '@twilio-paste/core/box';
 
 import { StringTemplates } from '../../flex-hooks/strings';
 
