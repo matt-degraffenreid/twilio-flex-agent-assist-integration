@@ -3,12 +3,13 @@ import { Stack } from '@twilio-paste/core/stack';
 import { Box } from '@twilio-paste/core/box';
 import { Heading } from '@twilio-paste/core/heading';
 import { Form, FormControl, FormActions } from '@twilio-paste/core/form';
-import { useToaster, Toaster } from '@twilio-paste/core/toast';
 import { Label } from '@twilio-paste/core/label';
 import { TextArea } from '@twilio-paste/core/textarea';
 import { Input } from '@twilio-paste/core/input';
 import { DeleteIcon } from '@twilio-paste/icons/esm/DeleteIcon';
 import { ArrowBackIcon } from '@twilio-paste/icons/esm/ArrowBackIcon';
+import { Callout, CalloutHeading, CalloutText } from '@twilio-paste/core/callout';
+import { useState } from 'react';
 
 interface Props {
   currentStep: number;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const EditOrder = ({ currentStep, handleClose }: Props) => {
-  const toaster = useToaster();
+  const [status, setStatus] = useState({ error: false, success: false });
   if (currentStep !== 2) {
     return null;
   }
@@ -28,19 +29,11 @@ export const EditOrder = ({ currentStep, handleClose }: Props) => {
   const handleCancelOrder = async (e: any) => {
     e.preventDefault();
     if (e.target.orderId.value === '1234') {
-      toaster.push({
-        message: 'Order cancelled successfully',
-        variant: 'success',
-        dismissAfter: 2000,
-      });
+      setStatus({ error: false, success: true });
       await pause(2000);
       handleClose();
     } else {
-      toaster.push({
-        message: 'Order does not exisit',
-        variant: 'error',
-        dismissAfter: 2000,
-      });
+      setStatus({ error: true, success: false });
     }
   };
 
@@ -82,8 +75,19 @@ export const EditOrder = ({ currentStep, handleClose }: Props) => {
             </Button>
           </FormActions>
         </Form>
+        {status.success && (
+          <Callout variant="success">
+            <CalloutHeading as="h2">Success!</CalloutHeading>
+            <CalloutText>The order was cancelled.</CalloutText>
+          </Callout>
+        )}
+        {status.error && (
+          <Callout variant="error">
+            <CalloutHeading as="h2">Error!</CalloutHeading>
+            <CalloutText>There was an error the order could not be cancelled.</CalloutText>
+          </Callout>
+        )}
       </Stack>
-      <Toaster {...toaster} />
     </Box>
   );
 };
