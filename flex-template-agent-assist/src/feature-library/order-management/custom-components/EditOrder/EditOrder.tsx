@@ -18,20 +18,15 @@ interface Props {
 
 export const EditOrder = ({ currentStep, handleClose }: Props) => {
   const [status, setStatus] = useState({ error: false, success: false });
+
   if (currentStep !== 2) {
     return null;
   }
-
-  const pause = async (milliseconds: number) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
 
   const handleCancelOrder = async (e: any) => {
     e.preventDefault();
     if (e.target.orderId.value === '1234') {
       setStatus({ error: false, success: true });
-      await pause(2000);
-      handleClose();
     } else {
       setStatus({ error: true, success: false });
     }
@@ -65,7 +60,13 @@ export const EditOrder = ({ currentStep, handleClose }: Props) => {
             <TextArea id={'cancelationReason'} name="cancelationReason" required />
           </FormControl>
           <FormActions>
-            <Button variant="primary" onClick={handleClose}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setStatus({ error: false, success: false });
+                handleClose();
+              }}
+            >
               <ArrowBackIcon decorative />
               Back
             </Button>
