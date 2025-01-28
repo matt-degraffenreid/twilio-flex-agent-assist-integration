@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const EditOrder = ({ currentStep, handleClose }: Props) => {
-  const [status, setStatus] = useState({ error: false, success: false });
+  const [status, setStatus] = useState({ error: false, success: false, msg: '' });
 
   if (currentStep !== 2) {
     return null;
@@ -26,9 +26,13 @@ export const EditOrder = ({ currentStep, handleClose }: Props) => {
   const handleCancelOrder = async (e: any) => {
     e.preventDefault();
     if (e.target.orderId.value === '1234') {
-      setStatus({ error: false, success: true });
+      setStatus({ error: false, success: true, msg: `The order was cancelled.` });
     } else {
-      setStatus({ error: true, success: false });
+      setStatus({
+        error: true,
+        success: false,
+        msg: `Order ${e.target.orderId.value} cannot be found, so it cannot be cancelled`,
+      });
     }
   };
 
@@ -63,7 +67,7 @@ export const EditOrder = ({ currentStep, handleClose }: Props) => {
             <Button
               variant="primary"
               onClick={() => {
-                setStatus({ error: false, success: false });
+                setStatus({ error: false, success: false, msg: '' });
                 handleClose();
               }}
             >
@@ -79,13 +83,13 @@ export const EditOrder = ({ currentStep, handleClose }: Props) => {
         {status.success && (
           <Callout variant="success">
             <CalloutHeading as="h2">Success!</CalloutHeading>
-            <CalloutText>The order was cancelled.</CalloutText>
+            <CalloutText>{status.msg}</CalloutText>
           </Callout>
         )}
         {status.error && (
           <Callout variant="error">
             <CalloutHeading as="h2">Error!</CalloutHeading>
-            <CalloutText>There was an error the order could not be cancelled.</CalloutText>
+            <CalloutText>{status.msg}</CalloutText>
           </Callout>
         )}
       </Stack>
