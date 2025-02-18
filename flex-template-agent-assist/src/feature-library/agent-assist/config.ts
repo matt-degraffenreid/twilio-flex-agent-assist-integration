@@ -46,7 +46,7 @@ export const isKnowledgeAssistEnabled = () => {
 };
 
 export const isSmartReplyEnabled = () => {
-  return smart_reply;
+  return isFeatureEnabled() && smart_reply;
 };
 
 export const isVoiceEnabled = () => {
