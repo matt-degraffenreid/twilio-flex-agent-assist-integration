@@ -12,11 +12,7 @@ export const actionEvent = FlexActionEvent.before;
 export const actionName = 'LoadCRMContainerTabs';
 export const actionHook = function addAgentAssistContainerToEnhancedCRM(flex: typeof Flex, manager: Flex.Manager) {
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload) => {
-    if (
-      !payload.task ||
-      !Flex.TaskHelper.isChatBasedTask(payload.task) ||
-      Flex.TaskHelper.isInWrapupMode(payload.task)
-    ) {
+    if (!payload.task || Flex.TaskHelper.isInWrapupMode(payload.task)) {
       return;
     }
 
