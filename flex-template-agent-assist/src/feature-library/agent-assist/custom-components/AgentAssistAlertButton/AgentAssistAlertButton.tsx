@@ -26,10 +26,10 @@ export const AgentAssistAlertButton = () => {
   useEffect(() => {
     const agentAssistUtils = AgentAssistUtils.instance;
     const fetchAuthToken = async () => {
-      return await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      return agentAssistUtils.getAgentAssistAuthToken(agentToken);
     };
     if (isAvailable) {
-      logger.debug('[Agent-Assist] Agent marked as available on page load. Setting up UI Modules');
+      logger.info('[Agent-Assist] Agent marked as available on page load. Setting up UI Modules');
       fetchAuthToken().then((authToken) => {
         const connectorConfig = {
           channel: isVoiceEnabled() ? 'voice' : 'chat',

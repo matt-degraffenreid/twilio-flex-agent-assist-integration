@@ -118,7 +118,7 @@ class AgentAssistUtils {
   public getConversationName(conversationId: string): string {
     const [, projectLocation] =
       getConversationProfile().match(/(^projects\/[^/]+\/locations\/[^/]+)\/conversationProfiles\/[^/]+$/) || [];
-    return `${projectLocation}/conversations/${conversationId}`;
+    return `projects/emea-bootcamp-2025/locations/global/conversations/${conversationId}`;
   }
 
   /**
@@ -131,7 +131,7 @@ class AgentAssistUtils {
   public getConversationProfile(conversationProfileName: string, customApiEndpoint?: string): string {
     const authToken = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
     if (!authToken) {
-      logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
+      logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CES request');
       return undefined;
     }
     const endpoint = this.validateUrl(customApiEndpoint ? customApiEndpoint : getCustomApiEndpoint());
@@ -184,7 +184,7 @@ class AgentAssistUtils {
     const endpoint = this.validateUrl(notifierServerEndpoint);
     const token = Cookies.get('CCAI_AGENT_ASSIST_AUTH_TOKEN');
     if (!token) {
-      logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request');
+      logger.debug('[Agent-Assist] No auth token stored, retrieve auth token before making CES request');
       return;
     }
     try {
@@ -215,6 +215,10 @@ class AgentAssistUtils {
       logger.debug('Network Error');
       onError();
     }
+  }
+
+  public subscribeToConversation(conversationName: string): void {
+    AgentAssistUtils.#connector.subscribeToEventBasedConversation(`${conversationName}`);
   }
 
   /**

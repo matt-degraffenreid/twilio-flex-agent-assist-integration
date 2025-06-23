@@ -38,6 +38,15 @@ export interface ConnectorConfig {
     /** Endpoint to which the connection will be established. */
     notifierServerEndpoint: string;
   };
+  /**
+   * UI module event options.
+   */
+  uiModuleEventOptions?: UiModuleEventOptions;
+}
+
+export declare interface UiModuleEventOptions {
+  // The namespace to send, listen, or transform the event.
+  namespace?: string;
 }
 
 export interface UiModuleConnector {

@@ -141,7 +141,7 @@ describe('AgentAssistUtils', () => {
         expect(conversationProfile).toBe(undefined);
         expect(loggerSpy).toBeCalledTimes(1);
         expect(loggerSpy).toBeCalledWith(
-          '[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request',
+          '[Agent-Assist] No auth token stored, retrieve auth token before making CES request',
         );
       });
 
@@ -210,7 +210,7 @@ describe('AgentAssistUtils', () => {
         agentAssistUtils.getWebsocketStatus('mockNotifierServerEndpoint', onSuccessMock, onErrorMock);
         expect(loggerSpy).toBeCalledTimes(1);
         expect(loggerSpy).toBeCalledWith(
-          '[Agent-Assist] No auth token stored, retrieve auth token before making CCAI request',
+          '[Agent-Assist] No auth token stored, retrieve auth token before making CES request',
         );
         expect(io).toBeCalledTimes(0);
       });

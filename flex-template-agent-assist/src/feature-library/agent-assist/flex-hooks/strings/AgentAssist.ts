@@ -19,10 +19,10 @@ export enum StringTemplates {
 
 export const stringHook = () => ({
   'en-US': {
-    [StringTemplates.AgentAssist]: 'Google CCAI Agent Assist',
+    [StringTemplates.AgentAssist]: 'Google CES Agent Assist',
     [StringTemplates.ErrorFetching]: 'There was an error starting Agent Assist. Please reload the page.',
-    [StringTemplates.AgentAssistConnected]: 'Google CCAI Agent Assist connected',
-    [StringTemplates.AgentAssistDisconnected]: 'Google CCAI Agent Assist disconnected',
+    [StringTemplates.AgentAssistConnected]: 'Google CES Agent Assist connected',
+    [StringTemplates.AgentAssistDisconnected]: 'Google CES Agent Assist disconnected',
     [StringTemplates.ConversationSummarization]: 'Conversation Summarization',
     [StringTemplates.KnowledgeAssist]: 'Knowledge Assist',
     [StringTemplates.Transcription]: 'Transcription',

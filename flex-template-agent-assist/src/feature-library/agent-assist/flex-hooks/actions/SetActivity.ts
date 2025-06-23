@@ -11,6 +11,7 @@ export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.SetActivity;
 export const actionHook = function afterSetActivity(flex: typeof Flex, _manager: Flex.Manager) {
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload, abortFunction) => {
+    console.log('this fires on refresh');
     const { activityName } = payload;
     const agentAssistUtils = AgentAssistUtils.instance;
     switch (activityName) {
@@ -48,6 +49,9 @@ const loginFlow = async (agentAssistUtils: AgentAssistUtils, manager: Flex.Manag
       transport: 'websocket',
       library: 'SocketIo',
       notifierServerEndpoint: getNotifierServerEndpoint(),
+    },
+    UiModuleEventOptions: {
+      namespace: 'twilio',
     },
   };
   agentAssistUtils.initializeUiConnector(connectorConfig);
