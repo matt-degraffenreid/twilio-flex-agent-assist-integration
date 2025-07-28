@@ -20,7 +20,7 @@ import {
   UiModuleConnector,
   UiModuleEventBasedConnector,
   agentAssistModules,
-} from '../types/AgentAssist';
+} from '../../types/AgentAssist';
 import { getCustomApiEndpoint, getConversationProfile } from '../../config';
 import logger from '../../../../utils/logger';
 
@@ -71,9 +71,8 @@ class AgentAssistUtils {
   public initializeUiConnector(config: ConnectorConfig) {
     if (!AgentAssistUtils.#connector) {
       AgentAssistUtils.#connector = new UiModulesConnector();
-      window._uiModuleFlags = { debug: true };
-    } else {
-      logger.debug('[Agent-Assist] connector already instantiated');
+      window._uiModuleFlags = { debug: false };
+      logger.debug('[Agent-Assist] connector instantiated');
     }
     AgentAssistUtils.#connector.init(config);
   }
@@ -111,6 +110,15 @@ class AgentAssistUtils {
   }
 
   /**
+   * Sets the authtoken without reiniting the UI modules
+   * @param {string} authToken authtoken provided by the UIM backend.
+   */
+  public setAgentAssistAuthToken(authToken: string) {
+    AgentAssistUtils.#connector.setAuthToken(authToken);
+    Cookies.set('CCAI_AGENT_ASSIST_AUTH_TOKEN', authToken, { expires: 7 });
+  }
+
+  /**
    * Generate the conversation name based off the conversation profile string.
    * @param {string} conversationId ID for the specific conversation.
    * @returns {string} The full conversation profile name.
@@ -118,7 +126,7 @@ class AgentAssistUtils {
   public getConversationName(conversationId: string): string {
     const [, projectLocation] =
       getConversationProfile().match(/(^projects\/[^/]+\/locations\/[^/]+)\/conversationProfiles\/[^/]+$/) || [];
-    return `projects/emea-bootcamp-2025/locations/global/conversations/${conversationId}`;
+    return `${projectLocation}/conversations/${conversationId}`;
   }
 
   /**
@@ -218,7 +226,9 @@ class AgentAssistUtils {
   }
 
   public subscribeToConversation(conversationName: string): void {
-    AgentAssistUtils.#connector.subscribeToEventBasedConversation(`${conversationName}`);
+    if (AgentAssistUtils.#connector) {
+      AgentAssistUtils.#connector.subscribeToEventBasedConversation(conversationName);
+    }
   }
 
   /**

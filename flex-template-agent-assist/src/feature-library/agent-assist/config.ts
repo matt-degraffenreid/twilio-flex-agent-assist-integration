@@ -5,14 +5,14 @@ import AgentAssistConfig from './types/ServiceConfiguration';
 
 const {
   enabled = false,
-  custom_api_endpoint = 'https://tf-ui-connector-798656365078.us-central1.run.app',
+  custom_api_endpoint = 'https://ui-connector-195821190183.us-central1.run.app',
   conversation_profile = '',
   conversation_summary = true,
   agent_coaching = true,
   knowledge_assist = true,
   smart_reply = true,
   enable_voice = false,
-  notifier_server_endpoint = '',
+  notifier_server_endpoint = 'https://ui-connector-195821190183.us-central1.run.app',
   transcription = {
     enabled: false,
     version: {
@@ -22,14 +22,9 @@ const {
   },
   script_sources = {
     staging: {
-      common: 'https://www.gstatic.com/agent-assist-ui-modules/staging/common.js',
+      common: 'https://www.gstatic.com/agent-assist-ui-modules/staging/common-bundle.js',
       container: 'https://www.gstatic.com/agent-assist-ui-modules/staging/v2/container.js',
-      summarization: 'https://www.gstatic.com/agent-assist-ui-modules/staging/summarization.js',
-      knowledge_assist: 'https://www.gstatic.com/agent-assist-ui-modules/staging/knowledge_assist.js',
-      transcript: 'https://www.gstatic.com/agent-assist-ui-modules/staging/transcript.js',
-      agent_coaching: 'https://www.gstatic.com/agent-assist-ui-modules/staging/agent_coaching.js',
-      smart_reply: 'https://www.gstatic.com/agent-assist-ui-modules/staging/smart_reply.js',
-      live_translation: 'https://www.gstatic.com/agent-assist-ui-modules/staging/live_translation.js',
+      transcript: 'https://www.gstatic.com/agent-assist-ui-modules/transcript.js',
     },
     prod: {
       common: 'https://www.gstatic.com/agent-assist-ui-modules/v1/common.js',

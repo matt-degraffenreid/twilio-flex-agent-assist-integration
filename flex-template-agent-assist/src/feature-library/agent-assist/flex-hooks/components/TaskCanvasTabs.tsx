@@ -16,6 +16,7 @@ export const componentHook = function addTranscriptionTab(flex: typeof Flex, man
     </Flex.Tab>,
     {
       sortOrder: 1000,
+      if: ({ task }) => Flex.TaskHelper.isCallTask(task),
     },
   );
 };

@@ -1,8 +1,8 @@
 export interface ConnectorConfig {
   /** Communication mode for the UI modules application. */
-  channel: 'chat' | 'voice';
+  channel: string;
   /** Agent desktop to use. */
-  agentDesktop: 'LivePerson' | 'Custom';
+  agentDesktop: string;
   /** Conversation profile name to use. */
   conversationProfileName: string;
   /** API Connector config. */
@@ -32,9 +32,9 @@ export interface ConnectorConfig {
      * Transport protocol to use for updates. Defaults to 'websocket' if none is
      * specified.
      */
-    transport?: 'websocket' | 'polling';
+    transport?: string;
     /** Event-based library to use (i.e., Socket.io). */
-    library?: 'SocketIo';
+    library?: string;
     /** Endpoint to which the connection will be established. */
     notifierServerEndpoint: string;
   };

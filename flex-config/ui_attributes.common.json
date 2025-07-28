@@ -47,25 +47,25 @@
         "script_sources":{
           "staging": {
             "common":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/common.js",
+              "https://www.gstatic.com/agent-assist-ui-modules/staging/common-bundle.js",
             "container":
               "https://www.gstatic.com/agent-assist-ui-modules/staging/container.js",
             "container_v2":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/v2/container.js",
+              "https://www.gstatic.com/agent-assist-ui-modules/staging/v2/container-bundle.js",
             "summarization":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/summarization.js",
+              "",
             "knowledge_assist":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/knowledge_assist.js",
+              "",
             "knowledge_assist_v2":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/knowledge_assist.js",
+              "",
             "transcript":
               "https://www.gstatic.com/agent-assist-ui-modules/staging/transcript.js",
             "agent_coaching":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/agent_coaching.js",
+              "",
             "smart_reply":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/smart_reply.js",
+              "",
             "live_translation":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/live_translation.js"
+              ""
           },
           "prod": {
             "common":

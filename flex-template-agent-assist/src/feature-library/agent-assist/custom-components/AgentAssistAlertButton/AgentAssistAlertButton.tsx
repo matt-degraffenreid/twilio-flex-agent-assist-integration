@@ -25,26 +25,31 @@ export const AgentAssistAlertButton = () => {
 
   useEffect(() => {
     const agentAssistUtils = AgentAssistUtils.instance;
+    const connectorConfig = {
+      channel: isVoiceEnabled() ? 'voice' : 'chat',
+      agentDesktop: 'Custom',
+      conversationProfileName: getConversationProfile(),
+      apiConfig: {
+        authToken: '',
+        customApiEndpoint: getCustomApiEndpoint(),
+      },
+      eventBasedConfig: {
+        transport: 'websocket',
+        library: 'SocketIo',
+        notifierServerEndpoint: getNotifierServerEndpoint(),
+      },
+    };
     const fetchAuthToken = async () => {
       return agentAssistUtils.getAgentAssistAuthToken(agentToken);
+    };
+    const refreshAuthToken = async () => {
+      const authToken = await agentAssistUtils.getAgentAssistAuthToken(agentToken);
+      agentAssistUtils.setAgentAssistAuthToken(authToken);
     };
     if (isAvailable) {
       logger.info('[Agent-Assist] Agent marked as available on page load. Setting up UI Modules');
       fetchAuthToken().then((authToken) => {
-        const connectorConfig = {
-          channel: isVoiceEnabled() ? 'voice' : 'chat',
-          agentDesktop: 'Custom',
-          conversationProfileName: getConversationProfile(),
-          apiConfig: {
-            authToken,
-            customApiEndpoint: getCustomApiEndpoint(),
-          },
-          eventBasedConfig: {
-            transport: 'websocket',
-            library: 'SocketIo',
-            notifierServerEndpoint: getNotifierServerEndpoint(),
-          },
-        };
+        connectorConfig.apiConfig.authToken = authToken;
         agentAssistUtils.initializeUiConnector(connectorConfig);
         dispatch(
           updateAgentAssistState({
@@ -53,6 +58,7 @@ export const AgentAssistAlertButton = () => {
           }),
         );
       });
+      setTimeout(refreshAuthToken, 3600 * 1000);
     }
   }, []);
 
