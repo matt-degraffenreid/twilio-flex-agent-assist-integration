@@ -47,11 +47,11 @@
         "script_sources":{
           "staging": {
             "common":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/common-bundle.js",
+              "https://www.gstatic.com/agent-assist-ui-modules/common.js",
             "container":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/container.js",
+              "https://www.gstatic.com/agent-assist-ui-modules/container.js",
             "container_v2":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/v2/container-bundle.js",
+              "https://www.gstatic.com/agent-assist-ui-modules/v2/container.js",
             "summarization":
               "",
             "knowledge_assist":
@@ -59,7 +59,7 @@
             "knowledge_assist_v2":
               "",
             "transcript":
-              "https://www.gstatic.com/agent-assist-ui-modules/staging/transcript.js",
+              "https://www.gstatic.com/agent-assist-ui-modules/transcript.js",
             "agent_coaching":
               "",
             "smart_reply":

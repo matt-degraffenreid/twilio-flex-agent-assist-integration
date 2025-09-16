@@ -22,13 +22,13 @@ const {
   },
   script_sources = {
     staging: {
-      common: 'https://www.gstatic.com/agent-assist-ui-modules/staging/common-bundle.js',
-      container: 'https://www.gstatic.com/agent-assist-ui-modules/staging/v2/container.js',
+      common: 'https://www.gstatic.com/agent-assist-ui-modules/common.js',
+      container: 'https://www.gstatic.com/agent-assist-ui-modules/v2/container.js',
       transcript: 'https://www.gstatic.com/agent-assist-ui-modules/transcript.js',
     },
     prod: {
       common: 'https://www.gstatic.com/agent-assist-ui-modules/v1/common.js',
-      container: 'https://www.gstatic.com/agent-assist-ui-modules/v1/container.js',
+      container: 'https://www.gstatic.com/agent-assist-ui-modules/v2/container.js',
       summarization: 'https://www.gstatic.com/agent-assist-ui-modules/v1/summarization.js',
       knowledge_assist: 'https://www.gstatic.com/agent-assist-ui-modules/v2/knowledge_assist.js',
       transcript: 'https://www.gstatic.com/agent-assist-ui-modules/transcript.js',
@@ -37,7 +37,7 @@ const {
       live_translation: 'https://www.gstatic.com/agent-assist-ui-modules/v1/live_translation.js',
     },
   },
-  ui_module_version = 'staging',
+  ui_module_version = 'prod',
   debug = false,
 } = (getFeatureFlags()?.features?.agent_assist as AgentAssistConfig) || {};
 

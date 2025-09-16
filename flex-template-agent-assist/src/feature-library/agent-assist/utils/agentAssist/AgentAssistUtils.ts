@@ -15,12 +15,7 @@
 import Cookies from 'js-cookie';
 import { io } from 'socket.io-client';
 
-import {
-  ConnectorConfig,
-  UiModuleConnector,
-  UiModuleEventBasedConnector,
-  agentAssistModules,
-} from '../../types/AgentAssist';
+import { ConnectorConfig, UiModuleConnector, UiModuleEventBasedConnector } from '../../types/AgentAssist';
 import { getCustomApiEndpoint, getConversationProfile } from '../../config';
 import logger from '../../../../utils/logger';
 
@@ -71,7 +66,7 @@ class AgentAssistUtils {
   public initializeUiConnector(config: ConnectorConfig) {
     if (!AgentAssistUtils.#connector) {
       AgentAssistUtils.#connector = new UiModulesConnector();
-      window._uiModuleFlags = { debug: false };
+      window._uiModuleFlags = { debug: true };
       logger.debug('[Agent-Assist] connector instantiated');
     }
     AgentAssistUtils.#connector.init(config);
