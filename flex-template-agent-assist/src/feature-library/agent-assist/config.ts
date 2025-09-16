@@ -37,7 +37,7 @@ const {
       live_translation: 'https://www.gstatic.com/agent-assist-ui-modules/v1/live_translation.js',
     },
   },
-  ui_module_version = 'prod',
+  ui_module_version = 'staging',
   debug = false,
 } = (getFeatureFlags()?.features?.agent_assist as AgentAssistConfig) || {};
 
