@@ -26,7 +26,7 @@ export const AgentAssistAlertButton = () => {
   useEffect(() => {
     const agentAssistUtils = AgentAssistUtils.instance;
     const connectorConfig = {
-      channel: isVoiceEnabled() ? 'voice' : 'chat',
+      channel: 'chat',
       agentDesktop: 'Custom',
       conversationProfileName: getConversationProfile(),
       apiConfig: {
