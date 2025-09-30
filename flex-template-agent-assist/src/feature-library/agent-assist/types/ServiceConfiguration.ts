@@ -11,12 +11,7 @@ type env_options = 'staging' | 'prod';
 interface AgentAssistScripts {
   common: string;
   container: string;
-  summarization: string;
-  knowledge_assist: string;
   transcript: string;
-  agent_coaching: string;
-  smart_reply: string;
-  live_translation: string;
 }
 
 export default interface AgentAssistConfig {
@@ -31,7 +26,6 @@ export default interface AgentAssistConfig {
   notifier_server_endpoint: string;
   transcription: Transcription;
   script_sources: {
-    staging: AgentAssistScripts;
     prod: AgentAssistScripts;
   };
   ui_module_version: env_options;

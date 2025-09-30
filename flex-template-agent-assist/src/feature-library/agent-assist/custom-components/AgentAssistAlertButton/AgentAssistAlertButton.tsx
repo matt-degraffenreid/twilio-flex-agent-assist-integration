@@ -33,11 +33,11 @@ export const AgentAssistAlertButton = () => {
         authToken: '',
         customApiEndpoint: getCustomApiEndpoint(),
       },
-      eventBasedConfig: {
-        transport: 'websocket',
-        library: 'SocketIo',
-        notifierServerEndpoint: getNotifierServerEndpoint(),
-      },
+      // eventBasedConfig: {
+      //   transport: 'websocket',
+      //   library: 'SocketIo',
+      //   notifierServerEndpoint: getNotifierServerEndpoint(),
+      // },
     };
     const fetchAuthToken = async () => {
       return agentAssistUtils.getAgentAssistAuthToken(agentToken);

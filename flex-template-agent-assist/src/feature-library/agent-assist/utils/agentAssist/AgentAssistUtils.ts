@@ -69,6 +69,7 @@ class AgentAssistUtils {
       window._uiModuleFlags = { debug: true };
       logger.debug('[Agent-Assist] connector instantiated');
     }
+    console.log(config);
     AgentAssistUtils.#connector.init(config);
   }
 
