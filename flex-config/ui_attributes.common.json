@@ -45,14 +45,13 @@
           }
         },
         "script_sources":{
-          "prod": {
-            "common":
+          "common":
               "https://www.gstatic.com/agent-assist-ui-modules/staging/common.js",
             "container_v2":
               "https://www.gstatic.com/agent-assist-ui-modules/staging/v2/container.js",
             "transcript":
               "https://www.gstatic.com/agent-assist-ui-modules/transcript.js"
-          },
+        },
         "debug": false
       },
       "enhanced_crm_container": {

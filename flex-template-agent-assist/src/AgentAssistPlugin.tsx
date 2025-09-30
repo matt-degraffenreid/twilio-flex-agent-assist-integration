@@ -25,7 +25,7 @@ export default class AgentAssist extends FlexPlugin {
     console.log('[Agent-Assist] loading scripts', getScriptSources());
     const scriptSources = Object.values(getScriptSources());
     console.log('[Agent-Assist] loading scripts', scriptSources);
-    loadjs(scriptSources, function () {
+    loadjs(scriptSources as string[], function () {
       console.log('[Agent-Assist] Agent marked as available on page load. Initing Events');
       logger.info('[Agent-Assist] Agent marked as available on page load. Initing Events');
       initAgentAssistFeatures(flex, manager);

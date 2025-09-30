@@ -6,7 +6,7 @@ export interface Transcription {
   };
 }
 
-type env_options = 'staging' | 'prod';
+type env_options = 'prod';
 
 interface AgentAssistScripts {
   common: string;
@@ -25,9 +25,7 @@ export default interface AgentAssistConfig {
   enable_voice: boolean;
   notifier_server_endpoint: string;
   transcription: Transcription;
-  script_sources: {
-    prod: AgentAssistScripts;
-  };
+  script_sources: AgentAssistScripts;
   ui_module_version: env_options;
   debug: boolean;
 }

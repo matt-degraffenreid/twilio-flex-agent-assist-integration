@@ -21,13 +21,10 @@ const {
     },
   },
   script_sources = {
-    prod: {
-      common: 'https://www.gstatic.com/agent-assist-ui-modules/common.js',
-      container: 'https://www.gstatic.com/agent-assist-ui-modules/v2/container.js',
-      transcript: 'https://www.gstatic.com/agent-assist-ui-modules/transcript.js',
-    },
+    common: 'https://www.gstatic.com/agent-assist-ui-modules/common.js',
+    container: 'https://www.gstatic.com/agent-assist-ui-modules/v2/container.js',
+    transcript: 'https://www.gstatic.com/agent-assist-ui-modules/transcript.js',
   },
-  ui_module_version = 'prod',
   debug = false,
 } = (getFeatureFlags()?.features?.agent_assist as AgentAssistConfig) || {};
 
@@ -80,7 +77,7 @@ export const isIntermediateTranscriptionEnabled = () => {
 };
 
 export const getScriptSources = () => {
-  return script_sources[ui_module_version];
+  return script_sources;
 };
 
 export const getEnabledFeatureList = () => {
