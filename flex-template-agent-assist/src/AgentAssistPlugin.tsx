@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import * as Flex from '@twilio/flex-ui';
 import { FlexPlugin } from '@twilio/flex-plugin';
 import loadjs from 'loadjs';
@@ -23,17 +24,15 @@ export default class AgentAssist extends FlexPlugin {
    */
   init(flex: typeof Flex, manager: Flex.Manager) {
     console.log('[Agent-Assist] loading scripts', getScriptSources());
+    const source = getScriptSources();
     const scriptSources = Object.values(getScriptSources());
     console.log('[Agent-Assist] loading scripts', scriptSources);
-    loadjs(scriptSources as string[], function () {
-      console.log('[Agent-Assist] Agent marked as available on page load. Initing Events');
-      logger.info('[Agent-Assist] Agent marked as available on page load. Initing Events');
-      initAgentAssistFeatures(flex, manager);
-    });
+    loadjs(
+      [source['common'] as string, source['container'] as string, source['transcript'] as string] as string[],
+      'agent-assist',
+    );
 
     loadjs.ready('agent-assist', function () {
-      console.log('[Agent-Assist] Agent marked as available on page load. Initing Events');
-      logger.info('[Agent-Assist] Agent marked as available on page load. Initing Events');
       initAgentAssistFeatures(flex, manager);
     });
     initFeatures(flex, manager);
