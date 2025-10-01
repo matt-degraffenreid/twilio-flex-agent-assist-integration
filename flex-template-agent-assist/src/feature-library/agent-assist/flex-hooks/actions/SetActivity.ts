@@ -45,11 +45,11 @@ const loginFlow = async (agentAssistUtils: AgentAssistUtils, manager: Flex.Manag
       authToken,
       customApiEndpoint: getCustomApiEndpoint(),
     },
-    // eventBasedConfig: {
-    //   transport: 'websocket',
-    //   library: 'SocketIo',
-    //   notifierServerEndpoint: getNotifierServerEndpoint(),
-    // },
+    eventBasedConfig: {
+      transport: 'websocket',
+      library: 'SocketIo',
+      notifierServerEndpoint: getNotifierServerEndpoint(),
+    },
     UiModuleEventOptions: {
       namespace: 'twilio',
     },
