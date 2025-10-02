@@ -38,7 +38,7 @@ const loginFlow = async (agentAssistUtils: AgentAssistUtils, manager: Flex.Manag
   const agentToken = manager.store.getState().flex.session.ssoTokenPayload.token;
   const authToken = await agentAssistUtils.getAgentAssistAuthToken(agentToken);
   const connectorConfig = {
-    channel: 'chat',
+    channel: 'voice',
     agentDesktop: 'Custom',
     conversationProfileName: getConversationProfile(),
     apiConfig: {
